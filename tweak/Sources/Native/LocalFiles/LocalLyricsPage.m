@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // The lyrics page for a local file in the native look (LocalLyrics.h): the title and the artist, then
 // the lines on black, the one being sung white and a little larger, the rest gray, scrolled to keep it
 // in the middle. Read four times a second from the player's state, which is plenty for lines; the clock
@@ -62,7 +63,7 @@ static UILabel *label(UIFontTextStyle style, UIFontWeight weight, CGFloat size, 
     [_close setImage:[UIImage systemImageNamed:@"xmark" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:17 weight:UIImageSymbolWeightSemibold]]
             forState:UIControlStateNormal];
     _close.tintColor = UIColor.whiteColor;
-    _close.accessibilityLabel = @"Close";
+    _close.accessibilityLabel = SGT(@"Close");
     _close.translatesAutoresizingMaskIntoConstraints = NO;
     [_close addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
 
@@ -150,7 +151,7 @@ static UILabel *label(UIFontTextStyle style, UIFontWeight weight, CGFloat size, 
     NSString *title = state.track.trackTitle, *artist = state.track.artistName;
     _title.text = title;
     _artist.text = artist;
-    _status.text = @"Loading lyrics…";
+    _status.text = SGT(@"Loading lyrics…");
     _status.hidden = NO;
     // The file is read off the main thread the first time; after that it is kept.
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
@@ -165,7 +166,7 @@ static UILabel *label(UIFontTextStyle style, UIFontWeight weight, CGFloat size, 
     _lines = lyrics.karaokeLines;
     _timed = SGKaraokeLinesTiming(_lines) != SGKaraokeTimingNone;
     if (!_lines.count) {
-        _status.text = SGImportedLRCLinkedTo(_uri) ? @"This LRC file has no lines to show." : @"No imported lyrics for this track.";
+        _status.text = SGImportedLRCLinkedTo(_uri) ? SGT(@"This LRC file has no lines to show.") : SGT(@"No imported lyrics for this track.");
         return;
     }
     _status.hidden = YES;

@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // The player's settings that do not depend on the look: the lock screen widget's flags.
 #import "Core/SGCore.h"
 #import "Settings/SGModPage.h"
@@ -12,8 +13,8 @@
 UIViewController *SGLockScreenWidgetPage(void) {
     SGModRow *likes = SGFlagRow(@"Like and dislike buttons", @"ios-feature-lockscreen.like_dislike_enabled");
     likes.subtitle = @"Off and locked while Switch with the star is on: the star takes their place";
-    return [[SGModPage alloc] initWithTitle:@"Lock screen" intro:SGRestartNote sections:@[
+    return [[SGModPage alloc] initWithTitle:SGT(@"Lock screen") intro:SGRestartNote sections:@[
         SGSection(@"Widget", @[SGLockScreenLyricsRow(), likes]),
-        SGSection(@"Artwork", SGLockScreenMotionRows()),
+        SGSection(SGT(@"Artwork"), SGLockScreenMotionRows()),
     ] footer:nil];
 }

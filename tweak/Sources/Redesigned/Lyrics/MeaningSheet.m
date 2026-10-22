@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Settings/SGPageStyle.h"
 #import "MeaningSheet.h"
@@ -146,7 +147,7 @@ static NSAttributedString *linkedBody(NSString *body) {
                           withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:11 weight:UIImageSymbolWeightSemibold]];
     _author.configuration = badge;
     _body.attributedText = linkedBody(meaning.body);
-    _count.text = _meanings.count > 1 ? [NSString stringWithFormat:@"Genius · %lu of %lu", (unsigned long)_index + 1, (unsigned long)_meanings.count]
+    _count.text = _meanings.count > 1 ? [NSString stringWithFormat:SGT(@"Genius · %lu of %lu"), (unsigned long)_index + 1, (unsigned long)_meanings.count]
                                       : @"Genius";
     _next.hidden = _meanings.count < 2;
     _open.hidden = !meaning.url.length;

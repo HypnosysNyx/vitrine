@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // Player redesign: the lyrics turn sideways with the phone onto a landscape screen of their own. The cover
 // is on the left with the title, the artist and the controls under it, and the lines are on the right.
 // A track without lines keeps the screen: the cover grows to the screen's height with the title and the
@@ -257,7 +258,7 @@ static UIButton *controlButton(NSString *symbol, CGFloat size, NSString *label, 
     _artist.text = state.track.artistName;
     [_play setImage:[UIImage systemImageNamed:state.isPaused ? @"play.fill" : @"pause.fill" withConfiguration:
         [UIImageSymbolConfiguration configurationWithPointSize:30 weight:UIImageSymbolWeightBold]] forState:UIControlStateNormal];
-    _play.accessibilityLabel = state.isPaused ? @"Play" : @"Pause";
+    _play.accessibilityLabel = state.isPaused ? @"Play" : SGT(@"Pause");
     _field.motionHeld = state.isPaused;
     // A pause brings the controls back and keeps them; playing again, from here or anywhere, starts the
     // clock. The tap on the play button cannot: the state saying so arrives a beat after it.

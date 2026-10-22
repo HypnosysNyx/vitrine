@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Settings/SGPageStyle.h"
 #import "Onboarding.h"
@@ -190,7 +191,7 @@ static const CGFloat kLogoRadius = 22;
 - (instancetype)initWithFrame:(CGRect)frame {
     if (!(self = [super initWithFrame:frame])) return nil;
     self.isAccessibilityElement = YES;
-    self.accessibilityLabel = @"Vitrine";
+    self.accessibilityLabel = SGT(@"Vitrine");
     self.accessibilityTraits = UIAccessibilityTraitImage;
 
     _pane = [UIView new];
@@ -372,7 +373,7 @@ static BOOL adFree(void) {
     UIButtonConfiguration *config = [UIButtonConfiguration plainButtonConfiguration];
     config.contentInsets = NSDirectionalEdgeInsetsMake(4, 32, 4, 0);
     config.baseForegroundColor = SGGreen();
-    config.attributedTitle = [[NSAttributedString alloc] initWithString:@"Report a bug" attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:13 weight:UIFontWeightSemibold]}];
+    config.attributedTitle = [[NSAttributedString alloc] initWithString:SGT(@"Report a bug") attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:13 weight:UIFontWeightSemibold]}];
     _report = [UIButton buttonWithConfiguration:config primaryAction:[UIAction actionWithHandler:^(UIAction *action) {
         SGOpenURL([SGRepoURL stringByAppendingString:@"/issues"]);
     }]];
@@ -441,15 +442,15 @@ static BOOL adFree(void) {
 
     BOOL glass = SGRedesignAvailable();
     UILabel *heading = [UILabel new];
-    heading.text = @"Pick your look.";
+    heading.text = SGT(@"Pick your look.");
     heading.font = [UIFont systemFontOfSize:30 weight:UIFontWeightBold];
     heading.textColor = UIColor.whiteColor;
     heading.numberOfLines = 0;
 
     NSString *redesign = glass ? @"Looks like Apple Music. Better lyrics, Live Activity."
                                : [NSString stringWithFormat:@"Looks like Apple Music. Untested on iOS %@.", UIDevice.currentDevice.systemVersion];
-    _redesigned = [[SGLookCard alloc] initWithSymbol:@"sparkles" title:@"Redesigned" subtitle:redesign];
-    _legacy = [[SGLookCard alloc] initWithSymbol:@"slider.horizontal.3" title:@"Legacy" subtitle:@"More options, still looks like Spotify."];
+    _redesigned = [[SGLookCard alloc] initWithSymbol:@"sparkles" title:SGT(@"Redesigned") subtitle:redesign];
+    _legacy = [[SGLookCard alloc] initWithSymbol:@"slider.horizontal.3" title:SGT(@"Legacy") subtitle:@"More options, still looks like Spotify."];
     for (SGLookCard *card in @[_redesigned, _legacy]) [card addTarget:self action:@selector(picked:) forControlEvents:UIControlEventTouchUpInside];
     // The first launch offers the redesign where it is at home; below iOS 26 it waits to be asked for.
     // The tour again from the Mod page shows the stored look.
@@ -463,13 +464,13 @@ static BOOL adFree(void) {
     _ads = [UISwitch new];
     _ads.onTintColor = SGGreen();
     _ads.on = adFree();
-    _adsCard = [[SGLookCard alloc] initWithSymbol:@"speaker.slash" title:@"No ads"
-                                         subtitle:@"No ads, no Premium upsells, and Premium spoofed." accessory:_ads];
+    _adsCard = [[SGLookCard alloc] initWithSymbol:@"speaker.slash" title:SGT(@"No ads")
+                                         subtitle:SGT(@"No ads, no Premium upsells, and Premium spoofed.") accessory:_ads];
     [_adsCard addTarget:self action:@selector(toggleAds) forControlEvents:UIControlEventTouchUpInside];
     _adsCard.isAccessibilityElement = YES;
-    _adsCard.accessibilityLabel = @"No ads";
-    _adsCard.accessibilityHint = @"No ads, no Premium upsells, and Premium spoofed.";
-    _adsCard.accessibilityValue = _ads.on ? @"On" : @"Off";
+    _adsCard.accessibilityLabel = SGT(@"No ads");
+    _adsCard.accessibilityHint = SGT(@"No ads, no Premium upsells, and Premium spoofed.");
+    _adsCard.accessibilityValue = _ads.on ? SGT(@"On") : SGT(@"Off");
     if (@available(iOS 17.0, *)) _adsCard.accessibilityTraits = UIAccessibilityTraitToggleButton;
     else _adsCard.accessibilityTraits = UIAccessibilityTraitButton;
     UILabel *adsText = [UILabel new];
@@ -508,7 +509,7 @@ static BOOL adFree(void) {
     _primary = SGOnboardingButton(@"Start listening");
     [_primary addTarget:self action:@selector(finish) forControlEvents:UIControlEventTouchUpInside];
     UILabel *footer = [UILabel new];
-    footer.text = @"Hold Home to open settings.";
+    footer.text = SGT(@"Hold Home to open settings.");
     footer.font = [UIFont systemFontOfSize:13];
     footer.textColor = SGGrey();
     footer.textAlignment = NSTextAlignmentCenter;
@@ -583,7 +584,7 @@ static BOOL adFree(void) {
 
 - (void)toggleAds {
     [_ads setOn:!_ads.on animated:YES];
-    _adsCard.accessibilityValue = _ads.on ? @"On" : @"Off";
+    _adsCard.accessibilityValue = _ads.on ? SGT(@"On") : SGT(@"Off");
     [self refresh];
 }
 

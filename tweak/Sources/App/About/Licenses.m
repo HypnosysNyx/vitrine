@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // Mod > Licenses: the mod's own license, then each third-party one the build ships code under, in full,
 // since the MIT license asks for its text to travel with every copy.
 #import "Core/SGCore.h"
@@ -30,7 +31,7 @@ static NSString *const kZlib =
     @"3. This notice may not be removed or altered from any source distribution.";
 
 UIViewController *SGLicensesPage(void) {
-    SGModRow *mod = SGLinkRow(@"Vitrine", @"GNU General Public License v3.0", @"https://www.gnu.org/licenses/gpl-3.0.html");
+    SGModRow *mod = SGLinkRow(SGT(@"Vitrine"), @"GNU General Public License v3.0", @"https://www.gnu.org/licenses/gpl-3.0.html");
     SGModRow *bs2b = SGLinkRow(@"libbs2b", @"Crossfeed · MIT License", @"https://github.com/alexmarsev/libbs2b");
     SGModRow *wdl = SGLinkRow(@"WDL", @"Liveprog's EEL2 · zlib License", @"https://github.com/justinfrankel/WDL");
     // EeveeSpotify's repo was taken down, so the row opens the license both projects are under.
@@ -41,7 +42,7 @@ UIViewController *SGLicensesPage(void) {
     SGModRow *voice = SGLinkRow(@"Karaoke's voice model", @"Mel-Band RoFormer · MIT License", @"https://huggingface.co/My-Name-Is-Jeff/vitrine-sing");
     SGModRow *lightVoice = SGLinkRow(@"Karaoke's light voice model", @"Mini-BS-RoFormer-18M · MIT License",
                                      @"https://huggingface.co/HiDolen/Mini-BS-RoFormer-18M");
-    return [[SGModPage alloc] initWithTitle:@"Licenses" intro:@"The mod's own license, and the code from others it includes." sections:@[
+    return [[SGModPage alloc] initWithTitle:SGT(@"Licenses") intro:@"The mod's own license, and the code from others it includes." sections:@[
         SGSection(nil, @[mod]),
         SGNotedSection(nil, @[eevee], @"By whoeevee (whoeevee/EeveeSpotify), under the GNU General Public License v3.0, as Vitrine is.\n\n"
                                       @"Ported from it, on the Premium, ads & privacy page: Hide ads (the ad services kept from starting, "

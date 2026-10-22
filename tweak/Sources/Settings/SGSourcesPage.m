@@ -2,13 +2,14 @@
 #import "SGPage.h"
 #import "SGPageStyle.h"
 #import "SGSourcesPage.h"
+#import "Core/SGL10n.h"
 
 @implementation SGSource
 + (instancetype)sourceWithKey:(NSString *)key name:(NSString *)name detail:(NSString *)detail {
     SGSource *source = [self new];
     source.key = key;
-    source.name = name;
-    source.detail = detail;
+    source.name = SGT(name);
+    source.detail = SGT(detail);
     return source;
 }
 @end
@@ -82,8 +83,8 @@ typedef NS_ENUM(NSInteger, SGSourcesSection) {
 }
 
 - (UIView *)tableView:(UITableView *)table viewForHeaderInSection:(NSInteger)section {
-    if (section == SGSourcesSectionOn) return SGSectionHeader(table, _on.count ? @"Asked in this order" : @"None on");
-    return _off.count ? SGSectionHeader(table, @"Off") : nil;
+    if (section == SGSourcesSectionOn) return SGSectionHeader(table, _on.count ? SGT(@"Asked in this order") : SGT(@"None on"));
+    return _off.count ? SGSectionHeader(table, SGT(@"Off")) : nil;
 }
 
 - (CGFloat)tableView:(UITableView *)table heightForHeaderInSection:(NSInteger)section {
@@ -160,7 +161,7 @@ typedef NS_ENUM(NSInteger, SGSourcesSection) {
 UIViewController *SGSourcesPageMake(NSString *title, NSString *note, NSArray<SGSource *> *all,
                                     NSArray<NSString *> *(^order)(void), void (^setOrder)(NSArray<NSString *> *keys)) {
     SGSourcesPage *page = [[SGSourcesPage alloc] initWithStyle:UITableViewStyleInsetGrouped];
-    page.title = title;
+    page.title = SGT(title);
     page.note = note;
     page.all = all;
     page.order = order;

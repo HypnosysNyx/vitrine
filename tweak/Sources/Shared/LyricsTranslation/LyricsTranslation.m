@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 #import <Security/Security.h>
 #import "Core/SGCore.h"
 #import "Settings/SGModPage.h"
@@ -206,12 +207,12 @@ void SGLyricsTranslateWithGemini(NSString *trackID, NSArray<SGKaraokeLine *> *li
 
 static void askForKey(void) {
     // Says what leaves the phone, not only where the key stays: each song translated goes to Google whole.
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Gemini API key"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Gemini API key")
         message:@"Translate with Gemini sends the song's lyrics to Google, on your own key from Google AI Studio. The key stays on this iPhone."
         preferredStyle:UIAlertControllerStyleAlert];
     // An empty field would store nothing and take the key away, which only Remove is for: Save waits for text.
     __weak UIAlertController *weakAlert = alert;
-    UIAlertAction *save = [UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertAction *save = [UIAlertAction actionWithTitle:SGT(@"Save") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         // A key copied with the quotes around it, as from a code sample, is turned down by Google as it stands.
         NSMutableCharacterSet *around = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
         [around addCharactersInString:@"\"'“”‘’"];
@@ -232,18 +233,18 @@ static void askForKey(void) {
     }];
     [alert addAction:save];
     if (SGGeminiKeySet()) {
-        [alert addAction:[UIAlertAction actionWithTitle:@"Remove" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Remove") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
             storeKey(nil);
         }]];
     }
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
     [SGTopController() presentViewController:alert animated:YES completion:nil];
 }
 
 NSNotificationName const SGLyricsTranslationsDidChangeNotification = @"spotifyglass.lyricsTranslationsDidChange";
 
 SGModRow *SGTranslateEverySongRow(void) {
-    SGModRow *row = SGOptionRow(@"Translate any song", @"The lyrics' translate menu for songs that already read as your language",
+    SGModRow *row = SGOptionRow(SGT(@"Translate any song"), @"The lyrics' translate menu for songs that already read as your language",
                                 SGKeyLyricsTranslateEverySong);
     row.changed = ^(BOOL on) {
         [NSNotificationCenter.defaultCenter postNotificationName:SGLyricsTranslationsDidChangeNotification object:nil];
@@ -252,6 +253,6 @@ SGModRow *SGTranslateEverySongRow(void) {
 }
 
 SGModRow *SGGeminiKeyRow(void) {
-    return SGStatActionRow(@"Gemini API key", @"Translate any song from the lyrics' corner menu",
+    return SGStatActionRow(SGT(@"Gemini API key"), SGT(@"Translate any song from the lyrics' corner menu"),
                            ^NSString *{ return SGGeminiKeySet() ? @"Set" : @"Off"; }, ^{ askForKey(); });
 }

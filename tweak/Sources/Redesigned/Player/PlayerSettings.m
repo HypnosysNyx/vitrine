@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // The redesign's Player page in Mod Settings (App/Pages.m opens it in place of the native look's).
 //
 // It leads with a card of the player as the now playing track shows on it: the background chosen on the
@@ -73,7 +74,7 @@ static NSArray<NSString *> *backgroundNotes(void) {
     self.userInteractionEnabled = NO;
     self.isAccessibilityElement = YES;
     self.accessibilityTraits = UIAccessibilityTraitImage;
-    self.accessibilityLabel = @"Player preview";
+    self.accessibilityLabel = SGT(@"Player preview");
 
     _field = [[SGRArtworkField alloc] initWithFrame:frame];
     _field.showsBackdrop = YES;
@@ -148,7 +149,7 @@ static NSArray<NSString *> *backgroundNotes(void) {
 - (void)reloadTrack {
     SPTPlayerState *state = SGPlayerState();
     SGShownTrack *shown = SGShownTrackNow();
-    _title.text = shown.title ?: @"Not Playing";
+    _title.text = shown.title ?: SGT(@"Not Playing");
     _artist.text = shown.artist ?: @"";
     _position = shown.current && state.duration > 0 ? MIN(1, MAX(0, state.position / state.duration)) : 0;
     // The clip covers the field, and the hills move over it, which then holds still, as in the player.
@@ -329,16 +330,16 @@ UIViewController *SGRPlayerSettingsPage(NSArray *more) {
     SGRPlayerShowcase *showcase = [[SGRPlayerShowcase alloc] initWithFrame:CGRectMake(0, 0, 320, kCardMinHeight)];
     UISegmentedControl *backgrounds = [[UISegmentedControl alloc] initWithItems:SGRPlayerBackgroundNames()];
     backgrounds.selectedSegmentIndex = SGRPlayerBackground();
-    backgrounds.accessibilityLabel = @"Background";
+    backgrounds.accessibilityLabel = SGT(@"Background");
     backgrounds.apportionsSegmentWidthsByContent = YES;
 
-    SGModRow *lowData = SGOptionRow(@"Download in Low Data Mode", @"Up to about 7 MB a song", SGKeyMotionLowData);
+    SGModRow *lowData = SGOptionRow(SGT(@"Download in Low Data Mode"), @"Up to about 7 MB a song", SGKeyMotionLowData);
     lowData.visible = ^BOOL { return SGRPlayerBackground() == SGRPlayerBackgroundAnimated; };
     SGModRow *sources = SGMotionSourcesRow();
     sources.visible = lowData.visible;
 
     __block __weak UITableViewController *weakPage;
-    SGModRow *reset = SGActionRow(@"Reset", nil, ^{
+    SGModRow *reset = SGActionRow(SGT(@"Reset"), nil, ^{
         SGRResetFluidSettings();
         [weakPage.tableView reloadData];   // the sliders at once, rather than at the page's next tick
     });
@@ -353,17 +354,17 @@ UIViewController *SGRPlayerSettingsPage(NSArray *more) {
         SGSection(nil, @[sources, lowData]),
         SGNotedSection(nil, fluid, @"Brightness above 100% can make white text harder to read. A paused song holds the "
                                    @"background still. Animated and Visualizer use these where they show Fluid."),
-        SGNotedSection(@"Controls", @[SGSwitchRow(@"Volume", nil, SGRKeyPlayerVolume),
-                                      SGOptionRow(@"Follow the cover", nil, SGRKeyPlayerFollowsCover)],
+        SGNotedSection(SGT(@"Controls"), @[SGSwitchRow(SGT(@"Volume"), nil, SGRKeyPlayerVolume),
+                                      SGOptionRow(SGT(@"Follow the cover"), nil, SGRKeyPlayerFollowsCover)],
                        @"Volume puts a slider under the controls for this iPhone, or the speaker's while Spotify plays on another device. "
                        @"Follow the cover paints the like, shuffle and repeat in the color of the song playing."),
-        SGNotedSection(@"Mini player", SGRNowPlayingBarRows(),
+        SGNotedSection(SGT(@"Mini player"), SGRNowPlayingBarRows(),
                        @"Apple Music style moves the now playing bar in between two tabs as you scroll down."), nil];
     [sections addObjectsFromArray:more];
     // Fluid, Animated and Visualizer share the field (PlayerMotion.x reads the choice on every track, PlayerVisualiser.m
     // on the field's layout); Still and Colors are a field of another kind, made once a launch (PlayerField.x).
     NSString *footer = @"Fluid, Animated and Visualizer change with the next song. Still, Colors and Hide on the player apply after you restart Spotify.";
-    SGRPlayerPage *page = [[SGRPlayerPage alloc] initWithTitle:@"Player" intro:nil sections:sections footer:footer];
+    SGRPlayerPage *page = [[SGRPlayerPage alloc] initWithTitle:SGT(@"Player") intro:nil sections:sections footer:footer];
     weakPage = page;
     page.showcase = showcase;
     page.backgrounds = backgrounds;

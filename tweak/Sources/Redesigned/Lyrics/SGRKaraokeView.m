@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // The redesign's Apple Music style lyrics, always on: the line being sung lights up word by word, the
 // rest dim and blur with distance. Lines two voices sing at once are lit together, an instrumental
 // break holds three dots, and a line can show its pronunciation and its translation under it. The
@@ -2020,7 +2021,7 @@ static BOOL anyUntranslated(NSArray<SGKaraokeLine *> *lines) {
                                                                            message:error preferredStyle:UIAlertControllerStyleAlert];
             // Over the player, which is dark whatever the system's appearance.
             alert.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
-            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+            [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
             [SGTopController() presentViewController:alert animated:YES completion:nil];
         }
     });

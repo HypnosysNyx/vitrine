@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // The redesign's ⋯ as the system menu (ContextMenu.h says what and why).
 //
 // The player's ⋯ is a pull-down button of the mod's (SGRMenuFront) and its sheet lives in a window of the
@@ -673,7 +674,7 @@ static void raiseHost(UIWindow *window) {
 
 // Shown when Spotify's sheet never came, so More is not left loading.
 - (NSArray<UIMenuElement *> *)unavailable {
-    UIAction *none = [UIAction actionWithTitle:@"Spotify's options did not load" image:nil identifier:nil handler:^(UIAction *action) {}];
+    UIAction *none = [UIAction actionWithTitle:SGT(@"Spotify's options did not load") image:nil identifier:nil handler:^(UIAction *action) {}];
     none.attributes = UIMenuElementAttributesDisabled;
     return @[none];
 }
@@ -1118,7 +1119,7 @@ void SGRSystemMenuWatch(UIView *button, SGRMenuItems items, SGRMenuKind kind) {
         if (button.accessibilityLabel.length) front.accessibilityLabel = button.accessibilityLabel;
         button.isAccessibilityElement = NO;
     }
-    if (!front.accessibilityLabel.length) front.accessibilityLabel = @"More";
+    if (!front.accessibilityLabel.length) front.accessibilityLabel = SGT(@"More");
     if (front.superview != button) [button addSubview:front];
     else if (button.subviews.lastObject != front) [button bringSubviewToFront:front];
     if (!CGRectEqualToRect(front.frame, button.bounds)) front.frame = button.bounds;

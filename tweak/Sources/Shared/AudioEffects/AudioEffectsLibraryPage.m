@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // The pages a file effect's row and the Graphic EQ's row push: a library of files with the chosen one
 // ticked, and the GraphicEQ text to paste or edit. Each shows the effect's error, if its last change did
 // not take, in a red card at the top, looked at again once a second while the page is open.
@@ -37,13 +38,13 @@ static NSString *extensionList(SGDSPFileKind kind) {
 
 static void showAlert(UIViewController *owner, NSString *title, NSString *message) {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
     [owner presentViewController:alert animated:YES completion:nil];
 }
 
 static UITableViewCell *errorCell(UITableView *table, NSString *text) {
     UITableViewCell *cell = SGDequeueCell(table, @"error");
-    SGFillCell(cell, @"Not applied", text, SGRed(), @"exclamationmark.triangle.fill");
+    SGFillCell(cell, SGT(@"Not applied"), text, SGRed(), @"exclamationmark.triangle.fill");
     UIListContentConfiguration *content = (UIListContentConfiguration *)cell.contentConfiguration;
     content.secondaryTextProperties.color = SGRed();
     cell.contentConfiguration = content;
@@ -151,7 +152,7 @@ static UITableViewCell *tiledCell(UITableView *table, NSString *title, NSString 
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
     _kind = kind;
     self.errorKey = switchKeyOf(kind);
-    self.title = kind == SGDSPFileImpulseResponse ? @"Impulse responses" : kind == SGDSPFileDDC ? @"DDC files" : @"Scripts";
+    self.title = kind == SGDSPFileImpulseResponse ? SGT(@"Impulse responses") : kind == SGDSPFileDDC ? @"DDC files" : SGT(@"Scripts");
     return self;
 }
 
@@ -189,7 +190,7 @@ static UITableViewCell *tiledCell(UITableView *table, NSString *title, NSString 
     }
     UITableViewCell *cell = SGDequeueCell(table, @"file");
     if (!_files.count) {
-        SGFillCell(cell, @"No files yet", nil, SGGrey(), nil);
+        SGFillCell(cell, SGT(@"No files yet"), nil, SGGrey(), nil);
         cell.accessibilityTraits = UIAccessibilityTraitNone;
         return cell;
     }
@@ -224,7 +225,7 @@ static UITableViewCell *tiledCell(UITableView *table, NSString *title, NSString 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)table trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)path {
     if (path.section != 1 || !_files.count) return nil;
     NSString *name = _files[(NSUInteger)path.row];
-    UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete"
+    UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:SGT(@"Delete")
         handler:^(UIContextualAction *action, UIView *view, void (^done)(BOOL)) {
             [self deleteFile:name at:path];
             done(YES);
@@ -299,7 +300,7 @@ typedef NS_ENUM(NSInteger, SGGraphicEqRow) {
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Graphic EQ";
+    self.title = SGT(@"Graphic EQ");
     self.errorKey = SGKeyDSPGraphicEq;
     return self;
 }

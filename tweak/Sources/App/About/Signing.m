@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // Whether the lock screen can open this build at all. MediaRemote launches the now playing app by
 // the App ID in its application-identifier entitlement, not by CFBundleIdentifier, so a build signed
 // under a profile whose App ID is not the bundle id installs and plays but cannot be opened from the
@@ -72,7 +73,7 @@ static void showFix(void) {
     if (SGRepoURL) [sheet addAction:[UIAlertAction actionWithTitle:@"Read more" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         SGOpenURL([SGRepoURL stringByAppendingString:@"#signing"]);
     }]];
-    [sheet addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
     [top presentViewController:sheet animated:YES completion:nil];
 }
 

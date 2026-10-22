@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // Imported LRC files, on the Lyrics page beside the sources: the files kept (a swipe deletes one), Import
 // for current track…, which links the file to the local file playing, and Import LRC…, matched by title
 // and artist. Both open Files and copy the file in.
@@ -17,7 +18,7 @@ typedef NS_ENUM(NSInteger, SGLRCImportRow) {
 
 static void showAlert(UIViewController *owner, NSString *title, NSString *message) {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
     [owner presentViewController:alert animated:YES completion:nil];
 }
 
@@ -39,7 +40,7 @@ static NSString *playingLocalFile(void) {
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Imported LRC files";
+    self.title = SGT(@"Imported LRC files");
     return self;
 }
 
@@ -95,11 +96,11 @@ static NSString *playingLocalFile(void) {
     if (path.section == 1) {
         UITableViewCell *cell = SGDequeueCell(table, @"import");
         if (path.row == SGLRCImportByName) {
-            SGFillCell(cell, @"Import LRC…", @"Matched by title and artist", nil, @"square.and.arrow.down");
+            SGFillCell(cell, SGT(@"Import LRC…"), SGT(@"Matched by title and artist"), nil, @"square.and.arrow.down");
         } else {
             NSString *uri = playingLocalFile();
             NSString *title = SGLocalFileInfo(uri)[@"title"] ?: @"The local file playing";
-            SGFillCell(cell, @"Import for current track…", uri ? title : @"Start playing a local track first",
+            SGFillCell(cell, SGT(@"Import for current track…"), uri ? title : @"Start playing a local track first",
                        uri ? nil : SGGrey(), @"music.note");
         }
         BOOL enabled = path.row == SGLRCImportByName || playingLocalFile();
@@ -109,7 +110,7 @@ static NSString *playingLocalFile(void) {
     }
     UITableViewCell *cell = SGDequeueCell(table, @"file");
     if (!_files.count) {
-        SGFillCell(cell, @"No imported files", nil, SGGrey(), nil);
+        SGFillCell(cell, SGT(@"No imported files"), nil, SGGrey(), nil);
         return cell;
     }
     SGFillCell(cell, _files[(NSUInteger)path.row], nil, nil, nil);
@@ -134,7 +135,7 @@ static NSString *playingLocalFile(void) {
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)table trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)path {
     if (path.section != 0 || !_files.count) return nil;
     NSString *name = _files[(NSUInteger)path.row];
-    UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete"
+    UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:SGT(@"Delete")
         handler:^(UIContextualAction *action, UIView *view, void (^done)(BOOL)) {
             BOOL deleted = SGDeleteImportedLRC(name);
             if (deleted) [self reloadFiles];

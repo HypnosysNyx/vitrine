@@ -1,25 +1,26 @@
+#import "Core/SGL10n.h"
 #import "Settings/SGModPage.h"
 #import "Playlist.h"
 
 UIViewController *SGPlaylistSettingsPage(void) {
-    return [[SGModPage alloc] initWithTitle:@"Playlists" intro:nil sections:@[
-        SGSection(@"Header", @[
-            SGOptionRow(@"Artwork background", nil, SGKeyPlaylistBackdrop),
+    return [[SGModPage alloc] initWithTitle:SGT(@"Playlists") intro:nil sections:@[
+        SGSection(SGT(@"Header"), @[
+            SGOptionRow(SGT(@"Artwork background"), nil, SGKeyPlaylistBackdrop),
         ]),
         SGSection(@"Hide in the playlist header", @[
-            SGHideRow(@"Cover artwork", nil, SGHidePlaylistArtwork),
-            SGHideRow(@"Description", nil, SGHidePlaylistDescription),
-            SGHideRow(@"Creator and collaborators", nil, SGHidePlaylistCreator),
-            SGHideRow(@"Length and saves", nil, SGHidePlaylistLength),
+            SGHideRow(SGT(@"Cover artwork"), nil, SGHidePlaylistArtwork),
+            SGHideRow(SGT(@"Description"), nil, SGHidePlaylistDescription),
+            SGHideRow(SGT(@"Creator and collaborators"), nil, SGHidePlaylistCreator),
+            SGHideRow(SGT(@"Length and saves"), nil, SGHidePlaylistLength),
         ]),
-        SGSection(@"Hide playlist buttons", @[
+        SGSection(SGT(@"Hide playlist buttons"), @[
             SGHideRow(@"Video", nil, SGHidePlaylistVideo),
-            SGHideRow(@"Add to library", nil, SGHidePlaylistAddTo),
-            SGHideRow(@"Download", nil, SGHidePlaylistDownload),
-            SGHideRow(@"Share", nil, SGHidePlaylistShare),
-            SGHideRow(@"More", nil, SGHidePlaylistMore),
+            SGHideRow(SGT(@"Add to library"), nil, SGHidePlaylistAddTo),
+            SGHideRow(SGT(@"Download"), nil, SGHidePlaylistDownload),
+            SGHideRow(SGT(@"Share"), nil, SGHidePlaylistShare),
+            SGHideRow(SGT(@"More"), nil, SGHidePlaylistMore),
         ]),
-        SGSection(@"Hide above the tracks", @[
+        SGSection(SGT(@"Hide above the tracks"), @[
             SGHideRow(@"Curation pills", nil, SGHidePlaylistPills),
             SGHideRow(@"Find and sort bar", nil, SGHidePlaylistFind),
         ]),

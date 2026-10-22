@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // What the Updates row opens: where this build stands against GitHub's releases, and the changelog of
 // every release newer than it -- a section per release and heading, a row per line, each opening the
 // commit it came from. Everything here is read out of what the last check stored (Update.m), so the
@@ -85,7 +86,7 @@ static NSString *longDate(NSString *published) {    // 18 September 2026
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Updates";
+    self.title = SGT(@"Updates");
     _groups = [self build];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(checkLanded)
                                                name:SGUpdateCheckedNotification object:nil];
@@ -128,7 +129,7 @@ static NSArray<SGUpdateRelease *> *releasesToShow(void) {
 - (NSArray<SGUpdateGroup *> *)build {
     NSMutableArray<SGUpdateGroup *> *groups = [NSMutableArray array];
     SGUpdateRow *check = [SGUpdateRow new];
-    check.title = @"Check now";
+    check.title = SGT(@"Check now");
     check.symbol = @"arrow.clockwise";
     check.value = ^NSString *{ return SGUpdateStatus(); };
     check.action = ^{ SGCheckForUpdate(YES); };
@@ -143,7 +144,7 @@ static NSArray<SGUpdateRelease *> *releasesToShow(void) {
     [groups addObject:group(nil, top)];
 
     SGUpdateRow *notice = [SGUpdateRow new];
-    notice.title = @"Auto check updates";
+    notice.title = SGT(@"Auto check updates");
     notice.symbol = @"bell";
     notice.key = SGKeyUpdateNotice;
     [groups addObject:group(nil, @[notice])];
@@ -166,8 +167,8 @@ static NSArray<SGUpdateRelease *> *releasesToShow(void) {
         NSString *date = shortDate(release.date);
         if (!kinds.count) {
             SGUpdateRow *empty = [SGUpdateRow new];
-            empty.title = @"Nothing written down";
-            empty.subtitle = release.url.length ? @"Tap to read the release on GitHub" : nil;
+            empty.title = SGT(@"Nothing written down");
+            empty.subtitle = release.url.length ? SGT(@"Tap to read the release on GitHub") : nil;
             if (release.url.length) empty.action = ^{ SGOpenURL(release.url); };
             [groups addObject:group([NSString stringWithFormat:@"%@%@", release.version,
                                      date.length ? [@" · " stringByAppendingString:date] : @""], @[empty])];

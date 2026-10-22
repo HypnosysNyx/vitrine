@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // The Presets and Headphones pages the Audio effects page's first card opens. Both stay open after a pick,
 // so one preset or one headphone after another can be heard before going back.
 #import "Core/SGCore.h"
@@ -8,7 +9,7 @@
 
 static void showAlert(UIViewController *owner, NSString *title, NSString *message) {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
     [owner presentViewController:alert animated:YES completion:nil];
 }
 
@@ -50,7 +51,7 @@ static NSArray<NSString *> *userPresetNames(void) {
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Presets";
+    self.title = SGT(@"Presets");
     _builtIn = SGDSPBuiltInPresetNames();
     return self;
 }
@@ -91,7 +92,7 @@ static NSArray<NSString *> *userPresetNames(void) {
 }
 
 - (UIView *)tableView:(UITableView *)table viewForHeaderInSection:(NSInteger)section {
-    return section == 2 ? nil : SGSectionHeader(table, section == 0 ? @"Built in" : @"Yours");
+    return section == 2 ? nil : SGSectionHeader(table, section == 0 ? SGT(@"Built in") : SGT(@"Yours"));
 }
 
 - (CGFloat)tableView:(UITableView *)table heightForHeaderInSection:(NSInteger)section {
@@ -109,12 +110,12 @@ static NSArray<NSString *> *userPresetNames(void) {
 - (UITableViewCell *)tableView:(UITableView *)table cellForRowAtIndexPath:(NSIndexPath *)path {
     UITableViewCell *cell = SGDequeueCell(table, @"preset");
     if (path.section == 2) {
-        SGFillCell(cell, @"Save current settings…", @"Every effect as it is now, under a name", nil, @"square.and.arrow.down");
+        SGFillCell(cell, SGT(@"Save current settings…"), @"Every effect as it is now, under a name", nil, @"square.and.arrow.down");
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         return cell;
     }
     if (path.section == 1 && !_mine.count) {
-        SGFillCell(cell, @"None saved yet", nil, SGGrey(), nil);
+        SGFillCell(cell, SGT(@"None saved yet"), nil, SGGrey(), nil);
         cell.accessibilityTraits = UIAccessibilityTraitNone;
         return cell;
     }
@@ -152,7 +153,7 @@ static NSArray<NSString *> *userPresetNames(void) {
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)table trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)path {
     if (path.section != 1 || !_mine.count) return nil;
     NSString *name = _mine[(NSUInteger)path.row];
-    UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Delete"
+    UIContextualAction *delete = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:SGT(@"Delete")
         handler:^(UIContextualAction *action, UIView *view, void (^done)(BOOL)) {
             SGDSPDeleteUserPreset(name);
             self->_mine = userPresetNames();
@@ -169,15 +170,15 @@ static NSArray<NSString *> *userPresetNames(void) {
 }
 
 - (void)askForName {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Save preset"
-        message:@"A preset of the same name is replaced." preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Save preset")
+        message:SGT(@"A preset of the same name is replaced.") preferredStyle:UIAlertControllerStyleAlert];
     [alert addTextFieldWithConfigurationHandler:^(UITextField *field) {
-        field.placeholder = @"Name";
+        field.placeholder = SGT(@"Name");
         field.autocapitalizationType = UITextAutocapitalizationTypeSentences;
         field.keyboardAppearance = UIKeyboardAppearanceDark;
     }];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Save") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         NSString *name = [alert.textFields.firstObject.text stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         if (!name.length) return;
         SGDSPSaveUserPreset(name);
@@ -229,7 +230,7 @@ typedef NS_ENUM(NSInteger, SGDSPHeadphoneSection) {
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Headphones";
+    self.title = SGT(@"Headphones");
     return self;
 }
 
@@ -238,7 +239,7 @@ typedef NS_ENUM(NSInteger, SGDSPHeadphoneSection) {
     UITableView *table = self.tableView;
     table.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _search = [UISearchBar new];
-    _search.placeholder = @"Search headphones";
+    _search.placeholder = SGT(@"Search headphones");
     _search.searchBarStyle = UISearchBarStyleMinimal;
     _search.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
     _search.keyboardAppearance = UIKeyboardAppearanceDark;
@@ -256,7 +257,7 @@ typedef NS_ENUM(NSInteger, SGDSPHeadphoneSection) {
     ]];
     _header = SGNote(@"Corrections that make your headphones sound neutral, measured by AutoEq. Picking one turns Audio effects and the Graphic EQ on with it.");
     table.tableHeaderView = _header;
-    _footer = SGNote(@"From AutoEq by Jaakko Pasanen, MIT License. Pull down to fetch the list again.");
+    _footer = SGNote(SGT(@"From AutoEq by Jaakko Pasanen, MIT License. Pull down to fetch the list again."));
     table.tableFooterView = _footer;
     self.refreshControl = [UIRefreshControl new];
     [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
@@ -358,7 +359,7 @@ static BOOL headphoneInUse(void) {
 
 - (UIView *)tableView:(UITableView *)table viewForHeaderInSection:(NSInteger)section {
     if (section == SGDSPHeadphoneSearch) return _searchHeader;
-    return section == SGDSPHeadphoneRemembered && [self tableView:table numberOfRowsInSection:section] ? SGSectionHeader(table, @"Remembered outputs") : nil;
+    return section == SGDSPHeadphoneRemembered && [self tableView:table numberOfRowsInSection:section] ? SGSectionHeader(table, SGT(@"Remembered outputs")) : nil;
 }
 
 - (CGFloat)tableView:(UITableView *)table heightForHeaderInSection:(NSInteger)section {
@@ -393,7 +394,7 @@ static NSString *correctionName(NSString *path) {
         NSString *uid = SGAutoEqOutputUID();
         BOOL remembered = SGAutoEqOutputRemembered(uid);
         NSString *current = correctionName(headphoneInUse() ? SGDSPString(SGKeyDSPGraphicEqHeadphone) : nil);
-        SGFillCell(cell, [NSString stringWithFormat:@"Use for %@", SGAutoEqOutputName()],
+        SGFillCell(cell, [NSString stringWithFormat:SGT(@"Use for %@"), SGAutoEqOutputName()],
                    remembered ? [NSString stringWithFormat:@"%@ while it plays", current] : [NSString stringWithFormat:@"Remember %@ for this output", current], nil, nil);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         UISwitch *toggle = [UISwitch new];
@@ -410,7 +411,7 @@ static NSString *correctionName(NSString *path) {
         SGFillCell(cell, output[@"name"], now ? [NSString stringWithFormat:@"%@ · playing now", correctionName(output[@"path"])] : correctionName(output[@"path"]), nil, nil);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.accessibilityTraits = UIAccessibilityTraitNone;
-        cell.accessibilityHint = @"Swipe left to remove";
+        cell.accessibilityHint = SGT(@"Swipe left to remove");
         return cell;
     }
     cell.accessibilityHint = nil;
@@ -421,13 +422,13 @@ static NSString *correctionName(NSString *path) {
     }
     cell.accessibilityValue = nil;
     if (path.section == SGDSPHeadphoneNone) {
-        SGFillCell(cell, @"None", nil, nil, nil);
+        SGFillCell(cell, SGT(@"None"), nil, nil, nil);
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         tick(cell, !headphoneInUse());
         return cell;
     }
     if (!_shown.count) {
-        SGFillCell(cell, @"No headphones match", nil, SGGrey(), nil);
+        SGFillCell(cell, SGT(@"No headphones match"), nil, SGGrey(), nil);
         cell.accessibilityTraits = UIAccessibilityTraitNone;
         return cell;
     }
@@ -437,11 +438,11 @@ static NSString *correctionName(NSString *path) {
     if ([headphone.path isEqualToString:_applying]) {
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
         spinner.color = SGGrey();
-        spinner.accessibilityLabel = @"Applying";
+        spinner.accessibilityLabel = SGT(@"Applying");
         [spinner startAnimating];
         cell.accessoryView = spinner;
         // The cell is what VoiceOver reads, not the spinner in it.
-        cell.accessibilityValue = @"Applying";
+        cell.accessibilityValue = SGT(@"Applying");
         return cell;
     }
     tick(cell, headphoneInUse() && [headphone.path isEqualToString:SGDSPString(SGKeyDSPGraphicEqHeadphone)]);
@@ -461,7 +462,7 @@ static NSString *correctionName(NSString *path) {
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)table trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)path {
     if (path.section != SGDSPHeadphoneRemembered) return nil;
     NSString *uid = _remembered[(NSUInteger)path.row][@"uid"];
-    UIContextualAction *remove = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"Remove"
+    UIContextualAction *remove = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:SGT(@"Remove")
         handler:^(UIContextualAction *action, UIView *view, void (^done)(BOOL)) {
             SGAutoEqForgetOutput(uid);
             done(YES);

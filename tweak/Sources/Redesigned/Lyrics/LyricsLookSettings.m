@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // The Lyrics page in the redesign leads with its lyrics playing: a live preview of the lines in the look
 // the page sets, the presets under it as a row of glass buttons, and the sliders behind the button after them
 // in a sheet that rests at half height without dimming the page, so the preview shows every change as
@@ -96,7 +97,7 @@ static void presentStyleSheet(UIViewController *owner) {
     ];
     NSString *footer = @"Blur is how much the lines away from the one sung soften. Glow and Wave are how strongly a held "
                        @"word glows and its letters rise. 100% is Apple Music's.";
-    SGRLyricsStyleSheet *page = [[SGRLyricsStyleSheet alloc] initWithTitle:@"Lyrics Style" intro:nil
+    SGRLyricsStyleSheet *page = [[SGRLyricsStyleSheet alloc] initWithTitle:SGT(@"Lyrics Style") intro:nil
                                                                  sections:@[SGNotedSection(nil, rows, footer)] footer:nil];
     sheetPage = page;
     page.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemClose
@@ -184,7 +185,7 @@ static UIButtonConfiguration *chipConfiguration(NSString *title, NSString *symbo
     _card.layer.cornerCurve = kCACornerCurveContinuous;
     _card.clipsToBounds = YES;
     _card.isAccessibilityElement = YES;
-    _card.accessibilityLabel = @"Preview of the lyrics";
+    _card.accessibilityLabel = SGT(@"Preview of the lyrics");
     _preview = [[SGRKaraokeView alloc] initWithSampleLines:SGRLyricsSampleLines() length:SGRLyricsSampleLength()];
     _preview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [_card addSubview:_preview];
@@ -226,8 +227,8 @@ static UIButtonConfiguration *chipConfiguration(NSString *title, NSString *symbo
     adjust.attributedTitle = nil;
     adjust.contentInsets = NSDirectionalEdgeInsetsZero;
     _adjust.configuration = adjust;
-    _adjust.accessibilityLabel = @"Adjust";
-    _adjust.accessibilityValue = chosen < 0 ? @"Custom" : names[(NSUInteger)chosen];
+    _adjust.accessibilityLabel = SGT(@"Adjust");
+    _adjust.accessibilityValue = chosen < 0 ? SGT(@"Custom") : names[(NSUInteger)chosen];
     _adjust.accessibilityHint = @"Opens the sliders";
     _adjust.accessibilityTraits = UIAccessibilityTraitButton | (chosen < 0 ? UIAccessibilityTraitSelected : 0);
     _showChosen = YES;

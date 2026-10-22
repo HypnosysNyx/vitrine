@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // Translations kept on disk, whichever way they were made: one small JSON file a song and language in
 // Caches/Vitrine/Translations, each line's text to its translation, so a song comes back translated after
 // a relaunch and lyrics from another source still find their lines. The newest kKept files stay; iOS may
@@ -86,17 +87,17 @@ static NSString *summary(void) {
 }
 
 SGModRow *SGSavedTranslationsRow(void) {
-    return SGStatActionRow(@"Saved translations", @"Songs translated on this iPhone or by Gemini come back translated",
+    return SGStatActionRow(SGT(@"Saved translations"), SGT(@"Songs translated on this iPhone or by Gemini come back translated"),
                            ^NSString *{ return summary(); }, ^{
         if (!files().count) return;
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Delete saved translations?"
-            message:@"Songs translated before are translated again the next time you ask." preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Delete saved translations?")
+            message:SGT(@"Songs translated before are translated again the next time you ask.") preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Delete") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
             [NSFileManager.defaultManager removeItemAtURL:folder() error:nil];
             SGLog(@"translation: saved translations deleted");
             [NSNotificationCenter.defaultCenter postNotificationName:SGLyricsTranslationsDidChangeNotification object:nil];
         }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
         [SGTopController() presentViewController:alert animated:YES completion:nil];
     });
 }

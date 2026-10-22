@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // Home redesign: the header the way the Music app has it. The filter pills (All, Music, Podcasts) go and
 // a large title takes their place at the leading edge; the avatar that opens the side drawer moves to the
 // trailing edge; the scrim Spotify lays behind the header goes too, the soft scroll edge (Kit/SGREdgeEffect.x)
@@ -157,7 +158,7 @@ static NSArray<UIMenuElement *> *menuElements(void) {
     UIControl *showAll = SGRHomeTopPicksShowAll(&title);
     if (showAll) {
         __weak UIControl *weakShowAll = showAll;
-        [more addObject:[UIAction actionWithTitle:title.length ? [NSString stringWithFormat:@"Show all · %@", title] : @"Show all"
+        [more addObject:[UIAction actionWithTitle:title.length ? [NSString stringWithFormat:SGT(@"Show all · %@"), title] : SGT(@"Show all")
                                             image:[UIImage systemImageNamed:@"rectangle.stack"] identifier:nil handler:^(UIAction *a) {
             if (weakShowAll) SGRActivate(weakShowAll);
         }]];

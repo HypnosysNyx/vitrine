@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // The AutoMix page (App/ModSettings.x links it from the root, under either look): the switch, then the style and
 // the blend length, which read Spotify's own settings and gray out while the switch is off.
 // It has no restart note: Spotify's player takes a new setting at the next track change.
@@ -9,7 +10,7 @@
 static const double kShortest = 1, kLongest = 12;
 
 UIViewController *SGAutoMixSettingsPage(void) {
-    SGModRow *toggle = SGOptionRow(@"AutoMix", nil, SGKeyAutoMix);
+    SGModRow *toggle = SGOptionRow(SGT(@"AutoMix"), nil, SGKeyAutoMix);
     toggle.changed = ^(BOOL on) { SGAutoMixApply(on); };
 
     NSArray<NSString *> *styles = @[@"Beat-matched", @"Crossfade"];
@@ -27,7 +28,7 @@ UIViewController *SGAutoMixSettingsPage(void) {
     blend.waitsOn = SGKeyAutoMix;
 
     NSString *note = SGAutoMixAccountAllows() ? nil : @"AutoMix needs Premium, or Spoof Premium under Premium, ads & privacy.";
-    return [[SGModPage alloc] initWithTitle:@"AutoMix" intro:nil sections:@[
+    return [[SGModPage alloc] initWithTitle:SGT(@"AutoMix") intro:nil sections:@[
         SGNotedSection(nil, @[toggle, style, blend], note),
     ] footer:nil];
 }

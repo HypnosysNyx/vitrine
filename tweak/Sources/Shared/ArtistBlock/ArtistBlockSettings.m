@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // The Blocked artists page: the switch, whether a featured credit counts, blocking someone off the
 // track playing now, and the list, swiped to unblock. The hook reads all of it per track, so a change
 // needs no restart.
@@ -23,7 +24,7 @@ typedef NS_ENUM(NSInteger, SGArtistSection) {
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Blocked Artists";
+    self.title = SGT(@"Blocked Artists");
     _blocked = SGBlockedArtists();
     return self;
 }
@@ -50,7 +51,7 @@ typedef NS_ENUM(NSInteger, SGArtistSection) {
 
 - (UIView *)tableView:(UITableView *)table viewForHeaderInSection:(NSInteger)section {
     if (section == SGArtistSectionMode) return SGSectionHeader(table, @"Skip when the artist is");
-    if (section == SGArtistSectionList) return SGSectionHeader(table, @"Blocked");
+    if (section == SGArtistSectionList) return SGSectionHeader(table, SGT(@"Blocked"));
     return nil;
 }
 
@@ -66,7 +67,7 @@ typedef NS_ENUM(NSInteger, SGArtistSection) {
     UITableViewCell *cell = SGDequeueCell(table, @"artist");
     switch (path.section) {
         case SGArtistSectionSwitch: {
-            SGFillCell(cell, @"Skip blocked artists", nil, nil, nil);
+            SGFillCell(cell, SGT(@"Skip blocked artists"), nil, nil, nil);
             UISwitch *toggle = [UISwitch new];
             toggle.onTintColor = SGGreen();
             toggle.on = SGFlag(SGKeyArtistBlock, NO);
@@ -76,7 +77,7 @@ typedef NS_ENUM(NSInteger, SGArtistSection) {
         }
         case SGArtistSectionMode: {
             BOOL featured = path.row == 1;
-            SGFillCell(cell, featured ? @"Main or featured" : @"The main artist",
+            SGFillCell(cell, featured ? SGT(@"Main or featured") : SGT(@"The main artist"),
                        featured ? @"Any credit on the track" : @"The first name on the track", nil, nil);
             cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             if (featured == SGFlag(SGKeyArtistBlockFeatured, NO)) {
@@ -87,12 +88,12 @@ typedef NS_ENUM(NSInteger, SGArtistSection) {
             break;
         }
         case SGArtistSectionAdd:
-            SGFillCell(cell, @"Block from what's playing…", nil, nil, @"person.crop.circle.badge.xmark");
+            SGFillCell(cell, SGT(@"Block from what's playing…"), nil, nil, @"person.crop.circle.badge.xmark");
             cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             break;
         default:
             if (!_blocked.count) {
-                SGFillCell(cell, @"No one yet", nil, SGGrey(), nil);
+                SGFillCell(cell, SGT(@"No one yet"), nil, SGGrey(), nil);
                 break;
             }
             NSDictionary *artist = _blocked[(NSUInteger)path.row];
@@ -129,14 +130,14 @@ typedef NS_ENUM(NSInteger, SGArtistSection) {
 - (void)pickFromPlaying:(UIView *)source {
     NSArray<NSDictionary *> *artists = SGPlayingArtists();
     if (!artists.count) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Nothing playing"
-                                                                      message:@"Play a track by the artist first, then come back here."
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Nothing playing")
+                                                                      message:SGT(@"Play a track by the artist first, then come back here.")
                                                                preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
         [self presentViewController:alert animated:YES completion:nil];
         return;
     }
-    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:@"Block"
+    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:SGT(@"Block")
                                                                   message:nil
                                                            preferredStyle:UIAlertControllerStyleActionSheet];
     [artists enumerateObjectsUsingBlock:^(NSDictionary *artist, NSUInteger index, BOOL *stop) {
@@ -149,7 +150,7 @@ typedef NS_ENUM(NSInteger, SGArtistSection) {
         action.enabled = !blocked;
         [sheet addAction:action];
     }];
-    [sheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
     sheet.popoverPresentationController.sourceView = source;
     sheet.popoverPresentationController.sourceRect = source.bounds;
     [self presentViewController:sheet animated:YES completion:nil];

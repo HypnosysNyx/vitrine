@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // Player redesign: the ⋯ opens the system menu (Redesigned/ContextMenu): Share, Add to playlist and Add to
 // queue in a row at its top, then the player's own items here, then More with the rest of Spotify's rows. The
 // player's items take over what Speed and pitch's block is on Spotify's sheet:
@@ -45,9 +46,9 @@ static UIAction *soundMenu(void) {
     if (SGPlayerSpeedAllowed() && fabs(SGPlayerSpeed() - 1) >= 0.01) [changed addObject:speedText(SGPlayerSpeed())];
     if (SGPlayerPitchAvailable() && !pitchFollowing() && SGPlayerPitch() != 0) [changed addObject:semitonesText(SGPlayerPitch())];
     if (SGPlayerReverb() > 0) [changed addObject:[NSString stringWithFormat:@"Reverb %.0f%%", SGPlayerReverb()]];
-    UIAction *open = [UIAction actionWithTitle:@"Speed, Pitch & Reverb" image:symbol(@"slider.horizontal.3") identifier:nil
+    UIAction *open = [UIAction actionWithTitle:SGT(@"Speed, Pitch & Reverb") image:symbol(@"slider.horizontal.3") identifier:nil
                                        handler:^(UIAction *action) { SGPlayerShowSpeedPitchPanel(sg_moreButton); }];
-    open.subtitle = changed.count ? [changed componentsJoinedByString:@", "] : @"Normal";
+    open.subtitle = changed.count ? [changed componentsJoinedByString:@", "] : SGT(@"Normal");
     return open;
 }
 

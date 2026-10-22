@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // Player redesign: the footer as the Music app's row of three glyphs, lyrics, devices and queue, spread
 // evenly across the player, and no share button.
 //
@@ -96,7 +97,7 @@ void SGRPlayerLyricsChanged(void) {
 SGRGlyphButton *SGRPlayerLyricsGlyphIn(UIView *host) {
     SGRGlyphButton *glyph = objc_getAssociatedObject(host, &kLyricsGlyphKey);
     if (!glyph) {
-        glyph = [SGRGlyphButton buttonWithSymbol:kLyricsSymbol pointSize:kLyricsGlyphSize title:@"Lyrics"];
+        glyph = [SGRGlyphButton buttonWithSymbol:kLyricsSymbol pointSize:kLyricsGlyphSize title:SGT(@"Lyrics")];
         glyph.glyph.tintColor = SGRSecondary();
         glyph.onTap = ^{ SGRPlayerToggleLyrics(); };
         objc_setAssociatedObject(host, &kLyricsGlyphKey, glyph, OBJC_ASSOCIATION_RETAIN_NONATOMIC);

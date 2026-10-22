@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // The one thing the mod says for itself, unasked: a release newer than this build is out. Nobody
 // opens Mod Settings to look, so the check runs on its own a few seconds after Spotify comes up and
 // a release nobody has been told about brings a sheet -- once per release, and never over the
@@ -64,17 +65,17 @@ static void offerWhenClear(NSInteger tries) {
     UIAlertController *sheet = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@ is out", version]
                                                                   message:noticeBody(version, release.prerelease)
                                                            preferredStyle:UIAlertControllerStyleAlert];
-    [sheet addAction:[UIAlertAction actionWithTitle:@"What's new" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"What's new") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         // The sheet is still going as this runs, so the page waits for the screen it is pushed onto.
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             SGShowPage(SGTopController(), SGUpdatePage());
         });
     }]];
     if (release.url.length)
-        [sheet addAction:[UIAlertAction actionWithTitle:@"Get it" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"Get it") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             SGOpenURL(release.url);
         }]];
-    [sheet addAction:[UIAlertAction actionWithTitle:@"Not now" style:UIAlertActionStyleCancel handler:nil]];
+    [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"Not now") style:UIAlertActionStyleCancel handler:nil]];
     [top presentViewController:sheet animated:YES completion:nil];
     SGLog(@"update notice: offered %@ over %@", version, NSStringFromClass(top.class));
 }

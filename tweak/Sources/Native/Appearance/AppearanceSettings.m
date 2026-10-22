@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Settings/SGModPage.h"
 #import "Settings/SGPageStyle.h"
@@ -26,9 +27,9 @@ static void choosePreset(NSInteger index) {
 // The native look's rows of the Appearance page (App/Pages.m): the preset from a menu, then the color in
 // effect, which opens the picker; a color stored from there is Custom.
 NSArray<SGModRow *> *SGNativeAppearanceRows(void) {
-    SGModRow *menu = SGMenuRow(@"Accent color preset", presets(), ^NSString *{ return presets()[(NSUInteger)preset()]; },
+    SGModRow *menu = SGMenuRow(SGT(@"Accent color preset"), presets(), ^NSString *{ return presets()[(NSUInteger)preset()]; },
                                ^(NSInteger index) { choosePreset(index); });
-    SGModRow *colour = SGStatActionRow(@"Accent color", nil, ^NSString *{ return [NSString stringWithFormat:@"#%06lX", (long)SGAccentRGB()]; }, ^{
+    SGModRow *colour = SGStatActionRow(SGT(@"Accent color"), nil, ^NSString *{ return [NSString stringWithFormat:@"#%06lX", (long)SGAccentRGB()]; }, ^{
         SGPickColor(@"Accent color", SGAccentRGB(), ^(NSInteger rgb) {
             SGSetInt(SGKeyAccent, rgb);
             SGSetInt(SGKeyAccentCustom, rgb);
@@ -36,7 +37,7 @@ NSArray<SGModRow *> *SGNativeAppearanceRows(void) {
     });
     colour.swatch = ^UIColor *{ return SGColorRGB(SGAccentRGB()); };
     return @[
-        SGWithSymbol(SGOptionRow(@"AMOLED background", nil, SGKeyAmoled), @"moon"),
+        SGWithSymbol(SGOptionRow(SGT(@"AMOLED background"), nil, SGKeyAmoled), @"moon"),
         SGWithSymbol(menu, @"paintpalette"),
         SGWithSymbol(colour, @"eyedropper"),
     ];

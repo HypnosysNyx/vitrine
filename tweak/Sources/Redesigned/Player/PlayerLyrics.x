@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // Player redesign: the lyrics come to the player itself, the way the Music app shows them. The player
 // is one screen and does not scroll (PlayerScroll.x), so the footer's lyrics glyph is the only way to
 // them: it shrinks the cover into a thumbnail at the top of the artwork band, lifts the track's title
@@ -90,7 +91,7 @@ static __weak UIGestureRecognizer *sg_wake; // on the player, on while alone: th
     // A tap on the cover beside the lines brings the full player back.
     [_thumb addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(sgr_thumbTapped)]];
     _thumb.isAccessibilityElement = YES;
-    _thumb.accessibilityLabel = @"Show the player";
+    _thumb.accessibilityLabel = SGT(@"Show the player");
     _thumb.accessibilityTraits = UIAccessibilityTraitButton;
     _cover = [[UIImageView alloc] initWithFrame:CGRectZero];
     _cover.contentMode = UIViewContentModeScaleAspectFill;

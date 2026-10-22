@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Settings/SGPageStyle.h"
 #import "Shared/Sing/Sing.h"
@@ -52,7 +53,7 @@ static char kButtonGlassKey, kPanelGlassKey;
     // VoiceOver has the mic itself as one adjustable button: the slider shows only for a held finger and
     // goes again on a timer, which a swipe up or down never holds open.
     self.isAccessibilityElement = YES;
-    self.accessibilityLabel = @"Karaoke";
+    self.accessibilityLabel = SGT(@"Karaoke");
     self.accessibilityHint = @"Turns the vocals down";
     self.accessibilityTraits = UIAccessibilityTraitButton | UIAccessibilityTraitAdjustable;
 
@@ -218,11 +219,11 @@ static char kButtonGlassKey, kPanelGlassKey;
 #pragma mark - the tap
 
 static void tell(NSString *message, NSString *action, void (^then)(void)) {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Karaoke" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Karaoke") message:message preferredStyle:UIAlertControllerStyleAlert];
     // Over the player, which is dark whatever the system's appearance.
     alert.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
     if (action) [alert addAction:[UIAlertAction actionWithTitle:action style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) { then(); }]];
-    [alert addAction:[UIAlertAction actionWithTitle:action ? @"Cancel" : @"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:action ? SGT(@"Cancel") : SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
     [SGTopController() presentViewController:alert animated:YES completion:nil];
 }
 

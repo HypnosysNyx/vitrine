@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Settings/SGPage.h"
 #import "Settings/SGPageStyle.h"
@@ -70,7 +71,7 @@ static void appendTab(NSDictionary *tab) {
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Split Tabs";
+    self.title = SGT(@"Split Tabs");
     return self;
 }
 
@@ -98,7 +99,7 @@ static void appendTab(NSDictionary *tab) {
 }
 
 - (UIView *)tableView:(UITableView *)table viewForHeaderInSection:(NSInteger)section {
-    return SGSectionHeader(table, @"Tabs");
+    return SGSectionHeader(table, SGT(@"Tabs"));
 }
 
 - (CGFloat)tableView:(UITableView *)table heightForHeaderInSection:(NSInteger)section {
@@ -157,7 +158,7 @@ typedef NS_ENUM(NSInteger, SGNavbarSection) {
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Tab bar";
+    self.title = SGT(@"Tab bar");
     return self;
 }
 
@@ -165,7 +166,7 @@ typedef NS_ENUM(NSInteger, SGNavbarSection) {
     [super viewDidLoad];
     self.tableView.allowsSelectionDuringEditing = YES;
     self.tableView.editing = YES;
-    _intro = SGNote(@"Drag to reorder, tap to show or hide.");
+    _intro = SGNote(SGT(@"Drag to reorder, tap to show or hide."));
     self.tableView.tableHeaderView = _intro;
     _entries = navbarEntries();
 }
@@ -223,7 +224,7 @@ typedef NS_ENUM(NSInteger, SGNavbarSection) {
     UITableViewCell *cell = SGDequeueCell(table, @"navbar");
     switch (path.section) {
         case SGNavbarSectionSwitch: {
-            SGFillCell(cell, @"Custom navbar", nil, nil, nil);
+            SGFillCell(cell, SGT(@"Custom navbar"), nil, nil, nil);
             UISwitch *toggle = [UISwitch new];
             toggle.onTintColor = SGGreen();
             toggle.on = SGEnabled(SGKeyNavbar);
@@ -235,21 +236,21 @@ typedef NS_ENUM(NSInteger, SGNavbarSection) {
             NSDictionary *entry = _entries[(NSUInteger)path.row];
             BOOL hidden = [entry[SGNavbarHidden] boolValue];
             NSString *uri = entry[SGNavbarURI];
-            SGFillCell(cell, entry[SGNavbarTitle], hidden ? @"Hidden" : (uri ?: @"Spotify's own tab"),
+            SGFillCell(cell, entry[SGNavbarTitle], hidden ? SGT(@"Hidden") : (uri ?: @"Spotify's own tab"),
                      hidden ? SGGrey() : nil, hidden ? @"eye.slash" : @"eye");
             break;
         }
         case SGNavbarSectionAdd:
-            SGFillCell(cell, @"Add a tab…", nil, nil, @"plus");
+            SGFillCell(cell, SGT(@"Add a tab…"), nil, nil, @"plus");
             cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             break;
         case SGNavbarSectionSplit:
-            SGFillCell(cell, @"Split tabs", @"Place chosen tabs apart on the right", nil, @"rectangle.split.2x1");
+            SGFillCell(cell, SGT(@"Split tabs"), SGT(@"Place chosen tabs apart on the right"), nil, @"rectangle.split.2x1");
             cell.accessoryView = SGSymbolView(@"chevron.right", 13, UIImageSymbolWeightSemibold, 16);
             cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             break;
         default:
-            SGFillCell(cell, @"Use Spotify's order", nil, nil, @"arrow.uturn.backward");
+            SGFillCell(cell, SGT(@"Use Spotify's order"), nil, nil, @"arrow.uturn.backward");
             cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             break;
     }
@@ -314,11 +315,11 @@ typedef NS_ENUM(NSInteger, SGNavbarSection) {
 }
 
 - (void)reset {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Use Spotify's order"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Use Spotify's order")
                                                                   message:@"Every tab of Spotify's comes back where Spotify put it, the tabs you added go, and no tab is split apart."
                                                            preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Reset" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Reset") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         SGSetNavbarLayout(@[]);
         SGSetNavbarSplit(@[]);
         SGRefreshTabBar();

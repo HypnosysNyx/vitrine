@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // Drag the three texts of a line into size order, largest first.
 #import "Core/SGCore.h"
 #import "Settings/SGModPage.h"
@@ -14,7 +15,7 @@
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Text sizes";
+    self.title = SGT(@"Text sizes");
     return self;
 }
 
@@ -22,7 +23,7 @@
     [super viewDidLoad];
     _order = [SGRLyricsTextOrder() mutableCopy];
     self.tableView.editing = YES;
-    _footer = SGNote(@"Pronunciation and translation are turned on from the button in the lyrics' corner.");
+    _footer = SGNote(SGT(@"Pronunciation and translation are turned on from the button in the lyrics' corner."));
     self.tableView.tableFooterView = _footer;
 }
 
@@ -41,7 +42,7 @@
 }
 
 - (UIView *)tableView:(UITableView *)table viewForHeaderInSection:(NSInteger)section {
-    return SGSectionHeader(table, @"Largest first");
+    return SGSectionHeader(table, SGT(@"Largest first"));
 }
 
 - (CGFloat)tableView:(UITableView *)table heightForHeaderInSection:(NSInteger)section {
@@ -89,5 +90,5 @@
 @end
 
 SGModRow *SGRLyricsTextSizesRow(void) {
-    return SGPageRow(@"Text sizes", ^UIViewController *{ return [SGRLyricsTextPage new]; });
+    return SGPageRow(SGT(@"Text sizes"), ^UIViewController *{ return [SGRLyricsTextPage new]; });
 }

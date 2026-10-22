@@ -3,6 +3,7 @@
 #import "SGPageStyle.h"
 #import "SGGlowSwitch.h"
 #import "Core/SGCore.h"
+#import "Core/SGL10n.h"
 
 NSString *const SGRestartNote = @"Changes apply after you restart Spotify.";
 
@@ -14,8 +15,8 @@ NSString *const SGRestartNote = @"Changes apply after you restart Spotify.";
 
 SGModRow *SGSwitchRow(NSString *title, NSString *subtitle, NSString *key) {
     SGModRow *row = [SGModRow new];
-    row.title = title;
-    row.subtitle = subtitle;
+    row.title = SGT(title);
+    row.subtitle = SGT(subtitle);
     row.key = key;
     row.defaultOn = YES;
     return row;
@@ -63,15 +64,15 @@ SGModRow *SGKillRow(NSString *title, NSString *key) {
 
 SGModRow *SGStatRow(NSString *title, NSString *(^value)(void)) {
     SGModRow *row = [SGModRow new];
-    row.title = title;
+    row.title = SGT(title);
     row.value = value;
     return row;
 }
 
 SGModRow *SGActionRow(NSString *title, NSString *subtitle, void (^action)(void)) {
     SGModRow *row = [SGModRow new];
-    row.title = title;
-    row.subtitle = subtitle;
+    row.title = SGT(title);
+    row.subtitle = SGT(subtitle);
     row.action = action;
     return row;
 }
@@ -88,7 +89,7 @@ SGModRow *SGWarningRow(NSString *title, NSString *subtitle, void (^action)(void)
 // No subtitle: a list of pages reads as a list, not as a wall of explanations.
 SGModRow *SGPageRow(NSString *title, UIViewController *(^page)(void)) {
     SGModRow *row = [SGModRow new];
-    row.title = title;
+    row.title = SGT(title);
     row.page = page;
     return row;
 }
@@ -112,7 +113,7 @@ SGModRow *SGPageRow(NSString *title, UIViewController *(^page)(void)) {
 - (instancetype)initWithTitle:(NSString *)title key:(NSString *)key choices:(NSArray<NSString *> *)choices notes:(NSArray<NSString *> *)notes
                        footer:(NSString *)footer fallback:(NSInteger)fallback chosen:(void (^)(NSInteger index))chosen {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = title;
+    self.title = SGT(title);
     _key = key;
     _choices = choices;
     _notes = notes;
@@ -153,7 +154,7 @@ SGModRow *SGPageRow(NSString *title, UIViewController *(^page)(void)) {
 - (UITableViewCell *)tableView:(UITableView *)table cellForRowAtIndexPath:(NSIndexPath *)path {
     UITableViewCell *cell = SGDequeueCell(table, @"choice");
     NSUInteger index = (NSUInteger)path.row;
-    SGFillCell(cell, _choices[index], index < _notes.count ? _notes[index] : nil, nil, nil);
+    SGFillCell(cell, SGT(_choices[index]), index < _notes.count ? SGT(_notes[index]) : nil, nil, nil);
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     if (path.row == SGInt(_key, _fallback)) {
         UIImageView *tick = SGSymbolView(@"checkmark", 13, UIImageSymbolWeightSemibold, 16);
@@ -178,11 +179,11 @@ SGModRow *SGPageRow(NSString *title, UIViewController *(^page)(void)) {
 // can be set after this returns.
 SGModRow *SGChoiceRow(NSString *title, NSString *subtitle, NSString *key, NSArray<NSString *> *choices, NSInteger fallback) {
     SGModRow *row = [SGModRow new];
-    row.title = title;
-    row.subtitle = subtitle;
+    row.title = SGT(title);
+    row.subtitle = SGT(subtitle);
     row.value = ^NSString *{
         NSInteger index = SGInt(key, fallback);
-        return index >= 0 && index < (NSInteger)choices.count ? choices[(NSUInteger)index] : choices.firstObject;
+        return SGT(index >= 0 && index < (NSInteger)choices.count ? choices[(NSUInteger)index] : choices.firstObject);
     };
     __weak SGModRow *weakRow = row;
     row.page = ^UIViewController *{
@@ -194,8 +195,8 @@ SGModRow *SGChoiceRow(NSString *title, NSString *subtitle, NSString *key, NSArra
 SGModRow *SGSliderRow(NSString *title, NSString *subtitle, double minimum, double maximum, double step,
                       double (^get)(void), void (^set)(double value), NSString *(^format)(double value)) {
     SGModRow *row = [SGModRow new];
-    row.title = title;
-    row.subtitle = subtitle;
+    row.title = SGT(title);
+    row.subtitle = SGT(subtitle);
     row.minimum = minimum;
     row.maximum = maximum;
     row.step = step;
@@ -249,14 +250,14 @@ UIColor *SGColorRGB(NSInteger rgb) {
 
 void SGPickColor(NSString *title, NSInteger initial, void (^picked)(NSInteger rgb)) {
     UIColorPickerViewController *picker = [UIColorPickerViewController new];
-    picker.navigationItem.title = title;
+    picker.navigationItem.title = SGT(title);
     picker.supportsAlpha = NO;
     picker.selectedColor = SGColorRGB(initial);
     SGColorSheet *sheet = [SGColorSheet new];
     sheet.picker = picker;
     sheet.picked = picked;
     UIBarButtonItem *done = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"checkmark"] style:UIBarButtonItemStyleDone target:sheet action:@selector(confirm)];
-    done.accessibilityLabel = @"Done";
+    done.accessibilityLabel = SGT(@"Done");
     picker.navigationItem.rightBarButtonItem = done;
     // Inside a navigation controller the picker drops its own close button, so the bar carries one.
     picker.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemClose target:sheet action:@selector(cancel)];
@@ -275,8 +276,8 @@ SGModRow *SGLinkRow(NSString *title, NSString *subtitle, NSString *url) {
 // and a tap asks the site again instead of waiting for the six hour cache to lapse.
 SGModRow *SGStatActionRow(NSString *title, NSString *subtitle, NSString *(^value)(void), void (^action)(void)) {
     SGModRow *row = [SGModRow new];
-    row.title = title;
-    row.subtitle = subtitle;
+    row.title = SGT(title);
+    row.subtitle = SGT(subtitle);
     row.value = value;
     row.action = action;
     return row;
@@ -284,7 +285,7 @@ SGModRow *SGStatActionRow(NSString *title, NSString *subtitle, NSString *(^value
 
 SGModSection *SGSection(NSString *title, NSArray<SGModRow *> *rows) {
     SGModSection *s = [SGModSection new];
-    s.title = title;
+    s.title = SGT(title);
     s.rows = rows;
     return s;
 }
@@ -321,7 +322,7 @@ static UIView *valueAndChevron(NSString *text) {
     UILabel *label = [UILabel new];
     label.font = SGTitleFont();
     label.textColor = SGGrey();
-    label.text = text;
+    label.text = SGT(text);
     label.lineBreakMode = NSLineBreakByTruncatingTail;
     [label sizeToFit];
     if (label.bounds.size.width > kValueMaxWidth) label.bounds = CGRectMake(0, 0, kValueMaxWidth, label.bounds.size.height);
@@ -476,8 +477,8 @@ static const CGFloat kSliderTop = 12, kSliderGap = 6, kSliderHeight = 28, kSlide
     _title.font = SGTitleFont();
     _subtitle.font = SGSubtitleFont();
     _value.font = tabular(SGTitleFont());
-    _title.text = row.title;
-    _subtitle.text = row.subtitle;
+    _title.text = SGT(row.title);
+    _subtitle.text = SGT(row.subtitle);
     _subtitle.hidden = !row.subtitle;
     _slider.minimumTrackTintColor = SGGreen();
     _slider.minimumValue = (float)row.minimum;
@@ -485,8 +486,8 @@ static const CGFloat kSliderTop = 12, kSliderGap = 6, kSliderHeight = 28, kSlide
     _slider.spokenStep = (float)(count > 0 && count <= 40 ? row.step : snapped(row, row.minimum + (row.maximum - row.minimum) / 20) - row.minimum);
     _shown = snapped(row, row.number());
     _slider.value = (float)_shown;
-    _slider.accessibilityLabel = row.title;
-    _slider.accessibilityHint = row.subtitle;
+    _slider.accessibilityLabel = SGT(row.title);
+    _slider.accessibilityHint = SGT(row.subtitle);
     [self showValue];
 }
 
@@ -548,7 +549,7 @@ static NSArray<UIView *> *controlsIn(UITableViewCell *cell) {
 static void showWaiting(UITableViewCell *cell, BOOL waiting, NSString *switchTitle) {
     cell.contentView.alpha = waiting ? kWaitingAlpha : 1;
     cell.accessoryView.alpha = waiting ? kWaitingAlpha : 1;
-    cell.accessibilityHint = waiting ? [NSString stringWithFormat:@"Turn on %@ first.", switchTitle] : nil;
+    cell.accessibilityHint = waiting ? [NSString stringWithFormat:SGT(@"Turn on %@ first."), SGT(switchTitle)] : nil;
     if (!waiting) return;
     for (UIControl *control in controlsIn(cell)) {
         control.enabled = NO;
@@ -570,7 +571,7 @@ static void showWaiting(UITableViewCell *cell, BOOL waiting, NSString *switchTit
 
 - (instancetype)initWithTitle:(NSString *)title intro:(NSString *)intro sections:(NSArray<SGModSection *> *)sections footer:(NSString *)footer {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = title;
+    self.title = SGT(title);
     _sections = sections;
     _shown = [self rowsToShow];
     _intro = intro ? SGNote(intro) : nil;
@@ -899,7 +900,7 @@ static void showWaiting(UITableViewCell *cell, BOOL waiting, NSString *switchTit
         if (row.glows) {
             SGGlowSwitch *glow = [SGGlowSwitch new];
             glow.on = on;
-            glow.accessibilityLabel = row.title;
+            glow.accessibilityLabel = SGT(row.title);
             toggle = glow;
         } else {
             UISwitch *plain = [UISwitch new];
@@ -966,7 +967,7 @@ static void showWaiting(UITableViewCell *cell, BOOL waiting, NSString *switchTit
     NSMutableArray<UIAction *> *items = [NSMutableArray array];
     __weak typeof(self) weakSelf = self;
     [row.menu enumerateObjectsUsingBlock:^(NSString *name, NSUInteger i, BOOL *stop) {
-        UIAction *item = [UIAction actionWithTitle:name image:nil identifier:nil handler:^(UIAction *action) {
+        UIAction *item = [UIAction actionWithTitle:SGT(name) image:nil identifier:nil handler:^(UIAction *action) {
             if (row.chosen) row.chosen((NSInteger)i);
             [weakSelf.tableView reloadData];
         }];
@@ -975,7 +976,7 @@ static void showWaiting(UITableViewCell *cell, BOOL waiting, NSString *switchTit
     }];
     UIButtonConfiguration *look = [UIButtonConfiguration plainButtonConfiguration];
     NSString *shown = SGAccessibilityTextSize() ? nil : current;   // under the title instead
-    look.attributedTitle = shown ? [[NSAttributedString alloc] initWithString:shown attributes:@{NSFontAttributeName: SGTitleFont()}] : nil;
+    look.attributedTitle = shown ? [[NSAttributedString alloc] initWithString:SGT(shown) attributes:@{NSFontAttributeName: SGTitleFont()}] : nil;
     look.image = [UIImage systemImageNamed:@"chevron.up.chevron.down" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:11 weight:UIImageSymbolWeightSemibold]];
     look.imagePlacement = NSDirectionalRectEdgeTrailing;
     look.imagePadding = 5;
@@ -984,7 +985,7 @@ static void showWaiting(UITableViewCell *cell, BOOL waiting, NSString *switchTit
     UIButton *button = [UIButton buttonWithConfiguration:look primaryAction:nil];
     button.menu = [UIMenu menuWithChildren:items];
     button.showsMenuAsPrimaryAction = YES;
-    button.accessibilityLabel = row.title;
+    button.accessibilityLabel = SGT(row.title);
     button.accessibilityValue = current;
     [button sizeToFit];
     return button;
@@ -997,7 +998,7 @@ static void showWaiting(UITableViewCell *cell, BOOL waiting, NSString *switchTit
     UIImageSymbolConfiguration *symbol = [UIImageSymbolConfiguration configurationWithPointSize:17 weight:UIImageSymbolWeightRegular];
     [info setImage:[UIImage systemImageNamed:@"info.circle" withConfiguration:symbol] forState:UIControlStateNormal];
     info.tintColor = SGGrey();
-    info.accessibilityLabel = @"About this setting";
+    info.accessibilityLabel = SGT(@"About this setting");
     [info addTarget:self action:@selector(infoTapped:) forControlEvents:UIControlEventTouchUpInside];
     [toggle sizeToFit];
     CGFloat side = 30, gap = 8, height = MAX(side, toggle.bounds.size.height);
@@ -1013,8 +1014,8 @@ static void showWaiting(UITableViewCell *cell, BOOL waiting, NSString *switchTit
     NSIndexPath *path = [self pathOf:button];
     if (!path) return;
     SGModRow *row = [self rowAt:path];
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:row.title message:row.info preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:row.title message:SGT(row.info) preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -1047,21 +1048,21 @@ static void showWaiting(UITableViewCell *cell, BOOL waiting, NSString *switchTit
 // A locked row will not move, and nothing on it says why.
 - (void)explainLock {
     UIAlertController *alert = [UIAlertController
-        alertControllerWithTitle:@"Overridden by another setting"
-                         message:@"Another switch is forcing this flag, so the row shows what it forces instead of taking a value of its own."
+        alertControllerWithTitle:SGT(@"Overridden by another setting")
+                         message:SGT(@"Another switch is forcing this flag, so the row shows what it forces instead of taking a value of its own.")
                   preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)warn:(SGModRow *)row {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:[row.title stringByAppendingString:@" is unstable"]
-                                                                  message:row.warning
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:SGT(@"%@ is unstable"), SGT(row.title)]
+                                                                  message:SGT(row.warning)
                                                            preferredStyle:UIAlertControllerStyleAlert];
-    if (SGRepoURL) [alert addAction:[UIAlertAction actionWithTitle:@"Open GitHub" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    if (SGRepoURL) [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Open GitHub") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         SGOpenURL(SGRepoURL);
     }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 

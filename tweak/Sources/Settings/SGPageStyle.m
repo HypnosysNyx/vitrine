@@ -1,5 +1,6 @@
 #import "SGPageStyle.h"
 #import "Core/SGCore.h"
+#import "Core/SGL10n.h"
 
 static UIFont *sg_spotifyFont;
 
@@ -26,14 +27,14 @@ BOOL SGAccessibilityTextSize(void) {
 
 static CGFloat textHeight(NSString *text, UIFont *font, CGFloat width) {
     if (!text.length) return 0;
-    return ceil([text boundingRectWithSize:CGSizeMake(MAX(1, width), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin
+    return ceil([SGT(text) boundingRectWithSize:CGSizeMake(MAX(1, width), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin
                                 attributes:@{NSFontAttributeName: font} context:nil].size.height);
 }
 
 CGFloat SGSliderTextHeight(NSString *title, NSString *subtitle, CGFloat width) {
     CGFloat line = ceil(SGTitleFont().lineHeight);
-    CGFloat height = SGAccessibilityTextSize() ? textHeight(title, SGTitleFont(), width) + line : line;
-    return height + textHeight(subtitle, SGSubtitleFont(), width);
+    CGFloat height = SGAccessibilityTextSize() ? textHeight(SGT(title), SGTitleFont(), width) + line : line;
+    return height + textHeight(SGT(subtitle), SGSubtitleFont(), width);
 }
 
 CGFloat SGLayOutSliderText(UILabel *title, UILabel *value, UILabel *subtitle, CGFloat x, CGFloat y, CGFloat width) {
@@ -76,7 +77,7 @@ UIImageView *SGSymbolView(NSString *name, CGFloat size, UIImageSymbolWeight weig
 // A gray note in a wrapper view, for the table header and footer.
 UIView *SGNote(NSString *text) {
     UILabel *label = [UILabel new];
-    label.text = text;
+    label.text = SGT(text);
     label.font = SGSubtitleFont();
     label.adjustsFontForContentSizeCategory = YES;
     label.textColor = SGGrey();
@@ -219,7 +220,7 @@ void SGFillCell(UITableViewCell *cell, NSString *title, NSString *subtitle, UICo
 
 UIView *SGSectionHeader(UITableView *table, NSString *title) {
     UILabel *label = [UILabel new];
-    label.text = title.uppercaseString;
+    label.text = SGT(title).uppercaseString;
     label.font = SGSubtitleFont();
     label.adjustsFontForContentSizeCategory = YES;
     label.textColor = SGGrey();
@@ -238,7 +239,7 @@ static CGFloat footerTextHeight(UITableView *table, NSString *text) {
     // An inset grouped table narrows its footers by its side margins, and the label wraps at that width.
     CGFloat inset = table.style == UITableViewStyleInsetGrouped ? table.layoutMargins.left + table.layoutMargins.right : 0;
     CGFloat width = MAX(table.bounds.size.width - inset - 32, 100);
-    return ceil([text boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX)
+    return ceil([SGT(text) boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX)
                                    options:NSStringDrawingUsesLineFragmentOrigin
                                 attributes:@{NSFontAttributeName: SGSubtitleFont()}
                                    context:nil].size.height);
@@ -246,7 +247,7 @@ static CGFloat footerTextHeight(UITableView *table, NSString *text) {
 
 UIView *SGSectionFooter(UITableView *table, NSString *text) {
     UILabel *label = [UILabel new];
-    label.text = text;
+    label.text = SGT(text);
     label.font = SGSubtitleFont();
     label.adjustsFontForContentSizeCategory = YES;
     label.textColor = SGGrey();

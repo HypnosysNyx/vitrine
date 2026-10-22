@@ -1,25 +1,26 @@
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Settings/SGModPage.h"
 #import "Album.h"
 
 UIViewController *SGAlbumSettingsPage(void) {
     NSArray<SGModSection *> *sections = @[
-        SGSection(@"Header", @[
-            SGOptionRow(@"Artwork background", nil, SGKeyAlbumBackdrop),
+        SGSection(SGT(@"Header"), @[
+            SGOptionRow(SGT(@"Artwork background"), nil, SGKeyAlbumBackdrop),
         ]),
-        SGSection(@"Hide in the header", @[
-            SGHideRow(@"Explore (video deck)", nil, SGHideAlbumExplore),
-            SGHideRow(@"Add to library", nil, SGHideAlbumAddTo),
-            SGHideRow(@"Download", nil, SGHideAlbumDownload),
-            SGHideRow(@"More options", nil, SGHideAlbumMore),
+        SGSection(SGT(@"Hide in the header"), @[
+            SGHideRow(SGT(@"Explore (video deck)"), nil, SGHideAlbumExplore),
+            SGHideRow(SGT(@"Add to library"), nil, SGHideAlbumAddTo),
+            SGHideRow(SGT(@"Download"), nil, SGHideAlbumDownload),
+            SGHideRow(SGT(@"More options"), nil, SGHideAlbumMore),
         ]),
-        SGNotedSection(@"Hide on the page", @[
-            SGHideRow(@"More by the artist", nil, SGHideAlbumMoreBy),
-            SGHideRow(@"Related music videos", nil, SGHideAlbumVideos),
-            SGHideRow(@"Concerts", nil, SGHideAlbumConcerts),
-            SGHideRow(@"Merch", nil, SGHideAlbumMerch),
-            SGHideRow(@"You might also like", nil, SGHideAlbumYouMightLike),
+        SGNotedSection(SGT(@"Hide on the page"), @[
+            SGHideRow(SGT(@"More by the artist"), nil, SGHideAlbumMoreBy),
+            SGHideRow(SGT(@"Related music videos"), nil, SGHideAlbumVideos),
+            SGHideRow(SGT(@"Concerts"), nil, SGHideAlbumConcerts),
+            SGHideRow(SGT(@"Merch"), nil, SGHideAlbumMerch),
+            SGHideRow(SGT(@"You might also like"), nil, SGHideAlbumYouMightLike),
         ], @"Works only with Spotify in English."),
     ];
-    return [[SGModPage alloc] initWithTitle:@"Album" intro:nil sections:sections footer:nil];
+    return [[SGModPage alloc] initWithTitle:SGT(@"Album") intro:nil sections:sections footer:nil];
 }

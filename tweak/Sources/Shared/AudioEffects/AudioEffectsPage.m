@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // The Audio effects page. It is not an SGModPage: its sliders store as they move, its cards open out
 // into their controls as their switches go on, and its status line and the effects' errors come and go
 // while it is open, none of which a page of fixed rows does. It keeps Settings/'s look all the same: the
@@ -124,7 +125,7 @@ static NSArray<SGDSPEffect *> *effects(void) {
             row(SGDSPRowCurve, nil, SGKeyDSPEqualizerGains),
         ]),
         effect(SGKeyDSPGraphicEq, @"Graphic EQ", @"Any curve, like AutoEq's corrections", @[
-            pageRow(@"Response", ^NSString *{ return graphicEqSummary(); }, ^UIViewController *{ return SGDSPGraphicEqPage(); }),
+            pageRow(SGT(@"Response"), ^NSString *{ return graphicEqSummary(); }, ^UIViewController *{ return SGDSPGraphicEqPage(); }),
         ]),
         effect(SGKeyDSPConvolver, @"Convolver", @"Recorded rooms and speakers", @[
             fileRow(@"Impulse response", SGDSPFileImpulseResponse),
@@ -394,7 +395,7 @@ static UIFont *tabular(UIFont *font) {
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Audio effects";
+    self.title = SGT(@"Audio effects");
     _effects = effects();
     _open = [NSMutableSet set];
     _errors = [NSMutableDictionary dictionary];
@@ -403,7 +404,7 @@ static UIFont *tabular(UIFont *font) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _intro = SGNote(@"Changes apply straight away.");
+    _intro = SGNote(SGT(@"Changes apply straight away."));
     self.tableView.tableHeaderView = _intro;
     [self buildCredits];
     self.tableView.tableFooterView = _credits;
@@ -553,18 +554,18 @@ static UIFont *tabular(UIFont *font) {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)table cellForRowAtIndexPath:(NSIndexPath *)path {
-    if (path.section == 0 && path.row == 1) return [self valueCell:table title:@"Presets" value:@""];
-    if (path.section == 0 && path.row == 2) return [self valueCell:table title:@"Headphones" value:SGDSPHeadphoneSummary()];
+    if (path.section == 0 && path.row == 1) return [self valueCell:table title:SGT(@"Presets") value:@""];
+    if (path.section == 0 && path.row == 2) return [self valueCell:table title:SGT(@"Headphones") value:SGDSPHeadphoneSummary()];
     if (path.section == 0) {
         UITableViewCell *cell = SGDequeueCell(table, @"master");
-        [self fillHead:cell title:@"Effects" subtitle:SGDSPStatus()];
+        [self fillHead:cell title:SGT(@"Effects") subtitle:SGDSPStatus()];
         cell.accessoryView = [self switchOn:SGDSPSwitch(SGKeyDSP) action:@selector(masterToggled:) tag:0];
         return cell;
     }
     SGDSPEffect *e = [self effectIn:path.section];
     if (!e) {
         UITableViewCell *cell = SGDequeueCell(table, @"reset");
-        [self fillHead:cell title:@"Reset all effects" subtitle:nil];
+        [self fillHead:cell title:SGT(@"Reset all effects") subtitle:nil];
         UIListContentConfiguration *content = (UIListContentConfiguration *)cell.contentConfiguration;
         content.textProperties.color = SGRed();
         cell.contentConfiguration = content;
@@ -622,7 +623,7 @@ static UIFont *tabular(UIFont *font) {
 // Red, the way Settings' warning rows are: the effect's last change did not take, and why.
 - (UITableViewCell *)errorCell:(UITableView *)table text:(NSString *)text {
     UITableViewCell *cell = SGDequeueCell(table, @"error");
-    SGFillCell(cell, @"Not applied", text, SGRed(), @"exclamationmark.triangle.fill");
+    SGFillCell(cell, SGT(@"Not applied"), text, SGRed(), @"exclamationmark.triangle.fill");
     UIListContentConfiguration *content = (UIListContentConfiguration *)cell.contentConfiguration;
     content.secondaryTextProperties.color = SGRed();
     cell.contentConfiguration = content;
@@ -717,17 +718,17 @@ static UIFont *tabular(UIFont *font) {
 }
 
 - (void)confirmReset {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reset all effects?"
-        message:@"Every effect goes off, and every value, curve and file choice back to its default. The Effects switch and your imported files stay."
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Reset all effects?")
+        message:SGT(@"Every effect goes off, and every value, curve and file choice back to its default. The Effects switch and your imported files stay.")
         preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Reset" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Reset") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         SGDSPResetAll();
         [self readState];
         [UIView transitionWithView:self.tableView duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
             [self.tableView reloadData];
         } completion:nil];
     }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 

@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import <OSLog/OSLog.h>
 #import <sys/utsname.h>
@@ -28,7 +29,7 @@ static NSDictionary *storedDefaults(void) {
 static void showAlert(NSString *title, NSString *message, UIAlertAction *confirm) {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     if (confirm) [alert addAction:confirm];
-    [alert addAction:[UIAlertAction actionWithTitle:confirm ? @"Cancel" : @"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:confirm ? SGT(@"Cancel") : SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
     [SGTopController() presentViewController:alert animated:YES completion:nil];
 }
 

@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Settings/SGPage.h"
 #import "Settings/SGPageStyle.h"
@@ -74,7 +75,7 @@ static void appendTab(NSDictionary *tab) {
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Split Tabs";
+    self.title = SGT(@"Split Tabs");
     return self;
 }
 
@@ -102,7 +103,7 @@ static void appendTab(NSDictionary *tab) {
 }
 
 - (UIView *)tableView:(UITableView *)table viewForHeaderInSection:(NSInteger)section {
-    return SGSectionHeader(table, @"Tabs");
+    return SGSectionHeader(table, SGT(@"Tabs"));
 }
 
 - (CGFloat)tableView:(UITableView *)table heightForHeaderInSection:(NSInteger)section {
@@ -183,7 +184,7 @@ static const CGFloat kPlatterInset = 21, kApartItemWidth = 62, kPlatterGap = 12;
     [self addSubview:_main];
     [self addSubview:_apart];
     self.isAccessibilityElement = YES;
-    self.accessibilityLabel = @"Tab bar preview";
+    self.accessibilityLabel = SGT(@"Tab bar preview");
     return self;
 }
 
@@ -408,7 +409,7 @@ typedef NS_ENUM(NSInteger, SGRNavbarSection) {
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Tab bar";
+    self.title = SGT(@"Tab bar");
     return self;
 }
 
@@ -420,8 +421,8 @@ typedef NS_ENUM(NSInteger, SGRNavbarSection) {
     _header = [UIView new];
     [_header addSubview:_preview];
     self.tableView.tableHeaderView = _header;
-    _withNames = [[SGRLabelCard alloc] initWithTitle:@"Icons and names" names:YES];
-    _iconsOnly = [[SGRLabelCard alloc] initWithTitle:@"Icons only" names:NO];
+    _withNames = [[SGRLabelCard alloc] initWithTitle:SGT(@"Icons and names") names:YES];
+    _iconsOnly = [[SGRLabelCard alloc] initWithTitle:SGT(@"Icons only") names:NO];
     for (SGRLabelCard *card in @[_withNames, _iconsOnly]) [card addTarget:self action:@selector(labelsPicked:) forControlEvents:UIControlEventTouchUpInside];
     _entries = navbarEntries();
     [self showChoices];
@@ -561,8 +562,8 @@ typedef NS_ENUM(NSInteger, SGRNavbarSection) {
     cell.contentConfiguration = content;
     cell.separatorInset = UIEdgeInsetsMake(0, 52, 0, 0);
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-    cell.accessibilityValue = hidden ? @"Hidden" : @"Shown";
-    cell.accessibilityHint = entry[SGRNavbarURI] ? @"Opens the tab to edit it" : @"Shows or hides the tab";
+    cell.accessibilityValue = hidden ? SGT(@"Hidden") : SGT(@"Shown");
+    cell.accessibilityHint = entry[SGRNavbarURI] ? SGT(@"Opens the tab to edit it") : SGT(@"Shows or hides the tab");
 
     if (!cell.check) {
         cell.check = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -572,8 +573,8 @@ typedef NS_ENUM(NSInteger, SGRNavbarSection) {
     UIImageSymbolConfiguration *size = [UIImageSymbolConfiguration configurationWithPointSize:22 weight:UIImageSymbolWeightRegular];
     [cell.check setImage:[UIImage systemImageNamed:hidden ? @"circle" : @"checkmark.circle.fill" withConfiguration:size] forState:UIControlStateNormal];
     cell.check.tintColor = hidden ? SGGrey() : SGRAccent();
-    cell.check.accessibilityLabel = [NSString stringWithFormat:@"Show %@ on the bar", entry[SGRNavbarTitle]];
-    cell.check.accessibilityValue = hidden ? @"Off" : @"On";
+    cell.check.accessibilityLabel = [NSString stringWithFormat:SGT(@"Show %@ on the bar"), entry[SGRNavbarTitle]];
+    cell.check.accessibilityValue = hidden ? SGT(@"Off") : SGT(@"On");
     return cell;
 }
 
@@ -583,7 +584,7 @@ typedef NS_ENUM(NSInteger, SGRNavbarSection) {
     UITableViewCell *cell = SGDequeueCell(table, @"navbar");
     switch (path.section) {
         case SGRNavbarSectionSwitch: {
-            SGFillCell(cell, @"Custom tab bar", @"Your order, hidden tabs and tabs you add", nil, nil);
+            SGFillCell(cell, SGT(@"Custom tab bar"), SGT(@"Your order, hidden tabs and tabs you add"), nil, nil);
             UISwitch *toggle = [UISwitch new];
             toggle.onTintColor = SGGreen();
             toggle.on = SGEnabled(SGRKeyNavbar);
@@ -593,12 +594,12 @@ typedef NS_ENUM(NSInteger, SGRNavbarSection) {
         }
         case SGRNavbarSectionLinks:
             // Links in the accent color, as the system's own actions in a list are.
-            SGFillCell(cell, path.row == 0 ? @"Add a tab" : @"Use Spotify's tabs", nil, SGRAccent(), nil);
+            SGFillCell(cell, path.row == 0 ? SGT(@"Add a tab") : SGT(@"Use Spotify's tabs"), nil, SGRAccent(), nil);
             cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             cell.accessibilityTraits = UIAccessibilityTraitButton;
             break;
         default:
-            SGFillCell(cell, @"Split tabs", @"Place chosen tabs apart on the right", nil, @"rectangle.split.2x1");
+            SGFillCell(cell, SGT(@"Split tabs"), SGT(@"Place chosen tabs apart on the right"), nil, @"rectangle.split.2x1");
             cell.accessoryView = SGSymbolView(@"chevron.right", 13, UIImageSymbolWeightSemibold, 16);
             cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             break;
@@ -725,11 +726,11 @@ typedef NS_ENUM(NSInteger, SGRNavbarSection) {
 }
 
 - (void)reset {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Use Spotify's tabs"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Use Spotify's tabs")
                                                                   message:@"Every tab of Spotify's comes back where Spotify put it, the tabs you added go, and no tab is split apart."
                                                            preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Reset" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Reset") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         SGRSetNavbarLayout(@[]);
         SGRSetNavbarSplit(@[]);
         SGRRefreshTabBar();
