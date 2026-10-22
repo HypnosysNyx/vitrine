@@ -11,6 +11,7 @@ xcrun -sdk iphonesimulator clang -target arm64-apple-ios17.0-simulator -fobjc-ar
     -Wno-undeclared-selector -I"$SRC" "$HERE/main.m" "$HERE/sing-stubs.m" "$HERE/../../scene.m" \
     "$SRC"/Redesigned/Lyrics/SGRSingButton.m "$SRC"/Redesigned/Kit/SGRGlass.m "$SRC"/Redesigned/Kit/SGRTokens.m \
     "$SRC"/Core/SGGlass.m "$SRC"/Core/SGLog.m "$SRC"/Core/SGPrefs.m \
+    "$SRC"/Core/SGL10n.m \
     -framework UIKit -framework QuartzCore -framework CoreGraphics -framework Foundation -framework Symbols -o "$APP/SingButtonHarness"
 cat > "$APP/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
