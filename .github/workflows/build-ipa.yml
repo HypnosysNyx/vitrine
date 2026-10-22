@@ -1,6 +1,10 @@
 name: Build IPA from your own Spotify IPA
 
 on:
+  # On forks, an initial branch push registers this otherwise manual-only workflow.
+  # The push runs only the registration job; it never builds or uploads an IPA.
+  push:
+    branches: [i18n/zh-hans]
   workflow_dispatch:
     inputs:
       ipa_url:
@@ -17,7 +21,14 @@ env:
   THEOS: ${{ github.workspace }}/theos
 
 jobs:
+  register:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'IPA workflow registered. Use Run workflow to build manually.'
+
   build:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v5
