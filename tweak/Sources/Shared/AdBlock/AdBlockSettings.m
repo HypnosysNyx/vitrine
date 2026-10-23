@@ -44,7 +44,7 @@ UIViewController *SGAdsSettingsPage(void) {
         [counts addObject:SGStatRow(label, ^NSString *{
             NSUInteger checked = SGAdBlockChecked(label);
             return checked == NSNotFound ? @(SGAdBlockCount(label)).stringValue
-                : [NSString stringWithFormat:@"%lu of %lu", (unsigned long)SGAdBlockCount(label), (unsigned long)checked];
+                : [NSString stringWithFormat:SGT(@"%lu of %lu"), (unsigned long)SGAdBlockCount(label), (unsigned long)checked];
         })];
     }
     [counts addObject:SGStatRow(SGT(@"Total"), ^NSString *{

@@ -727,7 +727,7 @@ typedef NS_ENUM(NSInteger, SGRNavbarSection) {
 
 - (void)reset {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Use Spotify's tabs")
-                                                                  message:@"Every tab of Spotify's comes back where Spotify put it, the tabs you added go, and no tab is split apart."
+                                                                  message:SGT(@"Every tab of Spotify's comes back where Spotify put it, the tabs you added go, and no tab is split apart.")
                                                            preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
     [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Reset") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {

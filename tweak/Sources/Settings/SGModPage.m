@@ -314,7 +314,7 @@ static const CGFloat kValueMaxWidth = 170;
 // At the accessibility sizes a row's value goes under its title (stackedValue), and the accessories that
 // would carry it beside the title show none.
 static NSString *stackedValue(SGModRow *row) {
-    NSString *value = row.value() ?: @"";
+    NSString *value = SGT(row.value() ?: @"");
     return row.subtitle.length ? [NSString stringWithFormat:@"%@\n%@", row.subtitle, value] : value;
 }
 
@@ -343,7 +343,7 @@ static UIView *valueView(SGModRow *row) {
     UILabel *label = [UILabel new];
     label.font = SGTitleFont();
     label.textColor = SGGrey();
-    label.text = row.value();
+    label.text = SGT(row.value());
     [label sizeToFit];
     if (!row.swatch) return label;
     CGFloat side = 16, height = MAX(side, label.bounds.size.height);
@@ -819,7 +819,7 @@ static void showWaiting(UITableViewCell *cell, BOOL waiting, NSString *switchTit
         }
         UILabel *label = (UILabel *)cell.accessoryView;
         if (!row.value || row.page || ![label isKindOfClass:UILabel.class]) continue;
-        label.text = row.value();
+        label.text = SGT(row.value());
         [label sizeToFit];
         [cell setNeedsLayout];
     }

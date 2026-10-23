@@ -13,7 +13,7 @@ static NSString *cellLabel(SGGestureAction action) {
     if (action == SGGestureSeekBack) return [NSString stringWithFormat:@"−%gs", SGGestureStep()];
     if (action == SGGestureSeekForward) return [NSString stringWithFormat:@"+%gs", SGGestureStep()];
     NSArray<NSString *> *names = SGGestureActionNames();
-    return action >= 0 && action < (NSInteger)names.count ? names[(NSUInteger)action] : @"";
+    return action >= 0 && action < (NSInteger)names.count ? SGT(names[(NSUInteger)action]) : @"";
 }
 
 #pragma mark - the preview
@@ -149,7 +149,7 @@ static NSString *cellLabel(SGGestureAction action) {
                                                                   message:nil
                                                            preferredStyle:UIAlertControllerStyleActionSheet];
     [names enumerateObjectsUsingBlock:^(NSString *name, NSUInteger index, BOOL *stop) {
-        [sheet addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [sheet addAction:[UIAlertAction actionWithTitle:SGT(name) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             SGSetGestureZone(cell, (SGGestureAction)index);
             [self refresh];
         }]];
@@ -202,7 +202,7 @@ static NSString *cellLabel(SGGestureAction action) {
         case 2: {
             BOOL split = path.section == 1;
             NSString *title = split ? SGGestureSplitNames()[(NSUInteger)path.row]
-                                    : [NSString stringWithFormat:@"%@ seconds", SGGestureStepChoices()[(NSUInteger)path.row]];
+                                    : [NSString stringWithFormat:SGT(@"%@ seconds"), SGGestureStepChoices()[(NSUInteger)path.row]];
             SGFillCell(cell, title, nil, nil, nil);
             cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             if (path.row == (split ? SGGestureSplit() : SGGestureStepChoice())) {

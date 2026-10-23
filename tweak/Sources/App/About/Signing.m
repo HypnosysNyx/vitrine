@@ -57,20 +57,20 @@ static void showFix(void) {
     NSString *bundleID = NSBundle.mainBundle.bundleIdentifier ?: @"?";
     UIViewController *top = SGTopController();
     if (!appID || !top) return;
-    NSString *message = [NSString stringWithFormat:
+    NSString *message = [NSString stringWithFormat:SGT(
         @"Sign Spotify again with the bundle id set to\n\n%@\n\n"
         @"In Feather that is the Identifier field; leave PPQ protection off, it appends a random "
         @"string and breaks this again.\n\n"
         @"Why: this build is installed as %@ but signed under the App ID %@. iOS opens the now "
         @"playing card by the App ID, so it asks for an app that is not there. Nothing else in the "
-        @"mod is affected.", appID, bundleID, appID];
-    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:@"The lock screen cannot open Spotify"
+        @"mod is affected."), appID, bundleID, appID];
+    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:SGT(@"The lock screen cannot open Spotify")
                                                                   message:message
                                                            preferredStyle:UIAlertControllerStyleAlert];
-    [sheet addAction:[UIAlertAction actionWithTitle:@"Copy the bundle id" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"Copy the bundle id") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         UIPasteboard.generalPasteboard.string = appID;
     }]];
-    if (SGRepoURL) [sheet addAction:[UIAlertAction actionWithTitle:@"Read more" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    if (SGRepoURL) [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"Read more") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         SGOpenURL([SGRepoURL stringByAppendingString:@"#signing"]);
     }]];
     [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
@@ -80,7 +80,7 @@ static void showFix(void) {
 // nil while the signature is sound, which is what keeps the row out of Mod Settings entirely.
 SGModRow *SGSigningWarningRow(void) {
     if (SGSigningOpensFromLockScreen()) return nil;
-    return SGWarningRow(@"The lock screen cannot open Spotify",
+    return SGWarningRow(SGT(@"The lock screen cannot open Spotify"),
                         @"Tap for the fix",
                         ^{ showFix(); });
 }

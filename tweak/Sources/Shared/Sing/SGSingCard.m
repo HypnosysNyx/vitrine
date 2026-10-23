@@ -18,6 +18,7 @@
 // (the switch, the model, the heat, memory, Runs on, the model kept a minute after resting) stays Sing.x's.
 //
 // Threading: main thread.
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Core/SGGlass.h"
 #import "Settings/SGMarquee.h"
@@ -227,7 +228,7 @@ static CGFloat height(float rms) {
     [_column addTarget:self action:@selector(levelMoved) forControlEvents:UIControlEventValueChanged];
     [_card addSubview:_column];
 
-    _stops = [[UISegmentedControl alloc] initWithItems:@[@"Sing along", @"Original", @"Vocals only"]];
+    _stops = [[UISegmentedControl alloc] initWithItems:@[SGT(@"Sing along"), SGT(@"Original"), SGT(@"Vocals only")]];
     [_stops addTarget:self action:@selector(stopPicked) forControlEvents:UIControlEventValueChanged];
     [self addSubview:_stops];
 
@@ -295,7 +296,7 @@ static CGFloat height(float rms) {
     NSString *title = _shown.title ?: @"Not Playing";
     NSString *artist = _shown ? _shown.artist ?: @"" : @"Play a song to hear Karaoke";
     _title.text = title;
-    _artist.text = artist;
+    _artist.text = [artist isEqualToString:@"Play a song to hear Karaoke"] ? SGT(artist) : artist;
     SGSingState state = SGSingCurrentState();
     NSString *words = SGSingStatusText();
     float stored = SGSingLevel();
@@ -304,7 +305,8 @@ static CGFloat height(float rms) {
                                                  : [NSString stringWithFormat:@"%@ · %@", words, SGSingLevelText(stored)];
     }
     if (SGSingStatusDetail()) words = [words stringByAppendingString:@"  ⓘ"];
-    if (![_state.text isEqualToString:words]) _state.text = words;
+    NSString *translatedStatus = SGT(words);
+    if (![_state.text isEqualToString:translatedStatus]) _state.text = translatedStatus;
     _state.textColor = state == SGSingStateSinging ? SGGreen() : state == SGSingStateFailed || state == SGSingStateHot ? UIColor.systemOrangeColor : SGGrey();
 
     BOOL playing = player && !player.isPaused;
@@ -315,7 +317,7 @@ static CGFloat height(float rms) {
         [_play setImage:glyph forState:UIControlStateNormal];
     }
     _play.enabled = player != nil;
-    _play.accessibilityLabel = playing ? @"Pause" : @"Play";
+    _play.accessibilityLabel = SGT(playing ? @"Pause" : @"Play");
 
     if (!_column.tracking) _column.level = SGSingLevel();
     float level = _column.level;

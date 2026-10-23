@@ -22,15 +22,15 @@ static BOOL untestedChip(void) {
 UIView *SGSingCardView(void);   // SGSingCard.m
 
 static void tell(NSString *title, NSString *message) {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(title) message:SGT(message) preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
     [SGTopController() presentViewController:alert animated:YES completion:nil];
 }
 
 static void ask(NSString *title, NSString *message, NSString *action, BOOL destructive, void (^then)(void)) {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(title) message:SGT(message) preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:action style:destructive ? UIAlertActionStyleDestructive : UIAlertActionStyleDefault
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(action) style:destructive ? UIAlertActionStyleDestructive : UIAlertActionStyleDefault
                                             handler:^(UIAlertAction *a) { then(); }]];
     [SGTopController() presentViewController:alert animated:YES completion:nil];
 }
@@ -62,13 +62,13 @@ static NSString *modelValue(void) {
             if (SGSingModelChecking()) return @"Checking…";
             if (SGSingModelWaitingForNetwork()) return SGSingModelOverCellular() ? @"Waiting for the network" : @"Waiting for Wi-Fi";
             return [NSString stringWithFormat:@"%.0f%%", SGSingModelProgress() * 100];
-        case SGSingModelReady: return [NSString stringWithFormat:@"Downloaded · %@", SGSingModelSizeText()];
+        case SGSingModelReady: return [NSString stringWithFormat:SGT(@"Downloaded · %@"), SGSingModelSizeText()];
         case SGSingModelMissing:
             if (SGSingModelError()) return update ? @"Update failed, try again" : @"Failed, try again";
             if (SGSingModelPausedBytes()) {
                 return [NSString stringWithFormat:@"%@ · %@ of %@", update ? @"Update paused" : @"Paused", bytes(SGSingModelPausedBytes()), SGSingModelSizeText()];
             }
-            return [NSString stringWithFormat:update ? @"Update available · %@" : @"Download, %@", SGSingModelSizeText()];
+            return [NSString stringWithFormat:SGT(update ? @"Update available · %@" : @"Download, %@"), SGSingModelSizeText()];
     }
     return @"";
 }
@@ -231,7 +231,7 @@ UIViewController *SGSingSettingsPage(void) {
     remove.visible = ^BOOL { return SGSingModelCurrentState() == SGSingModelReady || SGSingModelPausedBytes() > 0; };
     // The two models, picked on the page: the rows below follow the one with the checkmark.
     SGModRow *(^choice)(NSString *, NSString *, SGSingModelKind) = ^SGModRow *(NSString *title, NSString *format, SGSingModelKind kind) {
-        SGModRow *row = SGActionRow(title, [NSString stringWithFormat:format, SGSingModelSizeTextOf(kind)], ^{
+        SGModRow *row = SGActionRow(title, [NSString stringWithFormat:SGT(format), SGSingModelSizeTextOf(kind)], ^{
             if (SGSingChosenModel() == kind) return;
             void (^choose)(void) = ^{
                 SGSetSingChosenModel(kind);
@@ -260,7 +260,7 @@ UIViewController *SGSingSettingsPage(void) {
     other.color = SGRed();
     other.visible = ^BOOL { return SGSingOtherModelBytes() > 0; };
     SGModRow *spatial = SGPageRow(SGT(@"Spatial voice"), ^UIViewController *{ return SGSpatialVoiceSettingsPage(); });
-    spatial.subtitle = @"With AirPods, the voice stays in front of you as you turn your head";
+    spatial.subtitle = SGT(@"With AirPods, the voice stays in front of you as you turn your head");
     spatial.value = ^NSString *{ return SGSingSpatial() ? @"On" : @"Off"; };
     // Facts about the iPhone, which do not change while the page shows.
     spatial.visible = ^BOOL { return SGSingSpatialAvailable(); };

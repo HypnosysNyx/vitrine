@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "AddTabSheet.h"
 #import "Links.h"
@@ -64,7 +65,7 @@ static UIView *withChevron(UIView *view) {
 
 static void showProblem(UIViewController *page, NSString *title, NSString *message) {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
     [page presentViewController:alert animated:YES completion:nil];
 }
 
@@ -81,7 +82,7 @@ static void showProblem(UIViewController *page, NSString *title, NSString *messa
 
 - (instancetype)initWithDraft:(SGTabDraft *)draft presets:(NSArray<NSDictionary *> *)presets {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Choose a Link";
+    self.title = SGT(@"Choose a Link");
     _draft = draft;
     _presets = presets;
     return self;
@@ -138,7 +139,7 @@ static void showProblem(UIViewController *page, NSString *title, NSString *messa
         [self.navigationController popViewControllerAnimated:YES];
         return;
     }
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Custom Link" message:@"A share link or a spotify: URI." preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Custom Link") message:SGT(@"A share link or a spotify: URI.") preferredStyle:UIAlertControllerStyleAlert];
     [alert addTextFieldWithConfigurationHandler:^(UITextField *field) {
         field.placeholder = @"spotify:playlist:…";
         field.text = self->_draft.uri;
@@ -147,8 +148,8 @@ static void showProblem(UIViewController *page, NSString *title, NSString *messa
         field.autocapitalizationType = UITextAutocapitalizationTypeNone;
         field.autocorrectionType = UITextAutocorrectionTypeNo;
     }];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Use Link" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Use Link") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [self useLink:alert.textFields.firstObject.text];
     }]];
     [self presentViewController:alert animated:YES completion:nil];
@@ -160,9 +161,9 @@ static void showProblem(UIViewController *page, NSString *title, NSString *messa
     BOOL spotify = [url.scheme.lowercaseString isEqualToString:@"spotify"];
     if (!spotify || routeOf(url, @"custom") == SGLinkRouteNone) {
         NSString *what = text.length ? text : @"nothing";
-        showProblem(self, @"Can't Use That Link",
-                    spotify ? [NSString stringWithFormat:@"Spotify has nowhere to open %@, so it would not work as a tab.", url.absoluteString]
-                            : [NSString stringWithFormat:@"%@ is not a share link or a spotify: URI.", what]);
+        showProblem(self, SGT(@"Can't Use That Link"),
+                    spotify ? [NSString stringWithFormat:SGT(@"Spotify has nowhere to open %@, so it would not work as a tab."), url.absoluteString]
+                            : [NSString stringWithFormat:SGT(@"%@ is not a share link or a spotify: URI."), what]);
         return;
     }
     _draft.uri = url.absoluteString;
@@ -192,7 +193,7 @@ static void showProblem(UIViewController *page, NSString *title, NSString *messa
 
 - (instancetype)initWithDraft:(SGTabDraft *)draft {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Choose an Icon";
+    self.title = SGT(@"Choose an Icon");
     _draft = draft;
     return self;
 }
@@ -208,7 +209,7 @@ static void showProblem(UIViewController *page, NSString *title, NSString *messa
     _search.searchResultsUpdater = self;
     _search.delegate = self;
     _search.obscuresBackgroundDuringPresentation = NO;
-    _search.searchBar.placeholder = @"Search icons";
+    _search.searchBar.placeholder = SGT(@"Search icons");
     _search.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _search.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
     self.navigationItem.searchController = _search;
@@ -377,7 +378,7 @@ typedef NS_ENUM(NSInteger, SGAddTabSection) {
 // The same sheet over a tab already on the bar: its name, link and icon filled in, Save in place of Add.
 - (instancetype)initWithTab:(NSDictionary *)tab presets:(NSArray<NSDictionary *> *)presets save:(void (^)(NSDictionary *tab))save remove:(void (^)(void))remove {
     if (!(self = [self initWithPresets:presets add:save])) return nil;
-    self.title = @"Edit Tab";
+    self.title = SGT(@"Edit Tab");
     _draft.title = tab[SGTabTitle];
     _draft.uri = tab[SGTabURI];
     _draft.icon = tab[SGTabIcon] ?: @"star";
@@ -390,7 +391,7 @@ typedef NS_ENUM(NSInteger, SGAddTabSection) {
 
 - (instancetype)initWithPresets:(NSArray<NSDictionary *> *)presets add:(void (^)(NSDictionary *tab))add {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Add a Tab";
+    self.title = SGT(@"Add a Tab");
     _draft = [SGTabDraft new];
     _draft.icon = @"star";
     _add = [add copy];
@@ -405,12 +406,12 @@ typedef NS_ENUM(NSInteger, SGAddTabSection) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:_remove ? @"Save" : @"Add" style:UIBarButtonItemStyleDone target:self action:@selector(addTab)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:_remove ? SGT(@"Save") : SGT(@"Add") style:UIBarButtonItemStyleDone target:self action:@selector(addTab)];
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
 
     _name = [UITextField new];
-    _name.placeholder = @"Name";
-    _name.accessibilityLabel = @"Name";
+    _name.placeholder = SGT(@"Name");
+    _name.accessibilityLabel = SGT(@"Name");
     _name.font = SGTitleFont();
     _name.textColor = UIColor.whiteColor;
     _name.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -528,14 +529,14 @@ typedef NS_ENUM(NSInteger, SGAddTabSection) {
 // The tab, its link and its icon go with it, so the sheet asks first.
 - (void)confirmRemove {
     NSString *name = _draft.title.length ? _draft.title : @"this tab";
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"Remove %@ from the tab bar?", name]
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:SGT(@"Remove %@ from the tab bar?"), name]
                                                             preferredStyle:UIAlertControllerStyleActionSheet];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Remove Tab" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Remove Tab") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         void (^remove)(void) = self->_remove;
         [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
         if (remove) remove();
     }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
     alert.popoverPresentationController.sourceView = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:SGAddTabSectionRemove]];
     [self presentViewController:alert animated:YES completion:nil];
 }

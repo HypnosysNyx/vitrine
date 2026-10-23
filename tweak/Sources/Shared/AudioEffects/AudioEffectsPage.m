@@ -260,14 +260,14 @@ static UIFont *tabular(UIFont *font) {
     _detents = count > 0 && count <= 24;
     _title.font = SGTitleFont();
     _value.font = tabular(SGTitleFont());
-    _title.text = row.title;
+    _title.text = SGT(row.title);
     _slider.minimumTrackTintColor = SGGreen();
     _slider.minimumValue = (float)range.min;
     _slider.maximumValue = (float)range.max;
     _slider.spokenStep = (float)(count > 0 && count <= 40 ? range.step : snapped(row.key, range.min + (range.max - range.min) / 20) - range.min);
     _shown = SGDSPNumber(row.key);
     _slider.value = (float)_shown;
-    _slider.accessibilityLabel = row.title;
+    _slider.accessibilityLabel = SGT(row.title);
     [self showValue];
 }
 
@@ -326,7 +326,7 @@ static UIFont *tabular(UIFont *font) {
 
 - (instancetype)initWithRow:(SGDSPRow *)row {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = row.title;
+    self.title = SGT(row.title);
     _row = row;
     return self;
 }

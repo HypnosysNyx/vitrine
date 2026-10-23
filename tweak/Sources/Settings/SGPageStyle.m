@@ -199,8 +199,8 @@ const CGFloat SGSectionGap = 20;
 // with an optional symbol in the leading slot.
 void SGFillCell(UITableViewCell *cell, NSString *title, NSString *subtitle, UIColor *color, NSString *symbolName) {
     UIListContentConfiguration *content = [UIListContentConfiguration subtitleCellConfiguration];
-    content.text = title;
-    content.secondaryText = subtitle;
+    content.text = SGT(title);
+    content.secondaryText = SGT(subtitle);
     content.textProperties.font = SGTitleFont();
     content.textProperties.color = color ?: UIColor.whiteColor;
     content.secondaryTextProperties.font = SGSubtitleFont();

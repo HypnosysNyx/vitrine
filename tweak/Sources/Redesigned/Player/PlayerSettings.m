@@ -265,7 +265,7 @@ static NSArray<NSString *> *backgroundNotes(void) {
 }
 
 - (void)showNote {
-    _note.text = backgroundNotes()[(NSUInteger)SGRPlayerBackground()];
+    _note.text = SGT(backgroundNotes()[(NSUInteger)SGRPlayerBackground()]);
     [self.view setNeedsLayout];
 }
 
@@ -288,7 +288,7 @@ static NSArray<NSString *> *backgroundNotes(void) {
     measure.font = _note.font;
     measure.numberOfLines = 0;
     for (NSString *text in backgroundNotes()) {
-        measure.text = text;
+        measure.text = SGT(text);
         room = MAX(room, ceil([measure sizeThatFits:CGSizeMake(noteWidth, CGFLOAT_MAX)].height));
     }
     CGFloat noteHeight = ceil([_note sizeThatFits:CGSizeMake(noteWidth, CGFLOAT_MAX)].height);
@@ -328,7 +328,9 @@ static SGModRow *fluidSlider(NSString *title, SGRFluidSetting setting, NSString 
 
 UIViewController *SGRPlayerSettingsPage(NSArray *more) {
     SGRPlayerShowcase *showcase = [[SGRPlayerShowcase alloc] initWithFrame:CGRectMake(0, 0, 320, kCardMinHeight)];
-    UISegmentedControl *backgrounds = [[UISegmentedControl alloc] initWithItems:SGRPlayerBackgroundNames()];
+    NSMutableArray<NSString *> *backgroundNames = [NSMutableArray array];
+    for (NSString *name in SGRPlayerBackgroundNames()) [backgroundNames addObject:SGT(name)];
+    UISegmentedControl *backgrounds = [[UISegmentedControl alloc] initWithItems:backgroundNames];
     backgrounds.selectedSegmentIndex = SGRPlayerBackground();
     backgrounds.accessibilityLabel = SGT(@"Background");
     backgrounds.apportionsSegmentWidthsByContent = YES;

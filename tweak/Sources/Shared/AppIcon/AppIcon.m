@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Settings/SGModPage.h"
 #import "Settings/SGPageStyle.h"
@@ -12,7 +13,7 @@ static NSArray<NSString *> *iconNames(void) {
 }
 
 static NSString *label(NSString *name) {
-    return name ? [name stringByReplacingOccurrencesOfString:@"_" withString:@" "] : @"Default";
+    return name ? [name stringByReplacingOccurrencesOfString:@"_" withString:@" "] : SGT(@"Default");
 }
 
 static void setIcon(NSString *icon) {
@@ -22,10 +23,10 @@ static void setIcon(NSString *icon) {
         // A re-signed install, or a call while the app is not frontmost, can be refused; without
         // a word the row looks broken. The handler can run off the main thread.
         dispatch_async(dispatch_get_main_queue(), ^{
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"The icon did not change"
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"The icon did not change")
                                                                            message:error.localizedDescription
                                                                     preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+            [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
             [SGTopController() presentViewController:alert animated:YES completion:nil];
         });
     }];
