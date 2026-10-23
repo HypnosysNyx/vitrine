@@ -1,3 +1,8 @@
+> 🇨🇳 **Unofficial Simplified Chinese localization / 非官方简体中文汉化版:** [中文介绍与安装说明](https://github.com/HypnosysNyx/vitrine/blob/i18n/zh-hans/README.zh-CN.md) · [汉化分支](https://github.com/HypnosysNyx/vitrine/tree/i18n/zh-hans)  
+> This is a community translation of Vitrine-owned UI, not an official Spotify/Vitrine release. Build with your own permitted Spotify IPA.
+
+---
+
 <h1 align="center">Vitrine</h1>
 
 <p align="center">Spotify, in glass.</p>
