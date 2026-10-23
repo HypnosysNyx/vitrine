@@ -2017,8 +2017,21 @@ static BOOL anyUntranslated(NSArray<SGKaraokeLine *> *lines) {
         }
         [self offerExtras];
         if (error) {
+            NSString *shownError = error;
+            if ([error hasPrefix:@"Apple Intelligence left "]) {
+                NSScanner *scanner = [NSScanner scannerWithString:error];
+                NSInteger remaining = 0, total = 0;
+                if ([scanner scanString:@"Apple Intelligence left " intoString:NULL] &&
+                    [scanner scanInteger:&remaining] &&
+                    [scanner scanString:@"of the song's " intoString:NULL] &&
+                    [scanner scanInteger:&total] &&
+                    [scanner scanString:@"lines untranslated. Ask again to try those lines once more." intoString:NULL] &&
+                    scanner.isAtEnd) {
+                    shownError = [NSString stringWithFormat:SGT(@"Apple Intelligence left %ld of the song's %ld lines untranslated. Ask again to try those lines once more."), (long)remaining, (long)total];
+                }
+            }
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(translations ? @"Partly translated" : @"No translation")
-                                                                           message:error preferredStyle:UIAlertControllerStyleAlert];
+                                                                           message:shownError preferredStyle:UIAlertControllerStyleAlert];
             // Over the player, which is dark whatever the system's appearance.
             alert.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
             [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];

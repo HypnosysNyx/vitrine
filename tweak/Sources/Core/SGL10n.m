@@ -90,6 +90,7 @@ NSString *SGT(NSString *english) {
             @"App icon": @"应用图标",
             @"Appearance": @"外观",
             @"Appears on": @"参与的专辑",
+            @"Apple Intelligence left %ld of the song's %ld lines untranslated. Ask again to try those lines once more.": @"Apple 智能还有 %ld 行未翻译（本首歌曲共 %ld 行）。请再次尝试翻译这些行。",
             @"Apple Music style": @"Apple Music 风格",
             @"Apple Music style moves the now playing bar in between two tabs as you scroll down.": @"向下滚动页面时，以 Apple Music 风格将迷你播放器收进两个标签之间。",
             @"Apple's Translate, on this iPhone": @"使用 Apple「翻译」，在本机完成",
