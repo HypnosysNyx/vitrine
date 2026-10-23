@@ -120,7 +120,15 @@ static NSArray<NSString *> *userPresetNames(void) {
         return cell;
     }
     BOOL builtIn = path.section == 0;
-    SGFillCell(cell, builtIn ? SGT(_builtIn[(NSUInteger)path.row]) : _mine[(NSUInteger)path.row], builtIn ? SGT(SGDSPBuiltInPresetDetail(path.row)) : nil, nil, nil);
+    NSString *title = builtIn ? nil : _mine[(NSUInteger)path.row];
+    if (builtIn) {
+        // Vitrine-owned built-in preset names only. Do not localize user presets or AutoEq models.
+        NSString *original = _builtIn[(NSUInteger)path.row];
+        NSString *translated = SGT(original);
+        title = [translated isEqualToString:original] ? original
+            : [NSString stringWithFormat:@"%@（%@）", original, translated];
+    }
+    SGFillCell(cell, title, builtIn ? SGT(SGDSPBuiltInPresetDetail(path.row)) : nil, nil, nil);
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     tick(cell, [path isEqual:_picked]);
     return cell;
