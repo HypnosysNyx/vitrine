@@ -7,6 +7,7 @@
 // went on through every source for word timing took three seconds and more, and the card never came.
 // So the order is the priority, as it reads on the Lyrics page: a source further down is only asked
 // when those above it had nothing timed, and then only for what they lacked.
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "LyricsSources.h"
 #import "Shared/Lyrics/Lyrics.h"
@@ -581,10 +582,20 @@ NSArray<NSString *> *SGLyricsTranslationLanguages(void) {
 }
 
 NSArray<NSString *> *SGLyricsTranslationLanguageNames(void) {
-    NSLocale *english = [NSLocale localeWithLocaleIdentifier:@"en"];
+    // Only this Vitrine-owned picker is localized; BCP 47 tags and persisted indices stay untouched.
+    BOOL chinese = SGUseSimplifiedChinese();
+    NSLocale *display = [NSLocale localeWithLocaleIdentifier:chinese ? @"zh-Hans" : @"en"];
     NSMutableArray<NSString *> *names = [NSMutableArray array];
     for (NSString *tag in SGLyricsTranslationLanguages()) {
-        [names addObject:tag.length ? [english localizedStringForLocaleIdentifier:tag] ?: tag : @"Any · iPhone's language"];
+        if (!tag.length) {
+            [names addObject:SGT(@"Any · iPhone's language")];
+        } else if (chinese && [tag isEqualToString:@"zh-Hans"]) {
+            [names addObject:@"简体中文"];
+        } else if (chinese && [tag isEqualToString:@"zh-Hant"]) {
+            [names addObject:@"繁体中文"];
+        } else {
+            [names addObject:[display localizedStringForLocaleIdentifier:tag] ?: tag];
+        }
     }
     return names;
 }

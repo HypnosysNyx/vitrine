@@ -153,10 +153,10 @@ assert contains("Shared/Sing/SGSingCard.m", 'alertControllerWithTitle:SGT(@"Kara
 assert contains("Shared/Sing/SGSingCard.m", 'actionWithTitle:SGT(SGSingCurrentState()')
 assert contains("Shared/Sing/SingSettings.m", 'stringWithFormat:SGT(@"After %.0f s")')
 assert contains("Redesigned/Lyrics/SGRSingButton.m", 'message:SGT(message)')
-assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "message:[self localizedTranslationError:shownError]")
-assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "[NSString stringWithFormat:SGT(format), translation]")
+assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "message:([shownError isEqualToString:error] ? [self localizedTranslationError:error] : shownError)")
+assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "[NSString stringWithFormat:SGT(format), translated]")
 assert contains("Shared/LyricsTranslation/OnDeviceTranslation.swift", 'Apple Intelligence could not translate the song (')
-assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "NSString *translation = SGT(reason);")
+assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "NSString *translated = SGT(reason);")
 example = TRANSLATIONS["Apple Intelligence could not translate the song (%@)."].replace(
     "%@", TRANSLATIONS["The model refused to answer."])
 assert example == "Apple 智能无法翻译这首歌曲（模型拒绝提供译文）。", example
@@ -182,4 +182,41 @@ uncatalogued = [
 ]
 assert not uncatalogued, ("Untranslated Karaoke Mod page strings", uncatalogued)
 
-print(f"PASS: {checked} screenshot strings resolve exactly; duplicate-case protection, Karaoke model dynamic templates, custom rendering, and raw IDs checked")
+# Follow-up: Vitrine-owned target language picker must use Chinese locale when the
+# Mod uses zh-Hans, keeping every language tag and saved index exactly unchanged.
+lang_src = (SRC / "Shared/LyricsSources/LyricsSources.m").read_text(encoding="utf-8")
+tag_anchor = "NSArray<NSString *> *SGLyricsTranslationLanguages(void) {"
+assert tag_anchor in lang_src, "Language tag source moved; review persisted setting indices"
+tag_start = lang_src.index(tag_anchor)
+tag_end = lang_src.index("];", tag_start)
+lang_tags = re.findall(r'@"([^"]*)"', lang_src[tag_start:tag_end])
+expected_tags = ["", "ar", "zh-Hans", "zh-Hant", "cs", "da", "nl", "en",
+                 "fi", "fr", "de", "el", "he", "hi", "hu", "id", "it", "ja",
+                 "ko", "nb", "pl", "pt", "ro", "ru", "sk", "es", "sv", "th",
+                 "tr", "uk", "vi"]
+assert lang_tags == expected_tags, ("Language IDs must remain stable", lang_tags)
+assert 'BOOL chinese = SGUseSimplifiedChinese();' in lang_src
+assert 'chinese ? @"zh-Hans" : @"en"' in lang_src
+assert '[display localizedStringForLocaleIdentifier:tag]' in lang_src
+assert '[tag isEqualToString:@"zh-Hans"]' in lang_src and '[names addObject:@"简体中文"]' in lang_src
+assert '[tag isEqualToString:@"zh-Hant"]' in lang_src and '[names addObject:@"繁体中文"]' in lang_src
+assert contains("Core/SGL10n.h", "FOUNDATION_EXPORT BOOL SGUseSimplifiedChinese(void);")
+assert contains("Settings/SGModPage.m", "SGFillCell(cell, SGT(_choices[index])")
+assert contains("Settings/SGModPage.m", "SGSetInt(_key, path.row)")
+assert contains("Shared/Lyrics/LyricsSettings.m", "SGLyricsTranslationLanguageNames(), 0")
+
+# The iOS 27 guardrail screenshot must never show a raw English NSError to users.
+assert TRANSLATIONS["The model's safety guardrails were triggered."] == "触发了模型的安全保护机制"
+error_ui = (SRC / "Redesigned/Lyrics/SGRKaraokeView.m").read_text(encoding="utf-8")
+assert "if (!error.length || !SGUseSimplifiedChinese()) return error;" in error_ui
+assert "NSString *translated = SGT(reason);" in error_ui
+assert "if (![translated isEqualToString:reason])" in error_ui
+assert 'SGLog(@"lyrics: untranslated translation failure: %@", error)' in error_ui
+assert 'return SGT(@"The translation could not be completed. Please try again.");' in error_ui
+assert 'message:([shownError isEqualToString:error] ? [self localizedTranslationError:error] : shownError)' in error_ui
+assert TRANSLATIONS["Apple Intelligence could not translate the song. Please try again."] != "Apple Intelligence could not translate the song. Please try again."
+assert "detail.contains(\"safety guardrails\")" in (SRC / "Shared/LyricsTranslation/OnDeviceTranslation.swift").read_text(encoding="utf-8")
+guardrail_shown = TRANSLATIONS["Apple Intelligence could not translate the song (%@)."].replace(
+    "%@", TRANSLATIONS["The model's safety guardrails were triggered."])
+assert guardrail_shown == "Apple 智能无法翻译这首歌曲（触发了模型的安全保护机制）。", guardrail_shown
+print(f"PASS: {checked} screenshot strings resolve exactly; 31 localized language choices, guardrail-error fallback, duplicate-case protection, dynamic templates, and raw IDs checked")

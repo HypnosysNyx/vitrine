@@ -1993,23 +1993,32 @@ static BOOL anyUntranslated(NSArray<SGKaraokeLine *> *lines) {
     [self setNeedsLayout];
 }
 
-// Vitrine-owned translation alert only. Preserve unknown system errors as diagnostics.
+// Localize only Vitrine's own alert. Never expose raw, potentially unlocalized OS messages
+// in the UI; keep the original failure in diagnostic logs. No translation/safety behavior changes.
 - (NSString *)localizedTranslationError:(NSString *)error {
-    if (!error.length) return error;
+    if (!error.length || !SGUseSimplifiedChinese()) return error;
+    NSString *known = SGT(error);
+    if (![known isEqualToString:error]) return known;
     NSString *ai = @"Apple Intelligence could not translate the song (";
     NSString *onDevice = @"Apple's Translate could not translate the song (";
     BOOL isAI = [error hasPrefix:ai];
+    BOOL isAppleTranslate = [error hasPrefix:onDevice];
     NSString *prefix = isAI ? ai : onDevice;
-    if ([error hasPrefix:prefix] && [error hasSuffix:@")."] && error.length >= prefix.length + 2) {
+    if ((isAI || isAppleTranslate) && [error hasSuffix:@")."] && error.length >= prefix.length + 2) {
         NSString *reason = [error substringWithRange:NSMakeRange(prefix.length, error.length - prefix.length - 2)];
-        NSString *translation = SGT(reason);
-        BOOL known = ![translation isEqualToString:reason];
-        NSString *format = isAI
-            ? (known ? @"Apple Intelligence could not translate the song (%@)." : @"Apple Intelligence could not translate the song. Error details: %@")
-            : (known ? @"Apple's Translate could not translate the song (%@)." : @"Apple's Translate could not translate the song. Error details: %@");
-        return [NSString stringWithFormat:SGT(format), translation];
+        NSString *translated = SGT(reason);
+        if (![translated isEqualToString:reason]) {
+            NSString *format = isAI
+                ? @"Apple Intelligence could not translate the song (%@)."
+                : @"Apple's Translate could not translate the song (%@).";
+            return [NSString stringWithFormat:SGT(format), translated];
+        }
+        SGLog(@"lyrics: untranslated translation failure: %@", error);
+        return SGT(isAI ? @"Apple Intelligence could not translate the song. Please try again."
+                        : @"Apple's Translate could not translate the song. Please try again.");
     }
-    return SGT(error);
+    SGLog(@"lyrics: untranslated translation failure: %@", error);
+    return SGT(@"The translation could not be completed. Please try again.");
 }
 
 // The song's lines into the Lyrics page's language, or the phone's: each line without a translation takes
@@ -2050,7 +2059,7 @@ static BOOL anyUntranslated(NSArray<SGKaraokeLine *> *lines) {
                 }
             }
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(translations ? @"Partly translated" : @"No translation")
-                                                                           message:[self localizedTranslationError:shownError] preferredStyle:UIAlertControllerStyleAlert];
+                                                                           message:([shownError isEqualToString:error] ? [self localizedTranslationError:error] : shownError) preferredStyle:UIAlertControllerStyleAlert];
             // Over the player, which is dark whatever the system's appearance.
             alert.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
             [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];

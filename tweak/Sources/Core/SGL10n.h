@@ -1,6 +1,7 @@
 // Vitrine-owned UI localization only. No Spotify SDK UI swizzles.
 #import <Foundation/Foundation.h>
 FOUNDATION_EXPORT NSString *SGT(NSString *english);
+FOUNDATION_EXPORT BOOL SGUseSimplifiedChinese(void);
 
 // Vitrine picker display names only; selectors, models, device IDs and stored settings remain raw.
 FOUNDATION_EXPORT NSString *SGZHFontDisplayName(NSString *name);

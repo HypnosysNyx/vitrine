@@ -216,6 +216,12 @@ public final class SGOnDeviceTranslation: NSObject {
             default: break
             }
         }
+        // Some iOS versions expose a localized NSError description instead of a
+        // typed GenerationError. Classify only clearly recognized refusal text.
+        let detail = error.localizedDescription.lowercased()
+        if detail.contains("safety guardrails") || detail.contains("guardrail violation") {
+            return declined
+        }
         return "Apple Intelligence could not translate the song (\(error.localizedDescription))."
     }
 
