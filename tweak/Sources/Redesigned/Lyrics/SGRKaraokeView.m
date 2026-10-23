@@ -1936,7 +1936,7 @@ static BOOL anyUntranslated(NSArray<SGKaraokeLine *> *lines) {
         _extras.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _extras.showsMenuAsPrimaryAction = YES;
         _extras.preferredMenuElementOrder = UIContextMenuConfigurationElementOrderFixed;
-        _extras.accessibilityLabel = @"Pronunciation and translation";
+        _extras.accessibilityLabel = SGT(@"Pronunciation and translation");
         [_extrasBox addSubview:_extras];
         [self addSubview:_extrasBox];
         self.extrasHidden = _extrasHidden;
@@ -1947,18 +1947,18 @@ static BOOL anyUntranslated(NSArray<SGKaraokeLine *> *lines) {
     if (config.showsActivityIndicator != translating) {
         config.showsActivityIndicator = translating;
         _extras.configuration = config;
-        _extras.accessibilityValue = translating ? @"Translating" : nil;
+        _extras.accessibilityValue = translating ? SGT(@"Translating") : nil;
     }
     NSMutableArray<UIMenuElement *> *items = [NSMutableArray array];
     if (_hasSpoken) {
         BOOL on = SGFlag(SGRKeyLyricsPronunciation, NO);
-        [items addObject:[UIAction actionWithTitle:on ? @"Hide Pronunciation" : @"Show Pronunciation"
+        [items addObject:[UIAction actionWithTitle:SGT(on ? @"Hide Pronunciation" : @"Show Pronunciation")
                                              image:[UIImage systemImageNamed:@"character.phonetic"] identifier:nil
                                            handler:^(UIAction *action) { SGRSetLyricsTextShown(SGRLyricsTextPronunciation, !on); }]];
     }
     if (_hasTranslation) {
         BOOL on = SGFlag(SGRKeyLyricsTranslation, NO);
-        [items addObject:[UIAction actionWithTitle:on ? @"Hide Translation" : @"Show Translation"
+        [items addObject:[UIAction actionWithTitle:SGT(on ? @"Hide Translation" : @"Show Translation")
                                              image:[UIImage systemImageNamed:@"character.bubble"] identifier:nil
                                            handler:^(UIAction *action) { SGRSetLyricsTextShown(SGRLyricsTextTranslation, !on); }]];
     }
@@ -1967,9 +1967,9 @@ static BOOL anyUntranslated(NSArray<SGKaraokeLine *> *lines) {
     if (translatable && !translating) {
         __weak SGRKaraokeView *weakSelf = self;
         void (^offer)(NSString *, NSString *, NSString *, SGRTranslator) = ^(NSString *title, NSString *glyph, NSString *subtitle, SGRTranslator translator) {
-            UIAction *action = [UIAction actionWithTitle:title image:[UIImage systemImageNamed:glyph] identifier:nil
+            UIAction *action = [UIAction actionWithTitle:SGT(title) image:[UIImage systemImageNamed:glyph] identifier:nil
                                                  handler:^(UIAction *action) { [weakSelf translateWith:translator]; }];
-            action.subtitle = subtitle;
+            action.subtitle = SGT(subtitle);
             [items addObject:action];
         };
         if (onDevice) {
@@ -2017,7 +2017,7 @@ static BOOL anyUntranslated(NSArray<SGKaraokeLine *> *lines) {
         }
         [self offerExtras];
         if (error) {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:translations ? @"Partly translated" : @"No translation"
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(translations ? @"Partly translated" : @"No translation")
                                                                            message:error preferredStyle:UIAlertControllerStyleAlert];
             // Over the player, which is dark whatever the system's appearance.
             alert.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
