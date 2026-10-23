@@ -107,7 +107,7 @@ static NSString *flagState(const SGFlagDef *flag, id value) {
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
 
     if (flag->type == SGFlagBool) {
-        UISegmentedControl *control = [[UISegmentedControl alloc] initWithItems:@[@"Auto", @"Off", @"On"]];
+        UISegmentedControl *control = [[UISegmentedControl alloc] initWithItems:@[SGT(@"Auto"), SGT(@"Off"), SGT(@"On")]];
         control.selectedSegmentIndex = value ? ([value boolValue] ? 2 : 1) : 0;
         control.selectedSegmentTintColor = SGGreen();
         // Capped, so the segments leave the flag's name its room at the accessibility sizes.

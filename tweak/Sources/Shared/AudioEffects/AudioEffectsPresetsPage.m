@@ -370,8 +370,8 @@ static BOOL headphoneInUse(void) {
 
 - (NSString *)outputFooter {
     NSString *name = SGAutoEqOutputName();
-    return [NSString stringWithFormat:@"With this on, the correction you pick is kept for %@. It comes back each time audio plays through "
-            "%@, and goes off on outputs with none remembered.", name, name];
+    return [NSString stringWithFormat:SGT(@"With this on, the correction you pick is kept for %@. It comes back each time audio plays through "
+            "%@, and goes off on outputs with none remembered."), name, name];
 }
 
 - (UIView *)tableView:(UITableView *)table viewForFooterInSection:(NSInteger)section {
@@ -395,7 +395,7 @@ static NSString *correctionName(NSString *path) {
         BOOL remembered = SGAutoEqOutputRemembered(uid);
         NSString *current = correctionName(headphoneInUse() ? SGDSPString(SGKeyDSPGraphicEqHeadphone) : nil);
         SGFillCell(cell, [NSString stringWithFormat:SGT(@"Use for %@"), SGAutoEqOutputName()],
-                   remembered ? [NSString stringWithFormat:@"%@ while it plays", current] : [NSString stringWithFormat:@"Remember %@ for this output", current], nil, nil);
+                   remembered ? [NSString stringWithFormat:SGT(@"%@ while it plays"), current] : [NSString stringWithFormat:SGT(@"Remember %@ for this output"), current], nil, nil);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         UISwitch *toggle = [UISwitch new];
         toggle.onTintColor = SGGreen();
