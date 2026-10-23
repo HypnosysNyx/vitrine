@@ -1,3 +1,10 @@
+> 🇨🇳 **[Vitrine 简体中文社区汉化版](README.zh-CN.md)**（非官方）
+> 当前汉化源码位于 **[i18n/zh-hans](https://github.com/HypnosysNyx/vitrine/tree/i18n/zh-hans)** 分支。
+> 中文介绍、适配版本、自行构建 IPA、安装及反馈方式请见 **[README.zh-CN.md](README.zh-CN.md)**。
+> 仅汉化 Vitrine 自有界面；本仓库不提供包含 Spotify 的公共 IPA。
+
+---
+
 <h1 align="center">Vitrine</h1>
 
 <p align="center">Spotify, in glass.</p>
