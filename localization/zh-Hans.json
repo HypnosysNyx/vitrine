@@ -1056,5 +1056,21 @@
   "this local file": "这个本地文件",
   "true or false, a number, or a text value": "true / false、数字或文本值",
   "type unknown": "未知类型",
-  "up to date": "已是最新版本"
+  "up to date": "已是最新版本",
+  "Clear Keychain?": "清除钥匙串？",
+  "The Gemini, OpenAI-compatible and Anthropic API keys, the OpenAI-compatible server and the Spicy Lyrics key are removed from this iPhone. Settings stay as they are.": "这将从此 iPhone 移除 Gemini、OpenAI 兼容接口、Anthropic 及 Spicy Lyrics 的 API 密钥，以及 OpenAI 兼容服务器地址。其他设置保持不变。",
+  "Clear Keychain": "清除钥匙串",
+  "Tabs here sit apart from the others at the right end of the bar, the way the Music app sets Search apart. They are not on the bar's own list.": "这些标签页与其他标签页分开，位于标签栏右端，类似音乐 App 单独放置“搜索”的方式，不属于标签栏的常规列表。",
+  "Moves the tab to the right end of the bar": "将标签页移至标签栏右端",
+  "Prefer word-by-word timing": "优先逐字时间轴",
+  "Asks down the order past lines timed by the line": "继续尝试后续歌词源，以优先获取逐字时间轴，而非整行时间轴",
+  "Double-tap to dismiss.": "双击关闭。",
+  "Songs translated on this iPhone or by an AI translator come back translated": "在此 iPhone 或通过 AI 翻译器翻译过的歌曲将保留译文",
+  "No key on the clipboard": "剪贴板中没有密钥",
+  "Copy the API key, then tap Paste Key again.": "请先复制 API 密钥，再点击“粘贴密钥”。",
+  "A model id, such as %@.": "输入模型 ID，例如 %@。",
+  "Translation prompt": "翻译提示词",
+  "For every AI translator. {language} and {count} are filled in for each song; the translator is then told the shape of its answer, and the song's lines follow as a JSON array.": "适用于所有 AI 翻译器。每首歌都会填入 {language} 和 {count}，随后告知翻译器答案格式，并以 JSON 数组发送歌词行。",
+  "AI translator": "AI 翻译器",
+  "What the AI translator is told to do with a song's lines": "发送给 AI 翻译器的歌词翻译指令"
 }

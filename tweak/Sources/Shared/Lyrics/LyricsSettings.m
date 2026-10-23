@@ -21,7 +21,8 @@ SGModSection *SGLyricsSourcesSection(BOOL namingSource) {
         NSUInteger count = SGImportedLRCFiles().count;
         return count ? @(count).stringValue : @"None";
     };
-    NSMutableArray<SGModRow *> *rows = [NSMutableArray arrayWithObjects:sources, imported,
+    SGModRow *words = SGOptionRow(SGT(@"Prefer word-by-word timing"), SGT(@"Asks down the order past lines timed by the line"), SGKeyLyricsPreferWordTiming);
+    NSMutableArray<SGModRow *> *rows = [NSMutableArray arrayWithObjects:sources, words, imported,
         SGSwitchRow(@"Lyrics for every track", SGT(@"Even where Spotify has none"), SGKeyLyricsAllTracks), SGSpicyLyricsKeyRow(), nil];
     // Spicy Lyrics' terms ask for its credit wherever its lines show (Shared/LyricsSources/SpicyLyrics.m), so the switch
     // says so, or its credit under the lyrics reads as the switch not working (issue #20).
