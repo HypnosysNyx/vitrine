@@ -15,6 +15,23 @@ SRC = ROOT / "tweak" / "Sources"
 TRANSLATIONS = json.loads((ROOT / "localization" / "zh-Hans.json").read_text(encoding="utf-8"))
 # Exact literal keys seen in screenshots from follow-up batches 1-3, plus repeat failures.
 CASES = {
+    # Follow-up 4: dynamic Karaoke model alert, spatial voice note/value, and generated translation errors.
+    "Shared/Sing/Sing.x": [
+        "Karaoke needs its voice model, which is downloaded from Mod Settings",
+        "Karaoke needs iOS 18, the first its voice model runs on",
+    ],
+    "Shared/Sing/SingSettings.m": [
+        "After %.0f s",
+        "How far ahead the voice sings, and how much of the room you hear",
+    ],
+    "Redesigned/Lyrics/SGRSingButton.m": [
+        "Karaoke turns the vocals down with a voice model",
+        "\n\nThe last try failed: %@",
+    ],
+    "Redesigned/Lyrics/SGRKaraokeView.m": [
+        "Apple Intelligence could not translate the song (%@).",
+        "Apple's Translate could not translate the song (%@).",
+    ],
     "Redesigned/Home/HomeSettings.m": [
         "Top picks, the tinted shortcut pills",
         "A shelf Home does not show today",
@@ -105,4 +122,21 @@ assert contains("Shared/AudioEffects/AudioEffectsPresetsPage.m", "SGAutoEqOutput
 assert contains("Shared/AudioEffects/AudioEffectsPresetsPage.m", "_applying = headphone.path")
 assert contains("Shared/AudioEffects/AudioEffectsPresetsPage.m", "NSString *original = _builtIn[(NSUInteger)path.row]")
 assert contains("Shared/AudioEffects/AudioEffectsPresetsPage.m", "SGDSPLoadBuiltInPreset(path.row)")
-print(f"PASS: {checked} screenshot strings resolve exactly; custom rendering and raw selectors/IDs checked")
+
+# Follow-up 4: test real render entrypoints, not just dictionary presence.
+assert contains("Shared/Sing/Sing.x", 'stringWithFormat:SGT(@"Karaoke needs its voice model')
+assert contains("Shared/Sing/SGSingCard.m", "NSString *words = SGT(SGSingStatusText());")
+assert contains("Shared/Sing/SGSingCard.m", 'alertControllerWithTitle:SGT(@"Karaoke") message:SGT(detail)')
+assert contains("Shared/Sing/SGSingCard.m", 'actionWithTitle:SGT(SGSingCurrentState()')
+assert contains("Shared/Sing/SingSettings.m", 'stringWithFormat:SGT(@"After %.0f s")')
+assert contains("Redesigned/Lyrics/SGRSingButton.m", 'message:SGT(message)')
+assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "message:[self localizedTranslationError:shownError]")
+assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "[NSString stringWithFormat:SGT(format), translation]")
+assert contains("Shared/LyricsTranslation/OnDeviceTranslation.swift", 'Apple Intelligence could not translate the song (')
+assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "NSString *translation = SGT(reason);")
+example = TRANSLATIONS["Apple Intelligence could not translate the song (%@)."].replace(
+    "%@", TRANSLATIONS["The model refused to answer."])
+assert example == "Apple 智能无法翻译这首歌曲（模型拒绝提供译文）。", example
+assert TRANSLATIONS["After %.0f s"] == "%.0f 秒后"
+assert "恢复正前方" in TRANSLATIONS[next(k for k in TRANSLATIONS if k.startswith("How far ahead the voice sings"))]
+print(f"PASS: {checked} screenshot strings resolve exactly; custom rendering, dynamic errors, and raw selectors/IDs checked")

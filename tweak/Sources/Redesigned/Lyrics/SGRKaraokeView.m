@@ -1993,6 +1993,25 @@ static BOOL anyUntranslated(NSArray<SGKaraokeLine *> *lines) {
     [self setNeedsLayout];
 }
 
+// Vitrine-owned translation alert only. Preserve unknown system errors as diagnostics.
+- (NSString *)localizedTranslationError:(NSString *)error {
+    if (!error.length) return error;
+    NSString *ai = @"Apple Intelligence could not translate the song (";
+    NSString *onDevice = @"Apple's Translate could not translate the song (";
+    BOOL isAI = [error hasPrefix:ai];
+    NSString *prefix = isAI ? ai : onDevice;
+    if ([error hasPrefix:prefix] && [error hasSuffix:@")."] && error.length >= prefix.length + 2) {
+        NSString *reason = [error substringWithRange:NSMakeRange(prefix.length, error.length - prefix.length - 2)];
+        NSString *translation = SGT(reason);
+        BOOL known = ![translation isEqualToString:reason];
+        NSString *format = isAI
+            ? (known ? @"Apple Intelligence could not translate the song (%@)." : @"Apple Intelligence could not translate the song. Error details: %@")
+            : (known ? @"Apple's Translate could not translate the song (%@)." : @"Apple's Translate could not translate the song. Error details: %@");
+        return [NSString stringWithFormat:SGT(format), translation];
+    }
+    return SGT(error);
+}
+
 // The song's lines into the Lyrics page's language, or the phone's: each line without a translation takes
 // the translator's, and translations are switched on so the answer shows. The whole song goes, for the sense.
 - (void)translateWith:(SGRTranslator)translator {
@@ -2031,7 +2050,7 @@ static BOOL anyUntranslated(NSArray<SGKaraokeLine *> *lines) {
                 }
             }
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(translations ? @"Partly translated" : @"No translation")
-                                                                           message:shownError preferredStyle:UIAlertControllerStyleAlert];
+                                                                           message:[self localizedTranslationError:shownError] preferredStyle:UIAlertControllerStyleAlert];
             // Over the player, which is dark whatever the system's appearance.
             alert.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
             [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];

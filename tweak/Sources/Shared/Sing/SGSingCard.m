@@ -298,14 +298,14 @@ static CGFloat height(float rms) {
     _title.text = title;
     _artist.text = [artist isEqualToString:@"Play a song to hear Karaoke"] ? SGT(artist) : artist;
     SGSingState state = SGSingCurrentState();
-    NSString *words = SGSingStatusText();
+    NSString *words = SGT(SGSingStatusText());
     float stored = SGSingLevel();
     if (state == SGSingStateSinging) {
-        words = stored > 0.001 && stored < 0.999 ? [NSString stringWithFormat:@"%@ · vocals at %@", words, SGSingLevelText(stored)]
-                                                 : [NSString stringWithFormat:@"%@ · %@", words, SGSingLevelText(stored)];
+        words = stored > 0.001 && stored < 0.999 ? [NSString stringWithFormat:SGT(@"%@ · vocals at %@"), words, SGT(SGSingLevelText(stored))]
+                                                 : [NSString stringWithFormat:SGT(@"%@ · %@"), words, SGT(SGSingLevelText(stored))];
     }
     if (SGSingStatusDetail()) words = [words stringByAppendingString:@"  ⓘ"];
-    NSString *translatedStatus = SGT(words);
+    NSString *translatedStatus = words;  // Localize the status before appending the info glyph.
     if (![_state.text isEqualToString:translatedStatus]) _state.text = translatedStatus;
     _state.textColor = state == SGSingStateSinging ? SGGreen() : state == SGSingStateFailed || state == SGSingStateHot ? UIColor.systemOrangeColor : SGGrey();
 
@@ -325,8 +325,8 @@ static CGFloat height(float rms) {
     if (_stops.selectedSegmentIndex != stop) _stops.selectedSegmentIndex = stop;
 
     _song.accessibilityLabel = _shown.artist.length ? [NSString stringWithFormat:@"%@, %@", title, artist] : title;
-    _song.accessibilityValue = [NSString stringWithFormat:@"Karaoke: %@. Vocals: %@", SGSingStatusText(), SGSingLevelText(level)];
-    _song.accessibilityHint = SGSingStatusDetail() ? @"Double-tap for more about Karaoke's state." : nil;
+    _song.accessibilityValue = [NSString stringWithFormat:SGT(@"Karaoke: %@. Vocals: %@"), SGT(SGSingStatusText()), SGT(SGSingLevelText(level))];
+    _song.accessibilityHint = SGSingStatusDetail() ? SGT(@"Double-tap for more about Karaoke's state.") : nil;
     _song.accessibilityTraits = SGSingStatusDetail() ? UIAccessibilityTraitButton : UIAccessibilityTraitStaticText;
     _song.accessibilityFrameInContainerSpace = CGRectMake(0, 0, CGRectGetMinX(_column.frame), CGRectGetMinY(_play.frame));
 }
@@ -442,14 +442,14 @@ static CGFloat height(float rms) {
 - (void)explainState {
     NSString *detail = SGSingStatusDetail();
     if (!detail) return;
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Karaoke" message:detail preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Karaoke") message:SGT(detail) preferredStyle:UIAlertControllerStyleAlert];
     if (SGSingCurrentState() == SGSingStateFailed) {
-        [alert addAction:[UIAlertAction actionWithTitle:@"Try again" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
+        [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Try again") style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
             SGSetSingOn(NO);
             SGSetSingOn(YES);
         }]];
     }
-    [alert addAction:[UIAlertAction actionWithTitle:SGSingCurrentState() == SGSingStateFailed ? @"Cancel" : @"OK" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(SGSingCurrentState() == SGSingStateFailed ? @"Cancel" : @"OK") style:UIAlertActionStyleCancel handler:nil]];
     [SGTopController() presentViewController:alert animated:YES completion:nil];
 }
 

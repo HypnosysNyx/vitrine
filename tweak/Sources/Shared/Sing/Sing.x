@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 // Sing on Spotify's sound (Sing.h): the engine put between Spotify's mixer and its output, the voice model
 // loaded while the mic is on, Spotify's clock and seeks kept true to what plays, the heat, and what Sing is
 // doing for the button and the page.
@@ -602,8 +603,8 @@ void SGSetSingIgnoresHeat(BOOL ignores) {
 }
 
 NSString *SGSingMissing(void) {
-    if (!SGSingOSSupported()) return [NSString stringWithFormat:@"Karaoke needs iOS 18, the first its voice model runs on. This iPhone has iOS %@.", UIDevice.currentDevice.systemVersion];
-    if (SGSingModelCurrentState() != SGSingModelReady) return [NSString stringWithFormat:@"Karaoke needs its voice model, which is downloaded from Mod Settings > Karaoke (%@).", SGSingModelSizeText()];
+    if (!SGSingOSSupported()) return [NSString stringWithFormat:SGT(@"Karaoke needs iOS 18, the first its voice model runs on. This iPhone has iOS %@."), UIDevice.currentDevice.systemVersion];
+    if (SGSingModelCurrentState() != SGSingModelReady) return [NSString stringWithFormat:SGT(@"Karaoke needs its voice model, which is downloaded from Mod Settings > Karaoke (%@)."), SGSingModelSizeText()];
     return nil;
 }
 

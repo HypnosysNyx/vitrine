@@ -163,7 +163,7 @@ UIViewController *SGSpatialVoiceSettingsPage(void) {
             }, ^NSString *(double value) { return [NSString stringWithFormat:@"%.0f%%", value]; }),
             SGSliderRow(SGT(@"Back in front"), nil, 5, 60, 1, ^double { return SGSingSpatialFront(); }, ^(double value) {
                 SGSetSingSpatialSound(SGSingSpatialDistance(), SGSingSpatialRoom(), value, SGSingSpatialWidth());
-            }, ^NSString *(double value) { return [NSString stringWithFormat:@"After %.0f s", value]; }),
+            }, ^NSString *(double value) { return [NSString stringWithFormat:SGT(@"After %.0f s"), value]; }),
             SGSliderRow(SGT(@"Instruments width"), nil, 0, 200, 5, ^double { return SGSingSpatialWidth(); }, ^(double value) {
                 SGSetSingSpatialSound(SGSingSpatialDistance(), SGSingSpatialRoom(), SGSingSpatialFront(), value);
             }, ^NSString *(double value) { return [NSString stringWithFormat:@"%.0f%%", value]; }),

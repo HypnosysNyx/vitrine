@@ -219,10 +219,10 @@ static char kButtonGlassKey, kPanelGlassKey;
 #pragma mark - the tap
 
 static void tell(NSString *message, NSString *action, void (^then)(void)) {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Karaoke") message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Karaoke") message:SGT(message) preferredStyle:UIAlertControllerStyleAlert];
     // Over the player, which is dark whatever the system's appearance.
     alert.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
-    if (action) [alert addAction:[UIAlertAction actionWithTitle:action style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) { then(); }]];
+    if (action) [alert addAction:[UIAlertAction actionWithTitle:SGT(action) style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) { then(); }]];
     [alert addAction:[UIAlertAction actionWithTitle:action ? SGT(@"Cancel") : SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
     [SGTopController() presentViewController:alert animated:YES completion:nil];
 }
@@ -233,8 +233,8 @@ static void tell(NSString *message, NSString *action, void (^then)(void)) {
             tell(SGSingMissing(), nil, nil);
             return;
         case SGSingStateNoModel:
-            tell([NSString stringWithFormat:@"Karaoke turns the vocals down with a voice model that runs on this iPhone. Download it now (%@)? It is best over Wi-Fi.%@",
-                  SGSingModelSizeText(), SGSingModelError() ? [NSString stringWithFormat:@"\n\nThe last try failed: %@", SGSingModelError()] : @""],
+            tell([NSString stringWithFormat:SGT(@"Karaoke turns the vocals down with a voice model that runs on this iPhone. Download it now (%@)? It is best over Wi-Fi.%@"),
+                  SGSingModelSizeText(), SGSingModelError() ? [NSString stringWithFormat:SGT(@"\n\nThe last try failed: %@"), SGSingModelError()] : @""],
                  @"Download", ^{
                      SGSingDownloadModel();
                      // Downloaded for the mic, so the mic is on once it is in.
