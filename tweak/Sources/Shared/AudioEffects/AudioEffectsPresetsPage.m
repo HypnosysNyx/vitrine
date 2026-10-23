@@ -120,7 +120,7 @@ static NSArray<NSString *> *userPresetNames(void) {
         return cell;
     }
     BOOL builtIn = path.section == 0;
-    SGFillCell(cell, (builtIn ? _builtIn : _mine)[(NSUInteger)path.row], builtIn ? SGDSPBuiltInPresetDetail(path.row) : nil, nil, nil);
+    SGFillCell(cell, builtIn ? SGT(_builtIn[(NSUInteger)path.row]) : _mine[(NSUInteger)path.row], builtIn ? SGT(SGDSPBuiltInPresetDetail(path.row)) : nil, nil, nil);
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     tick(cell, [path isEqual:_picked]);
     return cell;

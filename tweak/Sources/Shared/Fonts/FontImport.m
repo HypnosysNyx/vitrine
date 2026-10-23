@@ -4,6 +4,7 @@
 // Fonts.x registers the files again on each launch.
 #import <CoreText/CoreText.h>
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Settings/SGModPage.h"
 #import "Settings/SGPageStyle.h"
@@ -217,7 +218,7 @@ typedef NS_ENUM(NSInteger, SGFontSection) { SGFontBuiltIn, SGFontMore, SGFontYou
 
 - (instancetype)init {
     if (!(self = [super initWithStyle:UITableViewStyleInsetGrouped])) return nil;
-    self.title = @"Font";
+    self.title = SGT(@"Font");
     _families = SGAppFontFamilies();
     SGRegisterCustomFont();   // so the imported family can be drawn here, whichever font is chosen
     return self;
