@@ -66,7 +66,7 @@ static NSString *modelValue(void) {
         case SGSingModelMissing:
             if (SGSingModelError()) return update ? @"Update failed, try again" : @"Failed, try again";
             if (SGSingModelPausedBytes()) {
-                return [NSString stringWithFormat:@"%@ · %@ of %@", update ? @"Update paused" : @"Paused", bytes(SGSingModelPausedBytes()), SGSingModelSizeText()];
+                return [NSString stringWithFormat:SGT(@"%@ · %@ of %@"), SGT(update ? @"Update paused" : @"Paused"), bytes(SGSingModelPausedBytes()), SGSingModelSizeText()];
             }
             return [NSString stringWithFormat:SGT(update ? @"Update available · %@" : @"Download, %@"), SGSingModelSizeText()];
     }
@@ -81,14 +81,15 @@ static void modelTapped(UITableViewController *page) {
     switch (rowState()) {
         case SGSingModelMissing: {
             BOOL update = SGSingModelUpdateAvailable();
-            NSString *message = [NSString stringWithFormat:@"%@%@%@ from Hugging Face. It waits for Wi-Fi unless you let it use cellular. It stays on this iPhone, and no audio leaves it.",
-                                 SGSingModelError() ? [NSString stringWithFormat:@"The last try failed: %@\n\n", SGSingModelError()] : @"",
-                                 update ? @"The new voice model runs on the Neural Engine, faster and cooler, and Karaoke keeps the one it has until it is in. " : @"",
+            // Localize each template before inserting file sizes and optional notes.
+            NSString *message = [NSString stringWithFormat:SGT(@"%@%@%@ from Hugging Face. It waits for Wi-Fi unless you let it use cellular. It stays on this iPhone, and no audio leaves it."),
+                                 SGSingModelError() ? [NSString stringWithFormat:SGT(@"The last try failed: %@\n\n"), SGSingModelError()] : @"",
+                                 update ? SGT(@"The new voice model runs on the Neural Engine, faster and cooler, and Karaoke keeps the one it has until it is in. ") : @"",
                                  SGSingModelSizeText()];
             if (untestedChip()) {
                 message = [message stringByAppendingString:SGSingChosenModel() == SGSingModelLight
-                    ? @"\n\nKaraoke is tested on the iPhone 15 Pro. On iPhones older than the iPhone 12 it may not keep up, even with the light model."
-                    : @"\n\nKaraoke is tested on the iPhone 15 Pro. On iPhones older than the iPhone 12 it may not keep up; the light model has a better chance."];
+                    ? SGT(@"\n\nKaraoke is tested on the iPhone 15 Pro. On iPhones older than the iPhone 12 it may not keep up, even with the light model.")
+                    : SGT(@"\n\nKaraoke is tested on the iPhone 15 Pro. On iPhones older than the iPhone 12 it may not keep up; the light model has a better chance.")];
             }
             NSString *title = SGSingModelPausedBytes() ? (update ? @"Carry on with the update?" : @"Carry on with the download?")
                                                        : (update ? @"Download the update?" : @"Download the voice model?");
@@ -97,7 +98,7 @@ static void modelTapped(UITableViewController *page) {
         }
         case SGSingModelDownloading:
             if (SGSingModelWaitingForNetwork() && !SGSingModelOverCellular()) {
-                ask(@"Download over cellular?", [NSString stringWithFormat:@"The download waits for Wi-Fi. Over cellular or a Low Data Mode network it uses up to %@ of your plan.",
+                ask(@"Download over cellular?", [NSString stringWithFormat:SGT(@"The download waits for Wi-Fi. Over cellular or a Low Data Mode network it uses up to %@ of your plan."),
                                                  SGSingModelSizeText()], @"Use cellular", NO, ^{ SGSingDownloadModelOverCellular(); });
                 break;
             }
@@ -250,8 +251,8 @@ UIViewController *SGSingSettingsPage(void) {
                              SGSingModelLight);
     SGModRow *other = SGStatActionRow(SGT(@"Remove the other model"), nil, ^NSString *{ return bytes(SGSingOtherModelBytes()); }, ^{
         NSString *name = SGSingChosenModel() == SGSingModelFull ? @"Light" : @"Best quality";
-        ask(@"Remove the other model?", [NSString stringWithFormat:@"%@ is not in use. Removing it frees %@, and choosing it again downloads it again.",
-                                         name, bytes(SGSingOtherModelBytes())],
+        ask(@"Remove the other model?", [NSString stringWithFormat:SGT(@"%@ is not in use. Removing it frees %@, and choosing it again downloads it again."),
+                                         SGT(name), bytes(SGSingOtherModelBytes())],
             @"Remove", YES, ^{
                 SGSingDeleteOtherModel();
                 [page refreshVisibility];

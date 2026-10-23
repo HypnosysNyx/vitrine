@@ -6,6 +6,7 @@ untranslated custom render paths and accidental changes to raw selection identif
 """
 from __future__ import annotations
 
+import ast
 import json
 import re
 from pathlib import Path
@@ -23,6 +24,18 @@ CASES = {
     "Shared/Sing/SingSettings.m": [
         "After %.0f s",
         "How far ahead the voice sings, and how much of the room you hear",
+        "The singer's voice keeps its place",
+        "%@ · %@ of %@",
+        "%@%@%@ from Hugging Face.",
+        "The last try failed: %@\n\n",
+        "The new voice model runs on the Neural Engine",
+        "\n\nKaraoke is tested on the iPhone 15 Pro. On iPhones older than the iPhone 12 it may not keep up, even with the light model.",
+        "\n\nKaraoke is tested on the iPhone 15 Pro. On iPhones older than the iPhone 12 it may not keep up; the light model has a better chance.",
+        "The download waits for Wi-Fi. Over cellular",
+        "What has come in is kept",
+        "The voice model coming in stops",
+        "Remove the other model?",
+        "%@ is not in use. Removing it frees",
     ],
     "Redesigned/Lyrics/SGRSingButton.m": [
         "Karaoke turns the vocals down with a voice model",
@@ -50,7 +63,6 @@ CASES = {
         "Motion & Fitness is off", "Following your head. Turn it",
         "Following your head. Turn Spatial", "Preview. With AirPods",
     ],
-    "Shared/Sing/SingSettings.m": ["The singer's voice keeps its place"],
     "Shared/HeadGestures/HeadGesturesSettings.m": [
         "Nod twice or shake your head to control the music",
         "They work while Spotify plays through headphones",
@@ -74,6 +86,17 @@ CASES = {
         "How long the sound fades before a sleep timer",
     ],
 }
+# A former bug silently overwrote earlier screenshot checks by repeating a dict key.
+# Inspect this Python source's own literal so duplicate CASES groups always fail CI.
+case_nodes = [
+    node.value for node in ast.parse(Path(__file__).read_text(encoding="utf-8")).body
+    if isinstance(node, ast.Assign)
+    and any(isinstance(target, ast.Name) and target.id == "CASES" for target in node.targets)
+]
+assert len(case_nodes) == 1 and isinstance(case_nodes[0], ast.Dict), "CASES must be one literal dictionary"
+case_keys = [key.value for key in case_nodes[0].keys if isinstance(key, ast.Constant)]
+assert len(case_keys) == len(set(case_keys)), "Duplicate screenshot regression group: previous checks would be lost"
+
 STRINGS = re.compile(r'@"(?:\\.|[^"\\])*"(?:\s*@?"(?:\\.|[^"\\])*")*')
 PIECES = re.compile(r'"(?:\\.|[^"\\])*"')
 
@@ -139,4 +162,24 @@ example = TRANSLATIONS["Apple Intelligence could not translate the song (%@)."].
 assert example == "Apple 智能无法翻译这首歌曲（模型拒绝提供译文）。", example
 assert TRANSLATIONS["After %.0f s"] == "%.0f 秒后"
 assert "恢复正前方" in TRANSLATIONS[next(k for k in TRANSLATIONS if k.startswith("How far ahead the voice sings"))]
-print(f"PASS: {checked} screenshot strings resolve exactly; custom rendering, dynamic errors, and raw selectors/IDs checked")
+
+# Latest Karaoke model-download screenshot: each dynamic template must be localized
+# BEFORE NSString's format inserts the varying model size or error explanation.
+sing_settings = (SRC / "Shared/Sing/SingSettings.m").read_text(encoding="utf-8")
+assert 'stringWithFormat:SGT(@"%@%@%@ from Hugging Face.' in sing_settings
+assert 'stringWithFormat:SGT(@"The last try failed: %@\\n\\n")' in sing_settings
+assert 'update ? SGT(@"The new voice model runs on the Neural Engine' in sing_settings
+assert '? SGT(@"\\n\\nKaraoke is tested on the iPhone 15 Pro.' in sing_settings
+assert 'stringWithFormat:SGT(@"The download waits for Wi-Fi.' in sing_settings
+assert 'stringWithFormat:SGT(@"%@ is not in use. Removing it frees %@' in sing_settings
+assert 'stringWithFormat:SGT(@"%@ · %@ of %@")' in sing_settings
+assert 'SGSingDownloadModel()' in sing_settings and 'SGSingDeleteOtherModel()' in sing_settings
+# Every substantial English source string in this Mod page must have a catalog
+# entry, regardless of whether it is currently visible in a particular screenshot.
+uncatalogued = [
+    value for value in extract_strings(SRC / "Shared/Sing/SingSettings.m")
+    if len(value) >= 12 and " " in value and value not in TRANSLATIONS
+]
+assert not uncatalogued, ("Untranslated Karaoke Mod page strings", uncatalogued)
+
+print(f"PASS: {checked} screenshot strings resolve exactly; duplicate-case protection, Karaoke model dynamic templates, custom rendering, and raw IDs checked")

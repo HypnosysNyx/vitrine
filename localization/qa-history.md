@@ -21,3 +21,12 @@ Purpose: Every screenshot regression must identify a root cause, fix the visible
 **Pre-install status:** static checks and CI compilation are separate from on-device verification. Do not label any batch 'fully fixed on device' before installing the matching SHA build and confirming the same pages.
 
 **Recurrence prevention:** This batch checks previous exact screenshot assertions as well as new call paths. A future occurrence of the same issue should become a failing check rather than another untracked screenshot.
+
+## Follow-up: voice-model download confirmation — 2026-10-23
+
+- **Observed:** Vitrine Karaoke's “下载人声模型？” alert had localized title and buttons, but its body still read “210.4 MB from Hugging Face. It waits for Wi-Fi ...”.
+- **Root cause:** `Shared/Sing/SingSettings.m` composed a localized-looking alert from **untranslated fragments**. It passed a `stringWithFormat:` result with a concrete model size to `SGT(message)`, which cannot match the catalog's placeholder-based keys.
+- **Fix:** Translate the main format **before insertion** and likewise translate optional download failure text, model update notice, device compatibility footnotes, cellular data prompt, partially downloaded progress, and removal confirmation. Do not touch model download choices, network behavior, device IDs, or the source brand “Hugging Face”.
+- **Regression prevention:** The screenshot-coverage test now checks these exact template keys **and** their `SGT` call sites, and ensures no substantial untranslated English literal remains in the Mod Karaoke settings source.
+- **Additional testing failure discovered:** The Python `CASES` dictionary had **two** `Shared/Sing/SingSettings.m` entries. The later one silently overwrote the earlier one, so the previously reported pass count excluded some tests. They are now merged, and the test uses Python's AST to fail when a duplicate `CASES` group is introduced.
+- **Acceptance:** Only static assertions and successful macOS compilation are evidence of source correctness; re-test on a phone using the build from the exact new commit to verify rendered text.
