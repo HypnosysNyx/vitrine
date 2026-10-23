@@ -3,6 +3,7 @@
 // text size: it is a picture of the lock screen, so it does not grow with the page's text. The new card
 // crossfades over the old one. The step timer runs only while the page shows and Spotify is in front.
 #import "Core/SGCore.h"
+#import "Core/SGL10n.h"
 #import "LiveActivity.h"
 #import "SGLiveActivityPreview.h"
 
@@ -369,7 +370,7 @@ static NSString *stepName(NSInteger view, NSInteger step) {
     _view = -1;
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(advance)]];
     self.isAccessibilityElement = YES;
-    self.accessibilityLabel = @"Preview of the Live Activity on the lock screen";
+    self.accessibilityLabel = SGT(@"Preview of the Live Activity on the lock screen");
     [self reload];
     return self;
 }

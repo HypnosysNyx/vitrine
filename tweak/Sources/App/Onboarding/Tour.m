@@ -399,7 +399,7 @@ static BOOL adFree(void) {
     } else {
         _noteIcon.image = [UIImage systemImageNamed:@"info.circle.fill"];
         _noteIcon.tintColor = SGGrey();
-        _noteText.text = @"Apple Music style lyrics, the redesigned player and the glass tab bar come with the redesign only.";
+        _noteText.text = SGT(@"Apple Music style lyrics, the redesigned player and the glass tab bar come with the redesign only.");
     }
     _report.hidden = !untested || !SGRepoURL;
     _note.hidden = _redesigned.selected && !untested;
@@ -407,9 +407,9 @@ static BOOL adFree(void) {
     [_column setCustomSpacing:_note.hidden ? 32 : 12 afterView:_legacy];
     // The tips of the picked look: Split Tabs is the redesign's bar's, and the lyrics preview the redesign's page's.
     _splitTip.hidden = !_redesigned.selected;
-    _lyricsTip.text = [(_redesigned.selected ? @"A live preview of the look, the sources in order, and lyrics even where Spotify has none."
-                                             : @"The sources in order, and lyrics even where Spotify has none.")
-                       stringByAppendingString:@"\nMod Settings > Lyrics"];
+    _lyricsTip.text = [SGT((_redesigned.selected ? @"A live preview of the look, the sources in order, and lyrics even where Spotify has none."
+                                             : @"The sources in order, and lyrics even where Spotify has none.") )
+                       stringByAppendingString:SGT(@"\nMod Settings > Lyrics")];
 }
 
 // What people miss in Mod Settings, as pointers only: the tour has no way into a page but holding Home.
@@ -474,16 +474,16 @@ static BOOL adFree(void) {
     if (@available(iOS 17.0, *)) _adsCard.accessibilityTraits = UIAccessibilityTraitToggleButton;
     else _adsCard.accessibilityTraits = UIAccessibilityTraitButton;
     UILabel *adsText = [UILabel new];
-    adsText.text = @"Three switches of Premium, ads & privacy, applied at the restart; off leaves each as it is. Spoof Premium is "
+    adsText.text = SGT(@"Three switches of Premium, ads & privacy, applied at the restart; off leaves each as it is. Spoof Premium is "
                    @"untested and can end in a forced logout; a Premium account gains nothing from it. Offline, audio quality and "
-                   @"sessions stay the server's.";
+                   @"sessions stay the server's.");
     UIStackView *adsNote = noteLine(SGSymbolView(@"info.circle.fill", 15, UIImageSymbolWeightSemibold, 22), adsText);
     adsNote.arrangedSubviews.firstObject.tintColor = SGGrey();
     adsNote.layoutMargins = UIEdgeInsetsMake(4, 4, 0, 4);
     adsNote.layoutMarginsRelativeArrangement = YES;
 
     UILabel *tipsHeading = [UILabel new];
-    tipsHeading.text = @"Easy to miss";
+    tipsHeading.text = SGT(@"Easy to miss");
     tipsHeading.font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
     tipsHeading.textColor = UIColor.whiteColor;
     UIView *tips = [self tipsView];

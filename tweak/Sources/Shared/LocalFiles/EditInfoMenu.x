@@ -12,6 +12,7 @@
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import <objc/runtime.h>
 #import "Core/SGCore.h"
+#import "Core/SGL10n.h"
 #import "Shared/Player/PlayerState.h"
 #import "Shared/Player/SpeedPitch.h"
 #import "LocalFiles.h"
@@ -123,7 +124,7 @@ static NSString *trimmed(NSString *text) {
     change.title = @"Change";
     _coverButton = [UIButton buttonWithConfiguration:change primaryAction:nil];
     _coverButton.showsMenuAsPrimaryAction = YES;
-    _coverButton.accessibilityLabel = @"Change cover";
+    _coverButton.accessibilityLabel = SGT(@"Change cover");
     _coverCell.accessoryView = _coverButton;
     _restoreCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     [self fitLabels];
@@ -188,7 +189,7 @@ static NSString *trimmed(NSString *text) {
     self.modalInPresentation = dirty;
     BOOL restorable = self.differsFromFile;
     UIListContentConfiguration *content = [UIListContentConfiguration cellConfiguration];
-    content.text = @"Restore file's info";
+    content.text = SGT(@"Restore file's info");
     content.textProperties.color = restorable ? UIColor.systemRedColor : UIColor.tertiaryLabelColor;
     _restoreCell.contentConfiguration = content;
     _restoreCell.userInteractionEnabled = restorable;
@@ -197,8 +198,8 @@ static NSString *trimmed(NSString *text) {
 
 - (void)showCover {
     UIListContentConfiguration *content = [UIListContentConfiguration subtitleCellConfiguration];
-    content.text = @"Cover";
-    content.secondaryText = !_cover ? @"The file's own" : _coverChange == SGCoverPicked ? @"New picture" : @"Your picture";
+    content.text = SGT(@"Cover");
+    content.secondaryText = SGT(!_cover ? @"The file's own" : _coverChange == SGCoverPicked ? @"New picture" : @"Your picture");
     content.secondaryTextProperties.color = UIColor.secondaryLabelColor;
     content.image = _cover ?: [UIImage systemImageNamed:@"music.note"];
     content.imageProperties.preferredSymbolConfiguration = [UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleTitle2];
@@ -258,7 +259,7 @@ static NSString *trimmed(NSString *text) {
 
 - (void)confirmDiscard {
     UIAlertController *sheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    [sheet addAction:[UIAlertAction actionWithTitle:@"Discard changes" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+    [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"Discard changes") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }]];
     [sheet addAction:[UIAlertAction actionWithTitle:@"Keep editing" style:UIAlertActionStyleCancel handler:nil]];
@@ -306,9 +307,9 @@ static NSString *trimmed(NSString *text) {
         return;
     }
     SGLog(@"local files: %@ is not an image", urls.firstObject.lastPathComponent);
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Not an image" message:@"Pick a JPEG, PNG or HEIC file."
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Not an image") message:SGT(@"Pick a JPEG, PNG or HEIC file.")
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 

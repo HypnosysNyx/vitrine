@@ -254,9 +254,9 @@ static void placeTick(UISlider *slider) {
         _animatedIcon = [[UIImageView alloc] initWithImage:paintedSymbol(@"play.rectangle.on.rectangle", 18, UIImageSymbolWeightRegular, secondary())];
         _animatedIcon.contentMode = UIViewContentModeCenter;
         _animatedName = makeLabel(font(UIFontTextStyleBody, UIFontWeightRegular, UIContentSizeCategoryExtraLarge), primary());
-        _animatedName.text = @"Animated artwork";
+        _animatedName.text = SGT(@"Animated artwork");
         _animated = [UISwitch new];
-        _animated.accessibilityLabel = @"Animated artwork";
+        _animated.accessibilityLabel = SGT(@"Animated artwork");
         [_animated addTarget:self action:@selector(animatedChanged) forControlEvents:UIControlEventValueChanged];
         for (UIView *view in @[_animatedIcon, _animatedName, _animated]) [_animatedRow addSubview:view];
         [self addSubview:_animatedRow];
@@ -398,7 +398,7 @@ static NSString *pitchText(float pitch) {
     if (pitch != 0) [changed addObject:[pitchText(pitch) stringByAppendingString:@" st"]];
     if (_shownReverb > 0) [changed addObject:@"Reverb"];
     _summary.text = sg_open ? nil : [changed componentsJoinedByString:@"  "];
-    _row.accessibilityLabel = changed.count ? [@"Speed and pitch, " stringByAppendingString:[changed componentsJoinedByString:@", "]] : SGT(@"Speed and pitch");
+    _row.accessibilityLabel = changed.count ? [SGT(@"Speed and pitch, ") stringByAppendingString:[changed componentsJoinedByString:@", "]] : SGT(@"Speed and pitch");
     _row.accessibilityValue = sg_open ? SGT(@"Expanded") : SGT(@"Collapsed");
     _chevron.transform = sg_open ? CGAffineTransformMakeRotation(M_PI) : CGAffineTransformIdentity;
     _panel.alpha = sg_open || self.panelOnly ? 1 : 0;

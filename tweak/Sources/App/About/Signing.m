@@ -160,7 +160,7 @@ SGModRow *SGSigningExpiryRow(void) {
     else day.dateStyle = NSDateFormatterMediumStyle;                 // "Oct 6, 2027"
     NSString *value = [day stringFromDate:expires];
     SGModRow *row = SGStatRow(@"Signed until", ^NSString *{ return value; });
-    if (week) row.subtitle = [NSString stringWithFormat:@"At %@. A free Apple ID signs for 7 days.",
+    if (week) row.subtitle = [NSString stringWithFormat:SGT(@"At %@. A free Apple ID signs for 7 days."),
                               [NSDateFormatter localizedStringFromDate:expires dateStyle:NSDateFormatterNoStyle
                                                              timeStyle:NSDateFormatterShortStyle]];
     return row;

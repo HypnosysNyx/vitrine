@@ -1029,7 +1029,7 @@ static const NSUInteger kLinesPerFrame = 4;
         _bubble.alpha = kBubbleAlpha;
         _bubble.frame = CGRectMake(x, last.center.y - kBubbleSide / 2, kBubbleSide, kBubbleSide);
         _bubble.isAccessibilityElement = YES;
-        _bubble.accessibilityLabel = @"Meaning from the artist";
+        _bubble.accessibilityLabel = SGT(@"Meaning from the artist");
         [self addSubview:_bubble];
         return;
     }

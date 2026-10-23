@@ -15,6 +15,7 @@
 // Threading: main thread, but for the motion handler, which hands its angle to the main queue.
 #import <CoreMotion/CoreMotion.h>
 #import "Core/SGCore.h"
+#import "Core/SGL10n.h"
 #import "Settings/SGPageStyle.h"
 #import "Shared/HeadGestures/HeadGestures.h"
 #import "SGSingEngine.h"
@@ -400,6 +401,7 @@ static CAGradientLayer *floorLight(CGPoint at, CGFloat size, UIColor *color, CGF
         text = @"Preview. With AirPods that track your head, it follows yours: turn, and the voice keeps its place in the room "
                @"while the rest of the song turns with you.";
     }
+    text = SGT(text);
     if ([text isEqualToString:_caption.text]) return;
     if (_caption.text) {
         [UIView transitionWithView:_caption duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve
@@ -412,7 +414,7 @@ static CAGradientLayer *floorLight(CGPoint at, CGFloat size, UIColor *color, CGF
 }
 
 - (NSString *)accessibilityLabel {
-    return @"Spatial voice preview: you in the middle of a field of dots, the voice a point in front of you";
+    return SGT(@"Spatial voice preview: you in the middle of a field of dots, the voice a point in front of you");
 }
 
 - (NSString *)accessibilityValue {

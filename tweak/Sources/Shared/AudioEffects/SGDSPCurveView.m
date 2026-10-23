@@ -1,4 +1,5 @@
 #import "Core/SGCore.h"
+#import "Core/SGL10n.h"
 #import "Settings/SGPageStyle.h"
 #import "SGDSPCurveView.h"
 #import "AudioEffects.h"
@@ -151,7 +152,7 @@ static NSString *signedNumber(double value, int decimals) {
         element.band = i;
         element.accessibilityLabel = spokenBand(_bands[i]);
         element.accessibilityTraits = UIAccessibilityTraitAdjustable;
-        element.accessibilityHint = @"Double tap and hold, then drag up or down, or swipe up or down to adjust.";
+        element.accessibilityHint = SGT(@"Double tap and hold, then drag up or down, or swipe up or down to adjust.");
         [_elements addObject:element];
     }
 

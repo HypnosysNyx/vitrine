@@ -40,7 +40,7 @@ static BOOL anythingLearned(void) {
 // Both learned sizes back to the defaults, asked first; `done` runs once they are.
 static void forget(void (^done)(void)) {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Forget your nod and shake?")
-        message:@"Both go back to the default sizes. You can teach them again." preferredStyle:UIAlertControllerStyleAlert];
+        message:SGT(@"Both go back to the default sizes. You can teach them again.") preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Forget") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         SGSetInt(SGKeyHeadNod, 0);
         SGSetInt(SGKeyHeadShake, 0);

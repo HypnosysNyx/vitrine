@@ -52,10 +52,10 @@ NSArray *SGLockScreenMotionRows(void) {
 // Below iOS 26 the section stays, with one row that says why there is nothing to pick.
 SGModRow *SGLockScreenArtworkNeedsRow(void) {
     return SGStatActionRow(SGT(@"Full-screen artwork"), nil, ^NSString *{ return @"Needs iOS 26"; }, ^{
-        NSString *message = [NSString stringWithFormat:@"This iPhone has iOS %@. The lock screen takes moving artwork "
+        NSString *message = [NSString stringWithFormat:SGT(@"This iPhone has iOS %@. The lock screen takes moving artwork "
                                                        @"from apps from iOS 26 on, so the Canvas and Apple Music's animated "
-                                                       @"covers can show there once the iPhone is updated.", UIDevice.currentDevice.systemVersion];
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Needs iOS 26" message:message
+                                                       @"covers can show there once the iPhone is updated."), UIDevice.currentDevice.systemVersion];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Needs iOS 26") message:message
                                                                 preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
         [SGTopController() presentViewController:alert animated:YES completion:nil];

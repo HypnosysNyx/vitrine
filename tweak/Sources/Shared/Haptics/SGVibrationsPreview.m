@@ -10,6 +10,7 @@
 // taps: no display link, no animation left over. With Reduce Motion nothing moves: every ring lights up at
 // once and fades, and the music's taps send nothing.
 #import "Core/SGCore.h"
+#import "Core/SGL10n.h"
 #import "Settings/SGPageStyle.h"
 #import "Haptics.h"
 #import "SGVibrationsPreview.h"
@@ -127,7 +128,7 @@ static CAKeyframeAnimation *keyframes(NSString *path, NSArray *values, NSArray<N
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(play)]];
     self.isAccessibilityElement = YES;
     self.accessibilityTraits = UIAccessibilityTraitButton;
-    self.accessibilityLabel = @"Vibrations preview, rings of dots that ripple out from the middle with each tap";
+    self.accessibilityLabel = SGT(@"Vibrations preview, rings of dots that ripple out from the middle with each tap");
     [self reload];
     return self;
 }
@@ -143,7 +144,7 @@ static CAKeyframeAnimation *keyframes(NSString *path, NSArray *values, NSArray<N
 - (void)reload {
     _feature = featureNow();
     _caption.font = SGSubtitleFont();
-    _caption.text = captionFor(_feature);
+    _caption.text = SGT(captionFor(_feature));
     self.accessibilityHint = _caption.text;
     [self setNeedsLayout];
 }

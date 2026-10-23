@@ -318,6 +318,17 @@ typedef NS_ENUM(NSInteger, SGDSPHeadphoneSection) {
 
 - (void)filter {
     _shown = SGAutoEqSearch(_all ?: @[], _search.text);
+    NSString *term = [_search.text stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+    if (!_shown.count && term.length) {
+        // Search Chinese names of the third-party catalog too; retain raw model IDs/paths.
+        NSMutableArray<SGAutoEqHeadphone *> *localized = [NSMutableArray array];
+        for (SGAutoEqHeadphone *headphone in _all) {
+            if ([SGZHAutoEqCatalogDisplayName(headphone.name) rangeOfString:term
+                    options:NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch].location != NSNotFound)
+                [localized addObject:headphone];
+        }
+        _shown = localized;
+    }
     BOOL searching = _search.isFirstResponder || _search.text.length > 0;
     BOOL changed = searching != _searching;
     _searching = searching;
@@ -392,7 +403,7 @@ static BOOL headphoneInUse(void) {
 
 // A remembered output's correction, by name.
 static NSString *correctionName(NSString *path) {
-    return path.length ? SGAutoEqNameOf(path) : @"None";
+    return path.length ? SGZHAutoEqCatalogDisplayName(SGAutoEqNameOf(path)) : SGT(@"None");
 }
 
 - (UITableViewCell *)tableView:(UITableView *)table cellForRowAtIndexPath:(NSIndexPath *)path {
@@ -416,7 +427,7 @@ static NSString *correctionName(NSString *path) {
     if (path.section == SGDSPHeadphoneRemembered) {
         NSDictionary<NSString *, NSString *> *output = _remembered[(NSUInteger)path.row];
         BOOL now = [output[@"uid"] isEqualToString:SGAutoEqOutputUID()];
-        SGFillCell(cell, output[@"name"], now ? [NSString stringWithFormat:@"%@ · playing now", correctionName(output[@"path"])] : correctionName(output[@"path"]), nil, nil);
+        SGFillCell(cell, output[@"name"], now ? [NSString stringWithFormat:SGT(@"%@ · playing now"), correctionName(output[@"path"])] : correctionName(output[@"path"]), nil, nil);
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.accessibilityTraits = UIAccessibilityTraitNone;
         cell.accessibilityHint = SGT(@"Swipe left to remove");
@@ -441,7 +452,7 @@ static NSString *correctionName(NSString *path) {
         return cell;
     }
     SGAutoEqHeadphone *headphone = _shown[(NSUInteger)path.row];
-    SGFillCell(cell, headphone.name, headphone.source, nil, nil);
+    SGFillCell(cell, SGZHAutoEqCatalogDisplayName(headphone.name), SGZHAutoEqSourceDisplayName(headphone.source), nil, nil);
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     if ([headphone.path isEqualToString:_applying]) {
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];

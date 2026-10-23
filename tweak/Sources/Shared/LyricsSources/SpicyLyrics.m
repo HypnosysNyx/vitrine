@@ -13,6 +13,7 @@
 // track for the session, a rate limit is waited out, and a refused key is not tried again for a while.
 #import <Security/Security.h>
 #import "Core/SGCore.h"
+#import "Core/SGL10n.h"
 #import "Settings/SGModPage.h"
 #import "Settings/SGPageStyle.h"
 #import "LyricsSources.h"
@@ -444,9 +445,10 @@ static void setKey(NSString *key) {
 static void askForKey(NSString *problem) {
     NSString *how = @"Sign up at Spicy Lyrics for Developers, create an application, turn on client access with "
                     @"No origin header allowed, and paste its publishable key (sl_pk_). The key stays on this iPhone.";
+    how = SGT(how);
     NSString *refused = SGSpicyLyricsKeySet() ? SGSpicyLyricsStatus() : nil;
     NSString *lead = problem ?: refused ? [refused stringByAppendingString:@"."] : nil;
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Spicy Lyrics Key"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Spicy Lyrics Key")
         message:lead ? [NSString stringWithFormat:@"%@\n\n%@", lead, how] : how
         preferredStyle:UIAlertControllerStyleAlert];
     [alert addTextFieldWithConfigurationHandler:^(UITextField *field) {

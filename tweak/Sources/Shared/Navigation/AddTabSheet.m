@@ -35,7 +35,7 @@ static SGLinkRoute routeOf(NSURL *url, NSString *what) {
 }
 
 static NSString *iconSummary(SGTabDraft *draft) {
-    return [NSString stringWithFormat:@"%@ · %@", draft.symbols ? @"SF Symbols" : @"Spotify Encore", draft.icon];
+    return [NSString stringWithFormat:@"%@ · %@", draft.symbols ? @"SF Symbols" : @"Spotify Encore", SGZHIconDisplayName(draft.icon, draft.symbols)];
 }
 
 // An icon at `size`, centered in a box of that size, for the right of a row.
@@ -276,9 +276,16 @@ static void showProblem(UIViewController *page, NSString *title, NSString *messa
     _footer = nil;
     if (text.length) {
         NSArray<NSString *> *pool = symbols ? (_symbols ?: SGCommonTabSymbols()) : SGEncoreGlyphNames();
-        NSPredicate *match = [NSPredicate predicateWithFormat:@"SELF CONTAINS[c] %@", text];
-        NSArray<NSString *> *found = [pool filteredArrayUsingPredicate:match];
-        _sections = @[found];
+        NSMutableArray<NSString *> *found = [NSMutableArray array];
+        NSStringCompareOptions loose = NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch;
+        for (NSString *name in pool) {
+            // Search raw icon selectors and their Mod-only Chinese display names.
+            NSString *display = SGZHIconDisplayName(name, symbols);
+            if ([name rangeOfString:text options:loose].location != NSNotFound ||
+                [display rangeOfString:text options:loose].location != NSNotFound)
+                [found addObject:name];
+        }
+        _sections = @[[found copy]];
         _headers = @[@""];
         if (!found.count) _footer = symbols && !_symbols ? @"Still reading the list of SF Symbols…" : @"No icon has that in its name.";
     } else if (symbols) {
@@ -331,7 +338,7 @@ static void showProblem(UIViewController *page, NSString *title, NSString *messa
     NSString *name = _sections[(NSUInteger)path.section][(NSUInteger)path.row];
     BOOL symbols = _sets.selectedSegmentIndex == 1;
     BOOL current = symbols == _draft.symbols && [name isEqualToString:_draft.icon];
-    SGFillCell(cell, name, current ? @"Current icon" : nil, nil, nil);
+    SGFillCell(cell, SGZHIconDisplayName(name, symbols), current ? @"Current icon" : nil, nil, nil);
     // A preview is one of Spotify's views; setting a new accessory takes the old one off the reused cell.
     cell.accessoryView = previewOf(name, symbols, 28);
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;

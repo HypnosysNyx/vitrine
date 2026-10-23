@@ -104,7 +104,7 @@ static void modelTapped(UITableViewController *page) {
             ask(@"Stop the download?", @"What has come in is kept, so the next download carries on from it.", @"Stop", YES, ^{ SGSingCancelModelDownload(); });
             break;
         case SGSingModelReady:
-            ask(@"Delete the voice model?", [NSString stringWithFormat:@"It frees %@. Karaoke needs it again to turn the vocals down.", SGSingModelInUseSizeText()],
+            ask(@"Delete the voice model?", [NSString stringWithFormat:SGT(@"It frees %@. Karaoke needs it again to turn the vocals down."), SGSingModelInUseSizeText()],
                 @"Delete", YES, ^{
                     SGSetSingOn(NO);
                     SGSingDeleteModel();
@@ -218,9 +218,9 @@ UIViewController *SGSingSettingsPage(void) {
     SGModRow *model = SGStatActionRow(SGT(@"Voice model"), nil, ^NSString *{ return modelValue(); }, ^{ modelTapped(page); });
     SGModRow *remove = SGActionRow(SGT(@"Remove voice model"), nil, ^{
         BOOL partial = SGSingModelCurrentState() != SGSingModelReady;
-        ask(partial ? @"Remove the paused download?" : @"Remove the voice model?",
-            partial ? [NSString stringWithFormat:@"It frees %@. A new download starts from the beginning.", bytes(SGSingModelPausedBytes())]
-                    : [NSString stringWithFormat:@"It frees %@. Karaoke needs it again to turn the vocals down.", SGSingModelInUseSizeText()],
+        ask(SGT(partial ? @"Remove the paused download?" : @"Remove the voice model?"),
+            partial ? [NSString stringWithFormat:SGT(@"It frees %@. A new download starts from the beginning."), bytes(SGSingModelPausedBytes())]
+                    : [NSString stringWithFormat:SGT(@"It frees %@. Karaoke needs it again to turn the vocals down."), SGSingModelInUseSizeText()],
             @"Remove", YES, ^{
                 SGSetSingOn(NO);
                 SGSingDeleteModel();

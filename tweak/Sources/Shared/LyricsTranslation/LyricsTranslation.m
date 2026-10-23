@@ -208,7 +208,7 @@ void SGLyricsTranslateWithGemini(NSString *trackID, NSArray<SGKaraokeLine *> *li
 static void askForKey(void) {
     // Says what leaves the phone, not only where the key stays: each song translated goes to Google whole.
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"Gemini API key")
-        message:@"Translate with Gemini sends the song's lyrics to Google, on your own key from Google AI Studio. The key stays on this iPhone."
+        message:SGT(@"Translate with Gemini sends the song's lyrics to Google, on your own key from Google AI Studio. The key stays on this iPhone.")
         preferredStyle:UIAlertControllerStyleAlert];
     // An empty field would store nothing and take the key away, which only Remove is for: Save waits for text.
     __weak UIAlertController *weakAlert = alert;

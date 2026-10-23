@@ -54,7 +54,7 @@ static char kButtonGlassKey, kPanelGlassKey;
     // goes again on a timer, which a swipe up or down never holds open.
     self.isAccessibilityElement = YES;
     self.accessibilityLabel = SGT(@"Karaoke");
-    self.accessibilityHint = @"Turns the vocals down";
+    self.accessibilityHint = SGT(@"Turns the vocals down");
     self.accessibilityTraits = UIAccessibilityTraitButton | UIAccessibilityTraitAdjustable;
 
     _ring = [CAShapeLayer layer];

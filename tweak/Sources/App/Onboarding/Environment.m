@@ -132,7 +132,7 @@ static void offerCleanup(void) {
     if (!leftovers.count) return;
     NSString *size = sizeOf(leftovers);
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:SGT(@"Chroma left %@ on this iPhone"), size]
-                                                                  message:@"Its Karaoke voice model and its saved lock screen videos are still in Spotify's storage, and Vitrine uses neither. Your listening history and audio effects stay."
+                                                                  message:SGT(@"Its Karaoke voice model and its saved lock screen videos are still in Spotify's storage, and Vitrine uses neither. Your listening history and audio effects stay.")
                                                            preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Delete") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{

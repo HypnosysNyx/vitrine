@@ -13,6 +13,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <os/lock.h>
 #import "Core/SGCore.h"
+#import "Core/SGL10n.h"
 #import "Settings/SGPageStyle.h"
 #import "HeadGestures.h"
 
@@ -292,7 +293,7 @@ static BOOL headOffset(double *pitch, double *yaw) {
         config.baseForegroundColor = UIColor.whiteColor;
     }
     config.contentInsets = NSDirectionalEdgeInsetsMake(15, 20, 15, 20);
-    config.title = title;
+    config.title = SGT(title);
     config.titleTextAttributesTransformer = ^NSDictionary *(NSDictionary *attributes) {
         NSMutableDictionary *styled = [attributes mutableCopy];
         UIFont *font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
@@ -306,7 +307,7 @@ static BOOL headOffset(double *pitch, double *yaw) {
 
 - (void)setPrimaryTitle:(NSString *)title {
     UIButtonConfiguration *config = _primaryButton.configuration;
-    config.title = title;
+    config.title = SGT(title);
     _primaryButton.configuration = config;
     _primaryButton.hidden = title == nil;
 }
@@ -382,7 +383,7 @@ static BOOL headOffset(double *pitch, double *yaw) {
     ]];
 
     [self showGesture];
-    _line.text = @"After each tone, nod twice the way you would say yes. Five nods, then five shakes.";
+    _line.text = SGT(@"After each tone, nod twice the way you would say yes. Five nods, then five shakes.");
     _redoButton.hidden = YES;
 }
 
@@ -406,14 +407,14 @@ static BOOL headOffset(double *pitch, double *yaw) {
 #pragma mark - what it shows
 
 - (void)showGesture {
-    _heading.text = self.nod ? @"Nod twice" : @"Shake your head";
-    _dial.accessibilityLabel = self.nod ? @"Double nods" : @"Shakes";
+    _heading.text = SGT(self.nod ? @"Nod twice" : @"Shake your head");
+    _dial.accessibilityLabel = SGT(self.nod ? @"Double nods" : @"Shakes");
     [self showCount];
 }
 
 - (void)showCount {
     NSInteger landed = (NSInteger)_samples.count;
-    _count.text = [NSString stringWithFormat:@"%ld of %ld", (long)landed, (long)kSamples];
+    _count.text = [NSString stringWithFormat:SGT(@"%ld of %ld"), (long)landed, (long)kSamples];
     _dial.accessibilityValue = _count.text;
     // Landed dots full, the one being recorded dim, the rest gray: a color change, so Reduce Motion keeps it.
     [UIView animateWithDuration:kFade delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -453,7 +454,7 @@ static BOOL headOffset(double *pitch, double *yaw) {
 - (void)record {
     NSUInteger step = ++_step;
     _listening = YES;
-    _line.text = self.nod ? @"Nod twice now." : @"Shake your head now.";
+    _line.text = SGT(self.nod ? @"Nod twice now." : @"Shake your head now.");
     [self showCount];
     SGHeadGesturesCue(SGHeadCueReady);
     SGHeadGesturesRecord(kWindow, ^(NSData *motion) {
@@ -467,8 +468,8 @@ static BOOL headOffset(double *pitch, double *yaw) {
         _running = NO;
         [self showCount];
         SGHeadGesturesCue(SGHeadCueFailed);
-        _line.text = @"No motion came in. Put in AirPods that track head motion, and allow Spotify in Settings > "
-                      "Privacy & Security > Motion & Fitness.";
+        _line.text = SGT(@"No motion came in. Put in AirPods that track head motion, and allow Spotify in Settings > "
+                      "Privacy & Security > Motion & Fitness.");
         announce(_line.text);
         [self setPrimaryTitle:@"Try again"];
         return;
@@ -479,11 +480,11 @@ static BOOL headOffset(double *pitch, double *yaw) {
     SGHeadGesturesCue(counted ? SGHeadCueWorked : SGHeadCueFailed);
     NSInteger landed = (NSInteger)_samples.count;
     if (counted) {
-        _line.text = landed < kSamples ? @"Got it." : self.nod ? @"That's five nods." : @"That's five shakes.";
-        announce([NSString stringWithFormat:@"Got it, %ld of %ld.", (long)landed, (long)kSamples]);
+        _line.text = SGT(landed < kSamples ? @"Got it." : self.nod ? @"That's five nods." : @"That's five shakes.");
+        announce([NSString stringWithFormat:SGT(@"Got it, %ld of %ld."), (long)landed, (long)kSamples]);
     } else {
-        _line.text = self.nod ? @"That didn't read as a double nod. Once more after the tone."
-                              : @"That didn't read as a shake. Once more after the tone.";
+        _line.text = SGT(self.nod ? @"That didn't read as a double nod. Once more after the tone."
+                              : @"That didn't read as a shake. Once more after the tone.");
         announce(_line.text);
     }
     if (landed < kSamples) [self after:self.gap then:^{ [self record]; }];
@@ -493,7 +494,7 @@ static BOOL headOffset(double *pitch, double *yaw) {
 - (void)learn {
     if (SGHeadGesturesLearnFrom(_samples, _axis) <= 0) {
         [_samples removeAllObjects];
-        _line.text = @"Those five were too far apart to learn from. Let's take them again.";
+        _line.text = SGT(@"Those five were too far apart to learn from. Let's take them again.");
         announce(_line.text);
         [self after:self.gap * 2 then:^{
             [self showCount];
@@ -502,13 +503,13 @@ static BOOL headOffset(double *pitch, double *yaw) {
         return;
     }
     if (self.nod) {
-        _line.text = @"Your nod is learned. Next, five shakes.";
+        _line.text = SGT(@"Your nod is learned. Next, five shakes.");
         announce(_line.text);
         [self after:self.gap * 1.5 then:^{
             self->_axis = SGHeadAxisYaw;
             [self->_samples removeAllObjects];
             [self showGesture];
-            self->_line.text = @"After each tone, shake your head the way you would say no.";
+            self->_line.text = SGT(@"After each tone, shake your head the way you would say no.");
             [self after:self.gap then:^{ [self record]; }];
         }];
         return;
@@ -516,11 +517,11 @@ static BOOL headOffset(double *pitch, double *yaw) {
     _finished = YES;
     _running = NO;
     self.navigationItem.leftBarButtonItem = nil;
-    _heading.text = @"All set";
+    _heading.text = SGT(@"All set");
     [_dial showDone];
-    _dial.accessibilityLabel = @"Nod and shake";
-    _line.text = @"Both are learned from yours. If one still slips past, raise Sensitivity.";
-    announce([@"All set. " stringByAppendingString:_line.text]);
+    _dial.accessibilityLabel = SGT(@"Nod and shake");
+    _line.text = SGT(@"Both are learned from yours. If one still slips past, raise Sensitivity.");
+    announce([SGT(@"All set. ") stringByAppendingString:_line.text]);
     [self showCount];
     [self setPrimaryTitle:@"Done"];
 }
@@ -530,8 +531,8 @@ static BOOL headOffset(double *pitch, double *yaw) {
     _listening = NO;
     SGHeadGesturesStopListening();
     [_samples removeLastObject];
-    _line.text = @"Taking that one again.";
-    announce([NSString stringWithFormat:@"Removed. %ld of %ld.", (long)_samples.count, (long)kSamples]);
+    _line.text = SGT(@"Taking that one again.");
+    announce([NSString stringWithFormat:SGT(@"Removed. %ld of %ld."), (long)_samples.count, (long)kSamples]);
     [self showCount];
     [self after:self.gap then:^{ [self record]; }];
 }

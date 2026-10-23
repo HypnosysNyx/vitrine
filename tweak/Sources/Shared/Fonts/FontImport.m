@@ -229,7 +229,7 @@ typedef NS_ENUM(NSInteger, SGFontSection) { SGFontBuiltIn, SGFontMore, SGFontYou
     NSString *own = self.styleCount == 1
         ? @"A font of your own is a .ttf or .otf file from Files. This one has a single style, so bold text comes out regular. Pick all the files of a family together to keep bold. "
         : @"A font of your own comes from Files: a .ttf or .otf file, or all the files of one family picked together, so bold and italic stay. ";
-    _footer = SGNote([own stringByAppendingString:@"Text Spotify draws itself may keep its own font. Changes apply after you restart Spotify."]);
+    _footer = SGNote([SGT(own) stringByAppendingString:SGT(@"Text Spotify draws itself may keep its own font. Changes apply after you restart Spotify.")]);
     self.tableView.tableFooterView = _footer;
 }
 
@@ -309,7 +309,7 @@ typedef NS_ENUM(NSInteger, SGFontSection) { SGFontBuiltIn, SGFontMore, SGFontYou
         cell.accessibilityTraits = UIAccessibilityTraitButton;
         return cell;
     }
-    SGFillCell(cell, title, subtitle, nil, nil);
+    SGFillCell(cell, SGZHFontDisplayName(title), subtitle, nil, nil);
     UIListContentConfiguration *content = (UIListContentConfiguration *)cell.contentConfiguration;
     if (font) content.textProperties.font = [[UIFontMetrics metricsForTextStyle:UIFontTextStyleBody] scaledFontForFont:font maximumPointSize:18];
     cell.contentConfiguration = content;
@@ -357,6 +357,6 @@ typedef NS_ENUM(NSInteger, SGFontSection) { SGFontBuiltIn, SGFontMore, SGFontYou
 
 NSArray<SGModRow *> *SGAppFontRows(void) {
     SGModRow *font = SGPageRow(@"Font", ^UIViewController *{ return [SGFontPage new]; });
-    font.value = ^NSString *{ return chosenLabel(); };
+    font.value = ^NSString *{ return SGZHFontDisplayName(chosenLabel()); };
     return @[font];
 }

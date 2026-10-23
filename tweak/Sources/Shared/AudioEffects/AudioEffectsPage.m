@@ -413,7 +413,7 @@ static UIFont *tabular(UIFont *font) {
 // The libraries two of the effects run on, in the gray of a note with the names as links.
 - (void)buildCredits {
     NSDictionary *grey = @{NSFontAttributeName: SGSubtitleFont(), NSForegroundColorAttributeName: SGGrey()};
-    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:@"Crossfeed is " attributes:grey];
+    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:SGT(@"Crossfeed is ") attributes:grey];
     NSArray<NSArray<NSString *> *> *parts = @[
         @[@"libbs2b", @"https://github.com/alexmarsev/libbs2b"], @[@" by Boris Mikhaylov. Liveprog runs on ", @""],
         @[@"EEL2", @"https://github.com/justinfrankel/WDL"], @[@", from Cockos' WDL.", @""],
@@ -421,7 +421,7 @@ static UIFont *tabular(UIFont *font) {
     for (NSArray<NSString *> *part in parts) {
         NSMutableDictionary *attributes = [grey mutableCopy];
         if (part[1].length) attributes[NSLinkAttributeName] = [NSURL URLWithString:part[1]];
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:part[0] attributes:attributes]];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:SGT(part[0]) attributes:attributes]];
     }
     _creditsText = [UITextView new];
     _creditsText.attributedText = text;
