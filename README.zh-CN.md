@@ -18,14 +18,16 @@
 
 | 项目 | 情况 |
 | --- | --- |
-| Vitrine 代码基线 | **1.0.0-beta.13**（非独立的正式汉化版号） |
+| Vitrine 代码基线 | **1.0.0-beta.14**（已同步上游源码；非独立的正式汉化版号） |
 | Spotify iOS 版本 | 原项目明确支持 **9.1.78、9.1.88、9.1.90**；其他版本未验证 |
 | iOS / 原生界面 | iOS **16.1+** |
 | iOS / Liquid Glass 重设计 | **iOS 26+**；较低系统有实验性警告和回退机制 |
 | 汉化源代码 | [`i18n/zh-hans` 分支](https://github.com/HypnosysNyx/vitrine/tree/i18n/zh-hans) |
 | 自动化检查 | [汉化源码与编译检查](https://github.com/HypnosysNyx/vitrine/actions/workflows/check-zh-hans.yml) |
 
-在 2026-10-23，汉化基线提交 [`acac43a`](https://github.com/HypnosysNyx/vitrine/commit/acac43a6337e8646d07fbbe8c304371d489a2967) 的[静态检查与编译](https://github.com/HypnosysNyx/vitrine/actions/runs/39942001448)以及[一次完整 IPA 构建](https://github.com/HypnosysNyx/vitrine/actions/runs/39946414229)均成功；**编译成功不代表已经完成所有机型的实机汉化验收**。后续提交需分别检查对应工作流。
+原 beta.13 汉化在 2026-10-23 的基线提交 [`acac43a`](https://github.com/HypnosysNyx/vitrine/commit/acac43a6337e8646d07fbbe8c304371d489a2967) 的[静态检查与编译](https://github.com/HypnosysNyx/vitrine/actions/runs/39942001448)以及[一次完整 IPA 构建](https://github.com/HypnosysNyx/vitrine/actions/runs/39946414229)均成功；**编译成功不代表已经完成所有机型的实机汉化验收**。后续提交需分别检查对应工作流。
+
+同步说明：2026-10-24 已将上游 beta.14 及后续提交合并至 [待验证同步分支](https://github.com/HypnosysNyx/vitrine/tree/sync/upstream-beta14-20261024)，并保留中文翻译。正式合并与发布前，请检查 [PR #1](https://github.com/HypnosysNyx/vitrine/pull/1) 的 macOS 编译结果和实机运行情况。此处的版本号不代表新的 IPA 已经过实机验收。
 
 ## 如何自行构建、安装
 
