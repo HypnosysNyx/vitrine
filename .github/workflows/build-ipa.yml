@@ -32,7 +32,10 @@ jobs:
       - run: echo 'IPA workflow registered. Use Run workflow to build manually.'
 
   build:
-    if: github.event_name == 'workflow_dispatch'
+    # A deliberately marked push can build a private workflow artifact using the
+    # fork's existing SPOTIFY_IPA_URL secret, without exposing the URL in a PR.
+    # Ordinary pushes keep doing registration-only, as before.
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[build-ipa]'))
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v5
@@ -94,14 +97,15 @@ jobs:
       - run: make release
 
       - uses: actions/upload-artifact@v5
-        if: inputs.upload_method != 'filebin'
+        if: github.event_name == 'push' || inputs.upload_method != 'filebin'
         with:
           name: vitrine.ipa
           path: out/*.ipa
           if-no-files-found: error
 
       - name: Upload to filebin.net
-        if: inputs.upload_method != 'artifacts'
+        # Never upload a push-triggered build to an external public file host.
+        if: github.event_name == 'workflow_dispatch' && inputs.upload_method != 'artifacts'
         run: |
           BIN="vitrine-${{ github.run_id }}"
           echo "### filebin.net download" >> "$GITHUB_STEP_SUMMARY"
