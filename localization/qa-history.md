@@ -40,3 +40,12 @@ Purpose: Every screenshot regression must identify a root cause, fix the visible
 | Vitrine > Lyrics > Translation language lists Arabic, Chinese, etc. in English | \`SGLyricsTranslationLanguageNames()\` always constructed English labels from the fixed \`NSLocale("en")\`, bypassing the rest of the Mod's localization | When the existing Mod language detector selects Simplified Chinese, use \`NSLocale("zh-Hans")\` for language **display names** and explicitly show \`简体中文\` / \`繁体中文\`; keep 31 original BCP-47 language tags, their order, selection index, translation requests and non-Chinese display logic unchanged | Assert all 31 raw tags and their order are unchanged; inspect the actual Vitrine picker display method and index persistence. Final visual verification needs the IPA of the matching commit |
 
 **Avoid repeating:** Dynamic text, locale-derived labels and OS-provided errors are not necessarily literal strings in source files. Pure literal scans and dictionaries cannot prove they are localized; inspect each **producer-to-renderer** path and require a targeted render-path assertion. Never conflate static QA/CI success with on-device acceptance.
+
+## Upstream beta.14 synchronization — 2026-10-24
+
+- **Upstream source:** My-Name-Is-Jeff/vitrine at `f5473f76958b22232f6034443b4af84107729dbb` (beta.14 plus its latest commit on 2026-10-23).
+- **Previously localized source:** HypnosysNyx/vitrine `i18n/zh-hans` at `98aca931d12a604f9fab5742dab5a4ddc662d7b5`.
+- **Merge:** Seven file-level textual conflicts reviewed and resolved; retained upstream behavior for its revised AI translator, saved translations, lyrics settings, redesigned navbar and karaoke translation menu while preserving localized UI calls.
+- **Translation updates:** Catalog increased from 1,058 to 1,074 entries. Localized new Keychain clearing confirmations, split-tab accessibility labels, word-level timing option, API key/model prompts and AI translation settings. Regenerated `Core/SGL10n.m`.
+- **Verified locally:** `sync-zh-hans.py --check`, `check-zh-hans-coverage.py` (52 screenshot cases), `check-zh-hans-placeholders.py`, `audit-mod-ui-literals.py` (297 files), `check-layers.sh`, and `git diff --check`.
+- **Not verified:** Apple SDK / Theos compilation or installation on a real iPhone. Do not declare this update a ready-to-install release until the exact merged SHA passes CI and on-device screenshots.

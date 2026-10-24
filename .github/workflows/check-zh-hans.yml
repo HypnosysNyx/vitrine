@@ -3,6 +3,9 @@
 name: Check zh-Hans compilation (no IPA)
 
 on:
+  pull_request:
+    branches:
+      - i18n/zh-hans
   push:
     branches:
       - i18n/zh-hans
