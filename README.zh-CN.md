@@ -27,7 +27,7 @@
 
 原 beta.13 汉化在 2026-10-23 的基线提交 [`acac43a`](https://github.com/HypnosysNyx/vitrine/commit/acac43a6337e8646d07fbbe8c304371d489a2967) 的[静态检查与编译](https://github.com/HypnosysNyx/vitrine/actions/runs/39942001448)以及[一次完整 IPA 构建](https://github.com/HypnosysNyx/vitrine/actions/runs/39946414229)均成功；**编译成功不代表已经完成所有机型的实机汉化验收**。后续提交需分别检查对应工作流。
 
-同步说明：2026-10-24 已将上游 beta.14 及后续提交合并至 [待验证同步分支](https://github.com/HypnosysNyx/vitrine/tree/sync/upstream-beta14-20261024)，并保留中文翻译。正式合并与发布前，请检查 [PR #1](https://github.com/HypnosysNyx/vitrine/pull/1) 的 macOS 编译结果和实机运行情况。此处的版本号不代表新的 IPA 已经过实机验收。
+同步状态（2026-10-24）：上游 beta.14 及截至 `f5473f7` 的后续提交已经通过 [PR #1](https://github.com/HypnosysNyx/vitrine/pull/1) 正式合并进 `i18n/zh-hans`（合并提交 [`c217a3f`](https://github.com/HypnosysNyx/vitrine/commit/c217a3ff1674223026460114b69c6fae2f2f8af4)）。[macOS 静态检查、界面测试和 tweak 编译链接](https://github.com/HypnosysNyx/vitrine/actions/runs/39991312030)均已通过。本次同步尚未执行对应 IPA 的安装及 iPhone 实机界面验收，不应当据此标称为实机测试完成的正式安装版。
 
 ## 如何自行构建、安装
 
