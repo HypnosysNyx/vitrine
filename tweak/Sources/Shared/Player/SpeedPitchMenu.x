@@ -145,7 +145,7 @@ static UILabel *makeLabel(UIFont *font, UIColor *color) {
     [button setTitleColor:[primary() colorWithAlphaComponent:0.4] forState:UIControlStateHighlighted];
     [button setTitleColor:primary() forState:UIControlStateDisabled];
     button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-    button.accessibilityHint = @"Resets it";
+    button.accessibilityHint = SGT(@"Resets it");
     [button addTarget:self action:reset forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
@@ -373,7 +373,7 @@ static NSString *pitchText(float pitch) {
     float pitch = following ? 0 : _shownPitch;
     [UIView performWithoutAnimation:^{
         [_speedValue setTitle:speedAllowed ? speedText(_shownSpeed) : SGT(@"Unavailable here") forState:UIControlStateNormal];
-        [_pitchValue setTitle:!pitchAvailable ? SGT(@"Unavailable") : following ? @"Follows speed" : [pitchText(pitch) stringByAppendingString:pitch ? @" st" : @""]
+        [_pitchValue setTitle:!pitchAvailable ? SGT(@"Unavailable") : following ? SGT(@"Follows speed") : [pitchText(pitch) stringByAppendingString:pitch ? SGT(@" st") : @""]
                      forState:UIControlStateNormal];
         [_speedValue layoutIfNeeded];
         [_pitchValue layoutIfNeeded];
@@ -388,15 +388,15 @@ static NSString *pitchText(float pitch) {
         [_reverbValue layoutIfNeeded];
     }];
     _reverbValue.enabled = _shownReverb > 0;
-    _reverb.accessibilityValue = _shownReverb > 0 ? [NSString stringWithFormat:@"%.0f percent", _shownReverb] : SGT(@"Off");
+    _reverb.accessibilityValue = _shownReverb > 0 ? [NSString stringWithFormat:SGT(@"%.0f percent"), _shownReverb] : SGT(@"Off");
     _speed.accessibilityValue = speedAllowed ? speedText(_shownSpeed) : SGT(@"Unavailable");
-    _pitch.accessibilityValue = following ? @"Follows speed" : pitch == 0 ? SGT(@"Original pitch")
-                                : [NSString stringWithFormat:@"%.0f semitones %@", fabsf(pitch), pitch > 0 ? @"up" : @"down"];
+    _pitch.accessibilityValue = following ? SGT(@"Follows speed") : pitch == 0 ? SGT(@"Original pitch")
+                                : [NSString stringWithFormat:SGT(@"%.0f semitones %@"), fabsf(pitch), SGT(pitch > 0 ? @"up" : @"down")];
 
     NSMutableArray<NSString *> *changed = [NSMutableArray array];
     if (_shownSpeed != 1) [changed addObject:speedText(_shownSpeed)];
-    if (pitch != 0) [changed addObject:[pitchText(pitch) stringByAppendingString:@" st"]];
-    if (_shownReverb > 0) [changed addObject:@"Reverb"];
+    if (pitch != 0) [changed addObject:[pitchText(pitch) stringByAppendingString:SGT(@" st")]];
+    if (_shownReverb > 0) [changed addObject:SGT(@"Reverb")];
     _summary.text = sg_open ? nil : [changed componentsJoinedByString:@"  "];
     _row.accessibilityLabel = changed.count ? [SGT(@"Speed and pitch, ") stringByAppendingString:[changed componentsJoinedByString:@", "]] : SGT(@"Speed and pitch");
     _row.accessibilityValue = sg_open ? SGT(@"Expanded") : SGT(@"Collapsed");

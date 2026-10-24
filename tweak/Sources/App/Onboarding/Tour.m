@@ -35,7 +35,7 @@ UIButton *SGOnboardingButton(NSString *title) {
     config.baseBackgroundColor = SGGreen();
     config.baseForegroundColor = SGOnAccent();
     config.contentInsets = NSDirectionalEdgeInsetsMake(15, 20, 15, 20);
-    config.attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold]}];
+    config.attributedTitle = [[NSAttributedString alloc] initWithString:SGT(title) attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold]}];
     UIButton *button = [UIButton buttonWithConfiguration:config primaryAction:nil];
     button.translatesAutoresizingMaskIntoConstraints = NO;
     return button;
@@ -506,7 +506,7 @@ static BOOL adFree(void) {
     [scroll addSubview:column];
     [self.view addSubview:scroll];
 
-    _primary = SGOnboardingButton(@"Start listening");
+    _primary = SGOnboardingButton(SGT(@"Start listening"));
     [_primary addTarget:self action:@selector(finish) forControlEvents:UIControlEventTouchUpInside];
     UILabel *footer = [UILabel new];
     footer.text = SGT(@"Hold Home to open settings.");
@@ -597,7 +597,7 @@ static BOOL adFree(void) {
 - (void)refresh {
     UIButtonConfiguration *config = _primary.configuration;
     NSString *title = self.needsRestart ? @"Restart Spotify" : @"Start listening";
-    config.attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold]}];
+    config.attributedTitle = [[NSAttributedString alloc] initWithString:SGT(title) attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold]}];
     _primary.configuration = config;
 }
 

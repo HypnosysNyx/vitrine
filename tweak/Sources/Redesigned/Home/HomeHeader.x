@@ -19,6 +19,7 @@
 //
 // The title is Spotify's own name for the tab, read off its tab bar item (id=TabBar.Item.Home, 10.txt:3100),
 // so it follows the app's language.
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Redesigned/Kit/SGRKit.h"
 #import "Home.h"
@@ -150,7 +151,7 @@ static NSArray<UIMenuElement *> *menuElements(void) {
     UIControl *connect = connectButton(sg_header.window);
     if (connect) {
         __weak UIControl *weakConnect = connect;
-        [more addObject:[UIAction actionWithTitle:@"Devices" image:[UIImage systemImageNamed:@"hifispeaker"] identifier:nil handler:^(UIAction *a) {
+        [more addObject:[UIAction actionWithTitle:SGT(@"Devices") image:[UIImage systemImageNamed:@"hifispeaker"] identifier:nil handler:^(UIAction *a) {
             if (weakConnect) SGRActivate(weakConnect);
         }]];
     }

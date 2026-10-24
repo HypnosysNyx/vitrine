@@ -1978,20 +1978,20 @@ static BOOL anyUntranslated(NSArray<SGKaraokeLine *> *lines) {
     }
     // Who made the saved translation and when, and for one an AI made (or no one known) a way to have it asked again.
     if (_saved && _hasTranslation) {
-        UIAction *source = [UIAction actionWithTitle:_saved.name image:[UIImage systemImageNamed:@"info.circle"] identifier:nil handler:^(UIAction *action) {}];
+        UIAction *source = [UIAction actionWithTitle:SGT(_saved.name) image:[UIImage systemImageNamed:@"info.circle"] identifier:nil handler:^(UIAction *action) {}];
         source.subtitle = _saved.made ? [NSDateFormatter localizedStringFromDate:_saved.made dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterShortStyle]
-                                      : @"Date unknown";
+                                      : SGT(@"Date unknown");
         source.attributes = UIMenuElementAttributesDisabled;
         NSMutableArray<UIMenuElement *> *about = [NSMutableArray arrayWithObject:source];
         // Not while a translator works: its next batch would save the file again.
         if (_saved.deletable && !translating) {
             NSString *track = _track, *language = _savedLanguage;
-            UIAction *delete = [UIAction actionWithTitle:@"Delete This Translation" image:[UIImage systemImageNamed:@"trash"] identifier:nil
+            UIAction *delete = [UIAction actionWithTitle:SGT(@"Delete This Translation") image:[UIImage systemImageNamed:@"trash"] identifier:nil
                                                  handler:^(UIAction *action) { SGLyricsDeleteSavedTranslation(track, language); }];
             delete.attributes = UIMenuElementAttributesDestructive;
             [about addObject:delete];
         }
-        [items addObject:[UIMenu menuWithTitle:@"Translated by" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:about]];
+        [items addObject:[UIMenu menuWithTitle:SGT(@"Translated by") image:nil identifier:nil options:UIMenuOptionsDisplayInline children:about]];
     }
     // Also for a song a source translated in part, as Musixmatch's community often has: the rest is filled in.
     // Said in each item: whether the song's words stay on the phone.
@@ -2019,8 +2019,8 @@ static BOOL anyUntranslated(NSArray<SGKaraokeLine *> *lines) {
             });
         }
         // The provider and model are read as the item is tapped, which is when the request is made.
-        if (ai) offer([@"Translate with " stringByAppendingString:SGAITranslatorName()], @"sparkles",
-                      [@"Sends the lyrics to " stringByAppendingString:SGAITranslatorRecipient()], ^{ return SGAITranslatorSource(); },
+        if (ai) offer([SGT(@"Translate with ") stringByAppendingString:SGAITranslatorName()], @"sparkles",
+                      [SGT(@"Sends the lyrics to ") stringByAppendingString:SGAITranslatorRecipient()], ^{ return SGAITranslatorSource(); },
                       ^(NSArray<SGKaraokeLine *> *lines, NSString *track, NSString *to, SGRTranslated progress, SGRTranslated done) {
             SGLyricsTranslateWithAI(track, lines, to, done);
         });

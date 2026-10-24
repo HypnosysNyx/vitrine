@@ -45,7 +45,7 @@ static void confirmClearKeychain(void) {
         SGSpicyLyricsForgetKey();
         SGLog(@"reset: keychain cleared");
     }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
     [SGTopController() presentViewController:alert animated:YES completion:nil];
 }
 

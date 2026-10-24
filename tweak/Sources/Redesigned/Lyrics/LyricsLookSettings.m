@@ -229,7 +229,7 @@ static UIButtonConfiguration *chipConfiguration(NSString *title, NSString *symbo
     _adjust.configuration = adjust;
     _adjust.accessibilityLabel = SGT(@"Adjust");
     _adjust.accessibilityValue = chosen < 0 ? SGT(@"Custom") : names[(NSUInteger)chosen];
-    _adjust.accessibilityHint = @"Opens the sliders";
+    _adjust.accessibilityHint = SGT(@"Opens the sliders");
     _adjust.accessibilityTraits = UIAccessibilityTraitButton | (chosen < 0 ? UIAccessibilityTraitSelected : 0);
     _showChosen = YES;
     [self.view setNeedsLayout];

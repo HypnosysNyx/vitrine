@@ -371,7 +371,7 @@ void SGLyricsOpenCreditLinks(NSArray<SGLyricsLink *> *links, UIView *from) {
             [UIApplication.sharedApplication openURL:url options:@{} completionHandler:nil];
         }]];
     }
-    [sheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
     sheet.popoverPresentationController.sourceView = from;
     sheet.popoverPresentationController.sourceRect = from.bounds;
     [SGTopController() presentViewController:sheet animated:YES completion:nil];

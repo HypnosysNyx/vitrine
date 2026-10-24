@@ -191,7 +191,7 @@ static char kButtonGlassKey, kPanelGlassKey;
 #pragma mark - VoiceOver
 
 - (NSString *)accessibilityValue {
-    return [NSString stringWithFormat:@"%@. Vocals level: %@", SGSingStatusText(), SGSingLevelText(SGSingLevel())];
+    return [NSString stringWithFormat:SGT(@"%@. Vocals level: %@"), SGT(SGSingStatusText()), SGT(SGSingLevelText(SGSingLevel()))];
 }
 
 - (BOOL)accessibilityActivate {
@@ -268,7 +268,7 @@ static void tell(NSString *message, NSString *action, void (^then)(void)) {
         _slider.minimumValue = 0;
         _slider.maximumValue = 2;
         _slider.transform = CGAffineTransformMakeRotation(-M_PI_2);
-        _slider.accessibilityLabel = @"Vocals";
+        _slider.accessibilityLabel = SGT(@"Vocals");
         [_slider addTarget:self action:@selector(slid) forControlEvents:UIControlEventValueChanged];
         [_slider addTarget:self action:@selector(holdPanel) forControlEvents:UIControlEventTouchDown];
         [_slider addTarget:self action:@selector(letPanelGo) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside | UIControlEventTouchCancel];

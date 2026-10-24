@@ -326,9 +326,9 @@ SGTranslationSource *SGAITranslatorSource(void) {
 - (NSString *)name {
     const SGAIProvider *p = providerFor(_by);
     if (p) return _model.length ? [NSString stringWithFormat:@"%@ (%@)", p->name, _model] : p->name;
-    if ([_by isEqualToString:SGTranslatedOnDevice]) return @"Translate on iPhone";
+    if ([_by isEqualToString:SGTranslatedOnDevice]) return SGT(@"Translate on iPhone");
     if ([_by isEqualToString:SGTranslatedByAppleIntelligence]) return @"Apple Intelligence";
-    return @"Unknown";
+    return SGT(@"Unknown");
 }
 
 // Asking the iPhone again costs nothing, and its translation is the same.
@@ -545,7 +545,7 @@ static void askForKey(void) {
         NSString *url = SGAIServerIn(weakAlert.textFields.firstObject.text);
         storeSecret(p, kServerAccount, [url isEqualToString:kOpenAIDefaultURL] ? nil : url);
     };
-    UIAlertAction *paste = [UIAlertAction actionWithTitle:@"Paste Key" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertAction *paste = [UIAlertAction actionWithTitle:SGT(@"Paste Key") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         // A key copied with the quotes around it, as from a code sample, is turned down as it stands.
         NSMutableCharacterSet *around = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
         [around addCharactersInString:@"\"'“”‘’"];
@@ -556,7 +556,7 @@ static void askForKey(void) {
                                                                           message:SGT(@"Copy the API key, then tap Paste Key again.")
                                                                    preferredStyle:UIAlertControllerStyleAlert];
             none.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
-            [none addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+            [none addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
             [SGTopController() presentViewController:none animated:YES completion:nil];
             return;
         }
@@ -566,7 +566,7 @@ static void askForKey(void) {
         board.items = @[];
         translatorChanged();
     }];
-    UIAlertAction *save = server && stored ? [UIAlertAction actionWithTitle:@"Save Server" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertAction *save = server && stored ? [UIAlertAction actionWithTitle:SGT(@"Save Server") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         saveServer();
         translatorChanged();
     }] : nil;
@@ -588,24 +588,24 @@ static void askForKey(void) {
     [alert addAction:paste];
     if (save) [alert addAction:save];
     if (stored) {
-        [alert addAction:[UIAlertAction actionWithTitle:@"Remove" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Remove") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
             storeSecret(p, kKeyAccount, nil);
             storeSecret(p, kServerAccount, nil);
             translatorChanged();
         }]];
     }
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
     [SGTopController() presentViewController:alert animated:YES completion:nil];
 }
 
 static void askForModel(void) {
     const SGAIProvider *p = chosen();
     NSString *example = p->models[1] ?: p->models[0] ?: @"gpt-6-astra, or a model your server lists";
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@ model", p->name]
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:SGT(@"%@ model"), p->name]
         message:[NSString stringWithFormat:SGT(@"A model id, such as %@."), example] preferredStyle:UIAlertControllerStyleAlert];
     alert.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
     __weak UIAlertController *weakAlert = alert;
-    UIAlertAction *save = [UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertAction *save = [UIAlertAction actionWithTitle:SGT(@"Save") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         NSString *modelID = modelIDIn(weakAlert.textFields.firstObject.text, p);
         if (modelID) [NSUserDefaults.standardUserDefaults setObject:modelID forKey:modelKey(p)];
         translatorChanged();
@@ -613,14 +613,14 @@ static void askForModel(void) {
     save.enabled = NO;
     __weak UIAlertAction *weakSave = save;
     [alert addTextFieldWithConfigurationHandler:^(UITextField *field) {
-        configure(field, p->models[0] ?: @"Model id");
+        configure(field, p->models[0] ?: SGT(@"Model id"));
         field.text = storedString(modelKey(p));
         __weak UITextField *weakField = field;
         [field addAction:[UIAction actionWithHandler:^(UIAction *action) { weakSave.enabled = modelIDIn(weakField.text, p) != nil; }]
         forControlEvents:UIControlEventEditingChanged];
     }];
     [alert addAction:save];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
     [SGTopController() presentViewController:alert animated:YES completion:nil];
 }
 
@@ -676,8 +676,8 @@ static NSArray<NSString *> *modelMenu(const SGAIProvider *p) {
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemClose target:self action:@selector(close)];
     // Plain: Spotify's white tint fills a Done item's glass and hides its glyph.
     UIBarButtonItem *done = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"checkmark"] style:UIBarButtonItemStylePlain target:self action:@selector(save)];
-    done.accessibilityLabel = @"Save";
-    UIBarButtonItem *reset = [[UIBarButtonItem alloc] initWithTitle:@"Default" style:UIBarButtonItemStylePlain target:self action:@selector(reset)];
+    done.accessibilityLabel = SGT(@"Save");
+    UIBarButtonItem *reset = [[UIBarButtonItem alloc] initWithTitle:SGT(@"Default") style:UIBarButtonItemStylePlain target:self action:@selector(reset)];
     self.navigationItem.rightBarButtonItems = @[done, reset];
 }
 

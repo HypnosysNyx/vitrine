@@ -73,7 +73,7 @@ static CGFloat height(float rms) {
     self.clipsToBounds = YES;
     _feedback = [UISelectionFeedbackGenerator new];
     self.isAccessibilityElement = YES;
-    self.accessibilityLabel = @"Vocals";
+    self.accessibilityLabel = SGT(@"Vocals");
     self.accessibilityTraits = UIAccessibilityTraitAdjustable;
     return self;
 }
@@ -95,7 +95,7 @@ static CGFloat height(float rms) {
 
 - (void)setLevel:(float)level {
     _level = fmaxf(0, fminf(level, 2));
-    self.accessibilityValue = SGSingLevelText(_level);
+    self.accessibilityValue = SGT(SGSingLevelText(_level));
     [self setNeedsLayout];
 }
 

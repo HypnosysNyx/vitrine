@@ -2,6 +2,7 @@
 #if TARGET_OS_IPHONE
 #import <os/proc.h>
 #endif
+#import "Core/SGL10n.h"
 #import "Core/SGLog.h"
 #import "SGSingLoader.h"
 #import "SGSingSeparator.h"
@@ -91,7 +92,7 @@ static unsigned long long memoryLeft(void) {
 
 static NSString *memoryText(void) {
     unsigned long long left = memoryLeft();
-    return left ? [NSString stringWithFormat:@"%.2f GB left to the process", left / 1e9] : @"memory left unknown";
+    return left ? [NSString stringWithFormat:SGT(@"%.2f GB left to the process"), left / 1e9] : SGT(@"memory left unknown");
 }
 
 // Whether `room` is left for a copy beside what is already in memory or still loading.
@@ -213,8 +214,8 @@ static void startCPU(void) {
     if (!roomFor(sg_outstanding ? copyRoom(sg_url) : firstRoom(sg_url))) {
         sg_state = SGSingLoaderFailed;
         sg_error = sg_outstanding
-            ? [NSString stringWithFormat:@"A load abandoned earlier still holds memory, and %@. Close Spotify and open it again to load the voice model.", memoryText()]
-            : [NSString stringWithFormat:@"iOS leaves Spotify too little memory for the voice model: %@, and it needs %.1f GB. Closing Spotify and opening it again can free some.", memoryText(), firstRoom(sg_url) / 1e9];
+            ? [NSString stringWithFormat:SGT(@"A load abandoned earlier still holds memory, and %@. Close Spotify and open it again to load the voice model."), memoryText()]
+            : [NSString stringWithFormat:SGT(@"iOS leaves Spotify too little memory for the voice model: %@, and it needs %.1f GB. Closing Spotify and opening it again can free some."), memoryText(), firstRoom(sg_url) / 1e9];
         SGLog(@"sing: no new load: %@", sg_error);
         changed();
         return;
@@ -229,14 +230,15 @@ static void startCPU(void) {
         } else {
             sg_state = SGSingLoaderFailed;
             sg_error = model ? @"Karaoke could not set aside memory for the voice model."
-                             : [NSString stringWithFormat:@"The voice model did not load: %@", error.localizedDescription ?: @"Core ML gave no reason."];
+                             : [NSString stringWithFormat:SGT(@"The voice model did not load: %@"),
+                                    SGUseSimplifiedChinese() ? SGT(@"Core ML could not load the voice model; diagnostic details are in the logs.") : (error.localizedDescription ?: @"Core ML gave no reason.")];
         }
         changed();
         startFast();
     }, ^{
         sg_cpuLoad = nil;
         sg_state = SGSingLoaderFailed;
-        sg_error = [NSString stringWithFormat:@"The voice model did not load in %.0f s, so that load was given up.", SGSingLoaderCPUDeadline];
+        sg_error = [NSString stringWithFormat:SGT(@"The voice model did not load in %.0f s, so that load was given up."), SGSingLoaderCPUDeadline];
         changed();
     });
     changed();
