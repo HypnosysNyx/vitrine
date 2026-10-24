@@ -50,3 +50,12 @@ Purpose: Every screenshot regression must identify a root cause, fix the visible
 - **Verified locally:** `sync-zh-hans.py --check`, `check-zh-hans-coverage.py` (52 screenshot cases), `check-zh-hans-placeholders.py`, `audit-mod-ui-literals.py` (297 files), `check-layers.sh`, and `git diff --check`.
 - **macOS compilation:** PR head `95e44c5` passed [macOS workflow run 39991312030](https://github.com/HypnosysNyx/vitrine/actions/runs/39991312030): localization checks, Xcode setup, appearance/settings harnesses and tweak compile/link all succeeded. PR #1 was merged at `c217a3f` on 2026-10-24. This step did **not** generate an IPA.
 - **Still not verified:** Installation of a build from the merged code on a real iPhone or screenshot-based visual acceptance. Do not present this as a device-tested IPA release.
+
+
+## Screenshot: beta.14 What's New sheet entirely English — 2026-10-24
+
+- **Observed on iPhone:** The first-run sheet displayed “What's New in Vitrine”, “Version 1.0.0-beta.14”, “Features”, all release descriptions (e.g. AI DJ, Automatic lyric source, AutoMix) and “Continue” in English despite Simplified Chinese locale.
+- **Root cause:** `App/Onboarding/WhatsNew.m` formatted fixed labels without `SGT` and passed `SGUpdateChangesIn(SGWhatsNewNotes)` strings directly from the generated `CHANGELOG.md` header to the UI, bypassing the translation dictionary. `scripts/audit-mod-ui-literals.py` missed the dynamically sourced text, and screenshot QA did not assert this renderer.
+- **Fix:** Translate UI literals and the original changelog text at the display boundary before optional first-character capitalization, while keeping the source markdown, links, kinds and update-seen preference keys unchanged. Added Chinese entries for all 64 release-note lines in beta.14 and used the same translated presentation in Mod's update page and notice.
+- **Permanent regression:** `scripts/check-zh-hans-coverage.py` now asserts the What's New title, version format, category heading, Continue button, row renderer, and parsing of the exact current-version notes from `CHANGELOG.md`; missing translations for newly released notes must fail CI, rather than silently shipping English.
+- **Not yet verified:** matching-SHA IPA build and device screenshot; source/tests alone do not establish visual acceptance. Reinstalling a corrected build with the same version does not automatically reopen a sheet already marked seen.

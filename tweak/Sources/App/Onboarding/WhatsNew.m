@@ -1,3 +1,4 @@
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Settings/SGPageStyle.h"
 #import "Onboarding.h"
@@ -60,7 +61,8 @@ static UILabel *label(NSString *text, UIFontTextStyle style, UIFontWeight weight
     UIImageView *icon = SGSymbolView(symbolFor(change.kind), 20, UIImageSymbolWeightSemibold, 30);
     icon.tintColor = SGGreen();
     // Commit titles start in lower case; a sentence on a sheet does not.
-    NSString *line = change.text.length ? [[change.text substringToIndex:1].uppercaseString stringByAppendingString:[change.text substringFromIndex:1]] : @"";
+    NSString *localized = SGT(change.text);
+    NSString *line = localized.length ? [[localized substringToIndex:1].uppercaseString stringByAppendingString:[localized substringFromIndex:1]] : @"";
     UILabel *text = label(line, UIFontTextStyleBody, UIFontWeightRegular, UIColor.whiteColor);
     [text setContentHuggingPriority:UILayoutPriorityDefaultLow - 1 forAxis:UILayoutConstraintAxisHorizontal];
     UIStackView *row = [[UIStackView alloc] initWithArrangedSubviews:@[icon, text]];
@@ -75,10 +77,10 @@ static UILabel *label(NSString *text, UIFontTextStyle style, UIFontWeight weight
     // iOS 26 gives a sheet its own material; before it the sheet takes the mod's page color.
     if (@available(iOS 26.0, *)) {} else self.view.backgroundColor = SGPageBackground();
 
-    UILabel *title = label(@"What's New in Vitrine", UIFontTextStyleLargeTitle, UIFontWeightBold, UIColor.whiteColor);
+    UILabel *title = label(SGT(@"What's New in Vitrine"), UIFontTextStyleLargeTitle, UIFontWeightBold, UIColor.whiteColor);
     title.textAlignment = NSTextAlignmentCenter;
     title.accessibilityTraits = UIAccessibilityTraitHeader;
-    UILabel *version = label([NSString stringWithFormat:@"Version %s", SG_VERSION], UIFontTextStyleSubheadline, UIFontWeightRegular, SGGrey());
+    UILabel *version = label([NSString stringWithFormat:SGT(@"Version %s"), SG_VERSION], UIFontTextStyleSubheadline, UIFontWeightRegular, SGGrey());
     version.textAlignment = NSTextAlignmentCenter;
 
     UIStackView *column = [[UIStackView alloc] initWithArrangedSubviews:@[title, version]];
@@ -89,7 +91,7 @@ static UILabel *label(NSString *text, UIFontTextStyle style, UIFontWeight weight
     for (SGUpdateChange *change in SGWhatsNewChanges()) {
         if (![change.kind isEqualToString:kind]) {
             kind = change.kind;
-            UILabel *heading = label(kind, UIFontTextStyleTitle3, UIFontWeightSemibold, UIColor.whiteColor);
+            UILabel *heading = label(SGT(kind), UIFontTextStyleTitle3, UIFontWeightSemibold, UIColor.whiteColor);
             heading.accessibilityTraits = UIAccessibilityTraitHeader;
             if (column.arrangedSubviews.count > 2) [column setCustomSpacing:28 afterView:column.arrangedSubviews.lastObject];
             [column addArrangedSubview:heading];
@@ -107,7 +109,7 @@ static UILabel *label(NSString *text, UIFontTextStyle style, UIFontWeight weight
     [scroll addSubview:column];
     [self.view addSubview:scroll];
 
-    UIButton *done = SGOnboardingButton(@"Continue");
+    UIButton *done = SGOnboardingButton(SGT(@"Continue"));
     [done addAction:[UIAction actionWithHandler:^(UIAction *action) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }] forControlEvents:UIControlEventTouchUpInside];

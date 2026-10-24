@@ -33,7 +33,7 @@ static NSString *noticeBody(NSString *version, BOOL beta) {
     NSMutableString *body = [NSMutableString stringWithFormat:@"This build is %s.", SG_VERSION];
     if (beta) [body appendString:@" This one is a beta, a test build ahead of the next release."];
     NSUInteger shown = MIN(changes.count, (NSUInteger)3);
-    for (NSUInteger i = 0; i < shown; i++) [body appendFormat:@"\n\n• %@", changes[i].text];
+    for (NSUInteger i = 0; i < shown; i++) [body appendFormat:@"\n\n• %@", SGT(changes[i].text)];
     if (changes.count > shown) [body appendFormat:@"\n\nand %lu more in %@.", (unsigned long)(changes.count - shown), version];
     return body;
 }

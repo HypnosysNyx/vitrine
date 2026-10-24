@@ -219,4 +219,45 @@ assert "detail.contains(\"safety guardrails\")" in (SRC / "Shared/LyricsTranslat
 guardrail_shown = TRANSLATIONS["Apple Intelligence could not translate the song (%@)."].replace(
     "%@", TRANSLATIONS["The model's safety guardrails were triggered."])
 assert guardrail_shown == "Apple 智能无法翻译这首歌曲（触发了模型的安全保护机制）。", guardrail_shown
+
+# Screenshot 2026-10-24: beta.14's What's New sheet showed its title, categories,
+# changelog bullets and Continue in English despite all earlier static checks
+# passing. Track the actual runtime renderer and GENERATED changelog keys.
+whatsnew = (SRC / "App/Onboarding/WhatsNew.m").read_text(encoding="utf-8")
+assert "label(SGT(@\"What's New in Vitrine\")," in whatsnew
+assert 'stringWithFormat:SGT(@"Version %s"), SG_VERSION' in whatsnew
+assert 'SGOnboardingButton(SGT(@"Continue"))' in whatsnew
+assert 'NSString *localized = SGT(change.text);' in whatsnew
+assert 'UILabel *heading = label(SGT(kind),' in whatsnew
+assert contains("App/About/UpdatePage.m", "row.title = SGT(change.text);")
+assert contains("App/About/UpdatePage.m", "release.version, SGT(kind),")
+assert contains("App/About/UpdateNotice.m", "SGT(changes[i].text)")
+for static_key in ("What's New in Vitrine", "Version %s", "Continue", "Features", "Fixes"):
+    assert TRANSLATIONS.get(static_key) and TRANSLATIONS[static_key] != static_key, static_key
+
+# Compare against the exact English notes compiled into SGWhatsNewNotes.h by
+# scripts/whats-new.sh; neither the CHANGELOG file itself nor commit URLs are changed.
+current_version = (ROOT / "version.txt").read_text(encoding="utf-8").strip()
+changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+section_match = re.search(r"(?ms)^## \[" + re.escape(current_version) +
+                          r"\][^\n]*\n(.*?)(?=^## \[|\Z)", changelog)
+assert section_match, ("Missing current release notes", current_version)
+release_notes = []
+for raw in section_match.group(1).splitlines():
+    line = raw.strip()
+    if not line.startswith(("* ", "- ")):
+        continue
+    line = re.sub(r"\s*\(\[[0-9a-f]{6,}\]\([^)]+\)\)\s*$", "", line[2:])
+    line = re.sub(r"\[([^\]]*)\]\([^)]+\)", r"\1", line).replace("**", "").strip()
+    if line:
+        release_notes.append(line)
+assert release_notes, ("Release sheet would be empty", current_version)
+missing_notes = [line for line in release_notes
+                 if line not in TRANSLATIONS or TRANSLATIONS[line] == line]
+assert not missing_notes, ("Unlocalized What's New notes", current_version, missing_notes)
+assert TRANSLATIONS["AI DJ player in the redesign (#36)"] == "重新设计版新增 AI DJ 播放器（#36）"
+assert TRANSLATIONS["Automatic in Lyrics Source, and a switch to prefer word-by-word timing"].startswith("歌词来源新增")
+assert TRANSLATIONS["AutoMix blends songs with Spotify's own Automix and crossfade (#41)"].endswith("（#41）")
+print(f"PASS: What's New render path and all {len(release_notes)} current release notes translated")
+
 print(f"PASS: {checked} screenshot strings resolve exactly; 31 localized language choices, guardrail-error fallback, duplicate-case protection, dynamic templates, and raw IDs checked")
