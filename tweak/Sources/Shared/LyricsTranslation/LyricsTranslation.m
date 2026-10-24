@@ -38,9 +38,9 @@ typedef struct {
     NSString *(*answer)(NSDictionary *reply, NSString *speaker, NSString **stopped);
 } SGAIProvider;
 
-static NSString *filtered(NSString *speaker) { return [NSString stringWithFormat:@"%@'s filters blocked this song's lyrics.", speaker]; }
-static NSString *tooLong(NSString *speaker) { return [NSString stringWithFormat:@"The song is too long for one answer from %@.", speaker]; }
-static NSString *declined(NSString *speaker) { return [NSString stringWithFormat:@"%@ declined to translate the song.", speaker]; }
+static NSString *filtered(NSString *speaker) { return [NSString stringWithFormat:SGT(@"%@'s filters blocked this song's lyrics."), speaker]; }
+static NSString *tooLong(NSString *speaker) { return [NSString stringWithFormat:SGT(@"The song is too long for one answer from %@."), speaker]; }
+static NSString *declined(NSString *speaker) { return [NSString stringWithFormat:SGT(@"%@ declined to translate the song."), speaker]; }
 
 static id dig(id root, NSArray *path) {
     for (id step in path) {
@@ -93,10 +93,10 @@ static NSMutableURLRequest *geminiRequest(NSString *model, NSString *prompt, NSS
 
 // Why Gemini stopped short, as finishReason or promptFeedback.blockReason name it.
 static NSString *geminiStop(NSString *reason, NSString *speaker) {
-    if ([reason isEqualToString:@"RECITATION"]) return [NSString stringWithFormat:@"%@ stopped because its answer repeated published lyrics.", speaker];
+    if ([reason isEqualToString:@"RECITATION"]) return [NSString stringWithFormat:SGT(@"%@ stopped because its answer repeated published lyrics."), speaker];
     if ([@[@"SAFETY", @"PROHIBITED_CONTENT", @"BLOCKLIST", @"SPII"] containsObject:reason]) return filtered(speaker);
     if ([reason isEqualToString:@"MAX_TOKENS"]) return tooLong(speaker);
-    return [NSString stringWithFormat:@"%@ stopped before translating the song (%@).", speaker, reason];
+    return [NSString stringWithFormat:SGT(@"%@ stopped before translating the song (%@)."), speaker, reason];
 }
 
 static NSString *geminiAnswer(NSDictionary *reply, NSString *speaker, NSString **stopped) {
@@ -391,25 +391,25 @@ NSArray<NSString *> *SGAITranslationsIn(NSString *provider, id root, NSInteger s
     // {"error": {"message": ...}} from all three; a bare string from some compatible servers.
     NSString *says = string(dig(reply, @[@"error", @"message"])) ?: string(reply[@"error"]);
     if (error) {
-        *problem = [NSString stringWithFormat:@"%@ could not be reached.", who];
+        *problem = [NSString stringWithFormat:SGT(@"%@ could not be reached."), who];
     } else if (status == 401 || status == 403 || (status == 400 && [says localizedCaseInsensitiveContainsString:@"API key"])) {
-        *problem = [NSString stringWithFormat:@"%@ turned the key down. Check it on the Lyrics page.", who];
+        *problem = [NSString stringWithFormat:SGT(@"%@ turned the key down. Check it on the Lyrics page."), who];
     } else if (status == 400 || status == 404) {
-        *problem = says.length ? [NSString stringWithFormat:@"%@ did not take the request: %@", who, says]
-                               : [NSString stringWithFormat:@"%@ did not take the request (%ld).", who, (long)status];
+        *problem = says.length ? [NSString stringWithFormat:SGT(@"%@ did not take the request: %@"), who, says]
+                               : [NSString stringWithFormat:SGT(@"%@ did not take the request (%ld)."), who, (long)status];
     } else if (status == 429) {
-        *problem = [NSString stringWithFormat:@"%@'s limit for this key is reached for now.", who];
+        *problem = [NSString stringWithFormat:SGT(@"%@'s limit for this key is reached for now."), who];
     } else if (status >= 500) {
-        *problem = [NSString stringWithFormat:@"%@ is busy right now. Try again in a minute.", who];
+        *problem = [NSString stringWithFormat:SGT(@"%@ is busy right now. Try again in a minute."), who];
     } else if (status != 200) {
-        *problem = [NSString stringWithFormat:@"%@ did not translate the song (%ld).", who, (long)status];
+        *problem = [NSString stringWithFormat:SGT(@"%@ did not translate the song (%ld)."), who, (long)status];
     } else if (stopped) {
         *problem = stopped;
     } else if (lines) {
-        *problem = [NSString stringWithFormat:@"%@ answered %lu lines for the song's %lu. Try again.", who,
+        *problem = [NSString stringWithFormat:SGT(@"%@ answered %lu lines for the song's %lu. Try again."), who,
                     (unsigned long)lines.count, (unsigned long)count];
     } else {
-        *problem = [NSString stringWithFormat:@"%@'s answer could not be read. Try again.", who];
+        *problem = [NSString stringWithFormat:SGT(@"%@'s answer could not be read. Try again."), who];
     }
     return nil;
 }
@@ -458,7 +458,7 @@ void SGLyricsTranslateWithAI(NSString *trackID, NSArray<SGKaraokeLine *> *lines,
     const SGAIProvider *p = chosen();
     NSString *key = storedSecret(p, kKeyAccount), *modelID = model(p), *template = promptTemplate();
     if (!key || !modelID) {
-        done(nil, [NSString stringWithFormat:@"Add a %@ API key%@ on the Lyrics page first.", p->name, modelID ? @"" : @" and a model"]);
+        done(nil, [NSString stringWithFormat:SGT(@"Add a %@ API key%@ on the Lyrics page first."), SGT(p->name), modelID ? @"" : SGT(@" and a model")]);
         return;
     }
     if (!sg_done) sg_done = [NSMutableDictionary dictionary];
@@ -481,7 +481,7 @@ void SGLyricsTranslateWithAI(NSString *trackID, NSArray<SGKaraokeLine *> *lines,
     NSString *prompt = [NSString stringWithFormat:@"%@\n\n%@", instructions, [[NSString alloc] initWithData:input encoding:NSUTF8StringEncoding]];
     NSURLRequest *request = p->request(modelID, prompt, key, NO), *plain = p->request(modelID, prompt, key, YES);
     if (!request) {
-        done(nil, @"The OpenAI-compatible server's URL is not usable. Check it on the Lyrics page.");
+        done(nil, SGT(@"The OpenAI-compatible server's URL is not usable. Check it on the Lyrics page."));
         return;
     }
     SGLog(@"ai: asking %@ %@ at %@, prompt %@%@", p->tag, modelID, request.URL.host, fingerprint(template),
@@ -545,8 +545,8 @@ static void configure(UITextField *field, NSString *placeholder) {
 static void askForKey(void) {
     const SGAIProvider *p = chosen();
     BOOL server = isOpenAI(p), stored = storedSecret(p, kKeyAccount) != nil;
-    NSString *message = [p->keyNote stringByAppendingString:@"\n\nCopy the key, then tap Paste Key."];
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@ API key", p->name]
+    NSString *message = [NSString stringWithFormat:@"%@\n\n%@", SGT(p->keyNote), SGT(@"Copy the key, then tap Paste Key.")];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:SGT(@"%@ API key"), SGT(p->name)]
                                                                    message:message preferredStyle:UIAlertControllerStyleAlert];
     alert.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;   // over the dark settings, whatever the system's
     __weak UIAlertController *weakAlert = alert;
@@ -610,7 +610,7 @@ static void askForKey(void) {
 
 static void askForModel(void) {
     const SGAIProvider *p = chosen();
-    NSString *example = p->models[1] ?: p->models[0] ?: @"gpt-6-astra, or a model your server lists";
+    NSString *example = p->models[1] ?: p->models[0] ?: SGT(@"gpt-6-astra, or a model your server lists");
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:SGT(@"%@ model"), p->name]
         message:[NSString stringWithFormat:SGT(@"A model id, such as %@."), example] preferredStyle:UIAlertControllerStyleAlert];
     alert.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;

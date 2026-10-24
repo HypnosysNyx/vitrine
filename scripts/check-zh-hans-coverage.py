@@ -353,4 +353,51 @@ assert 'SGKeyLyricsTranslateOnDevice' in harness_stub
 assert 'SGKeyLyricsAppleIntelligence' in harness_stub
 print("PASS: beta.15 7 release notes and new live lyrics source panel UI localized")
 
+
+# AI-KEY-20261024 screenshot (beta.15): OpenAI-compatible API key alert has
+# Chinese Cancel / Paste Key but the dynamically assembled title and provider
+# note remained English. The Model row was missing its translated catalog key.
+# Audit the producer (provider table), the renderer (askForKey), and all three
+# provider notes; the previous generic literal/UI audits missed the indirection.
+ai_source = (SRC / "Shared/LyricsTranslation/LyricsTranslation.m").read_text(encoding="utf-8")
+provider_table = ai_source.split("static const SGAIProvider kProviders[] = {", 1)[1].split(
+    "static const NSUInteger kProviderCount", 1)[0]
+provider_ids = ("gemini", "openai", "anthropic")
+for provider_id in provider_ids:
+    pat = (r'\{\s*@"' + provider_id + r'",\s*@"[^"]+",\s*(?:nil|@"[^"]+"),\s*'
+           r'@"[^"]+",\s*((?:@"(?:\\.|[^"\\])*"\s*)+),')
+    match = re.search(pat, provider_table)
+    assert match, ("Provider key-note definition changed", provider_id)
+    note = "".join(json.loads(t[1:]) for t in re.findall(r'@"(?:\\.|[^"\\])*"', match.group(1)))
+    assert note in TRANSLATIONS and TRANSLATIONS[note] != note, ("Untranslated provider API-key note", provider_id)
+key_dialog = ai_source.split("static void askForKey(void) {", 1)[1].split("static void askForModel(void) {", 1)[0]
+assert 'SGT(p->keyNote)' in key_dialog, "Provider note bypasses localization"
+assert 'stringWithFormat:SGT(@"%@ API key"), SGT(p->name)' in key_dialog, "API-key title bypasses localization"
+assert 'SGT(@"Copy the key, then tap Paste Key.")' in key_dialog, "Instructions bypass localization"
+assert 'storeSecret(p, kKeyAccount, key);' in key_dialog, "Protected key storage changed"
+assert 'storeSecret(p, kServerAccount,' in key_dialog, "Protected server storage changed"
+assert 'board.items = @[];' in key_dialog, "Secret clipboard cleanup changed"
+assert 'configure(field, kOpenAIDefaultURL);' in key_dialog, "Protected server field changed"
+for english, chinese in (("%@ API key", "%@ API 密钥"),
+                         ("OpenAI-compatible", "OpenAI 兼容接口"),
+                         ("Model", "模型"),
+                         ("API key", "API 密钥"),
+                         ("Other…", "其他…"),
+                         ("Copy the key, then tap Paste Key.", "请复制 API 密钥，然后点击“粘贴密钥”。")):
+    assert TRANSLATIONS.get(english) == chinese, ("Missing screenshot translation", english)
+assert 'SGMenuRow(@"Model", modelMenu(chosen())' in ai_source
+assert 'SGStatActionRow(@"API key",' in ai_source
+mod_rows = (SRC / "Settings/SGModPage.m").read_text(encoding="utf-8")
+assert 'SGModRow *row = SGStatRow(title, value);' in mod_rows
+assert 'row.title = SGT(title);' in mod_rows
+assert 'actionWithTitle:SGT(name)' in mod_rows
+for template in ("%@'s filters blocked this song's lyrics.",
+                 "The song is too long for one answer from %@.",
+                 "%@ declined to translate the song.",
+                 "Add a %@ API key%@ on the Lyrics page first."):
+    assert ('stringWithFormat:SGT(@' + json.dumps(template, ensure_ascii=False) + ')') in ai_source, template
+    assert template in TRANSLATIONS
+assert 'modelID ? @"" : SGT(@" and a model")' in ai_source
+print("PASS: AI-KEY-20261024 dynamic provider notes, alert title, settings rows and key storage")
+
 print(f"PASS: {checked} screenshot strings resolve exactly; 31 localized language choices, guardrail-error fallback, duplicate-case protection, dynamic templates, and raw IDs checked")
