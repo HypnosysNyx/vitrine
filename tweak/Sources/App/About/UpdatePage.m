@@ -160,7 +160,7 @@ static NSArray<SGUpdateRelease *> *releasesToShow(void) {
                 [kinds addObject:change.kind];
             }
             SGUpdateRow *row = [SGUpdateRow new];
-            row.title = change.text;
+            row.title = SGT(change.text);
             if (change.url.length) row.action = ^{ SGOpenURL(change.url); };
             [rows addObject:row];
         }
@@ -176,7 +176,7 @@ static NSArray<SGUpdateRelease *> *releasesToShow(void) {
         }
         [kinds enumerateObjectsUsingBlock:^(NSString *kind, NSUInteger i, BOOL *stop) {
             // The date goes on the first heading of a release, so several releases read as dated blocks.
-            NSString *title = [NSString stringWithFormat:@"%@ · %@%@", release.version, kind,
+            NSString *title = [NSString stringWithFormat:@"%@ · %@%@", release.version, SGT(kind),
                                i == 0 && date.length ? [@" · " stringByAppendingString:date] : @""];
             [groups addObject:group(title, byKind[kind])];
         }];
