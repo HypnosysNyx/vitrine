@@ -344,6 +344,13 @@ for k in ("Apple's Translate in the lyrics' translate menu",
 assert "SGOnDeviceTranslatorRows()" in (SRC / "App/Pages.m").read_text(encoding="utf-8")
 assert (ROOT / "version.txt").read_text(encoding="utf-8").strip() == "1.0.0-beta.15"
 assert len(release_notes) == 7, ("beta.15 release notes unexpectedly changed", release_notes)
+# The beta.15 source adds two translation settings rows to App/Pages.m.
+# The independent UIKit settings harness must provide both stubs too; a missing
+# symbol used to fail linking after all localization scans had passed.
+harness_stub = (ROOT / "harness/mod-settings/stubs.m").read_text(encoding="utf-8")
+assert 'NSArray<SGModRow *> *SGOnDeviceTranslatorRows(void)' in harness_stub
+assert 'SGKeyLyricsTranslateOnDevice' in harness_stub
+assert 'SGKeyLyricsAppleIntelligence' in harness_stub
 print("PASS: beta.15 7 release notes and new live lyrics source panel UI localized")
 
 print(f"PASS: {checked} screenshot strings resolve exactly; 31 localized language choices, guardrail-error fallback, duplicate-case protection, dynamic templates, and raw IDs checked")

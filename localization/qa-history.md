@@ -88,3 +88,5 @@ Purpose: Every screenshot regression must identify a root cause, fix the visible
 - **Remaining verification:** Exact merged-SHA CI compilation and genuine iPhone screen / click checks. Static checks alone are not device acceptance.
 
 - **Apple brand name:** The new Apple Intelligence switch uses `SGT` with an intentionally unchanged branded display value, while the explanatory subtitle is localized. Stored flags remain unchanged.
+
+- **CI repair (2026-10-24):** Initial macOS settings harness link failed with undefined symbol `_SGOnDeviceTranslatorRows`; the production function exists in beta.15 but isolated `harness/mod-settings/stubs.m` omitted the new two-row stub. Added matching test-only switch stubs using the same flag identifiers, plus a permanent harness completeness assertion. This changes no production app logic.
