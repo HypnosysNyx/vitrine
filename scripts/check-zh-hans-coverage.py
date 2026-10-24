@@ -224,7 +224,7 @@ assert guardrail_shown == "Apple 智能无法翻译这首歌曲（触发了模�
 # changelog bullets and Continue in English despite all earlier static checks
 # passing. Track the actual runtime renderer and GENERATED changelog keys.
 whatsnew = (SRC / "App/Onboarding/WhatsNew.m").read_text(encoding="utf-8")
-assert 'label(SGT(@"What\\'s New in Vitrine")' in whatsnew
+assert "label(SGT(@\"What's New in Vitrine\")," in whatsnew
 assert 'stringWithFormat:SGT(@"Version %s"), SG_VERSION' in whatsnew
 assert 'SGOnboardingButton(SGT(@"Continue"))' in whatsnew
 assert 'NSString *localized = SGT(change.text);' in whatsnew
