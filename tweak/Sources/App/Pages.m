@@ -121,8 +121,8 @@ static UIViewController *lyricsPage(void) {
                 SGSwitchRow(SGT(@"Hide the controls"), SGT(@"A few seconds after the last touch, the lyrics take the whole player"), SGRKeyLyricsAutoHide),
                 SGSwitchRow(SGT(@"Landscape lyrics"), SGT(@"Turn the phone with the lyrics open"), SGRKeyLyricsLandscape)]),
             timing,
-            SGSection(SGT(@"Translation"), [[@[SGLyricsTranslationLanguageRow(), SGTranslateEverySongRow()] arrayByAddingObjectsFromArray:SGAITranslatorRows()]
-                                          arrayByAddingObject:SGSavedTranslationsRow()]),
+            SGSection(SGT(@"Translation"), [[[@[SGLyricsTranslationLanguageRow(), SGTranslateEverySongRow()] arrayByAddingObjectsFromArray:SGOnDeviceTranslatorRows()]
+                                          arrayByAddingObjectsFromArray:SGAITranslatorRows()] arrayByAddingObject:SGSavedTranslationsRow()]),
             SGSection(nil, @[SGLyricsMeaningsRow()]),
         ]];
     } else {

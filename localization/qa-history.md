@@ -76,3 +76,17 @@ Purpose: Every screenshot regression must identify a root cause, fix the visible
 - **Fix:** Apply `SGT(item[0])` only at the actual `UIAction` title renderer. Preserve the source English labels, `item[2]` / `item[3]` row-identification keys, SF Symbols, and `fireQuick:quick` tap handler exactly.
 - **Regression:** `scripts/check-zh-hans-coverage.py` now checks the exact three catalog translations, the original four-field quick-item tuples, the translated UIAction renderer, and unchanged native matching/dispatch. The regression fails against the older shipped source.
 - **Validation needed:** matching-commit CI compile and on-device screenshot of all three translated quick actions and their correct tap actions. Build or dictionary checks alone do not prove device output.
+
+
+## Upstream v1.0.0-beta.15 official tag synchronization — 2026-10-24
+
+- **Source:** Upstream tag `v1.0.0-beta.15` (`b5fbe77da2567203bc4ce67d5fe826cc0822f020`); do not include later `upstream/main` commits.
+- **Old localized base:** `d6057c29ebb580b815f2491567d47d514a1b736a` (beta.14 with three quick action buttons localized).
+- **Conflict resolution:** `App/Pages.m` preserved the localized Translation heading and introduced new on-device translator switches. `Redesigned/Player/PlayerMenu.m` accepted upstream's new live lyrics source panel, then localized the title, header, source names, querying placeholder and subheadings without changing source selection keys or handlers.
+- **Translation updates:** Added all seven exact beta.15 release note keys, plus on-device translation toggle descriptions, auto mix flags, and the panel's `Asking…` state. Updated compiled `SGL10n.m` from the JSON.
+- **Permanent tests:** `check-zh-hans-coverage.py` asserts actual beta.15 source-panel producer to renderer, state text, new translator rows, source selection keys, current version and exact count of release notes. Preserve prior 'Translated by' and quick action regression checks.
+- **Remaining verification:** Exact merged-SHA CI compilation and genuine iPhone screen / click checks. Static checks alone are not device acceptance.
+
+- **Apple brand name:** The new Apple Intelligence switch uses `SGT` with an intentionally unchanged branded display value, while the explanatory subtitle is localized. Stored flags remain unchanged.
+
+- **CI repair (2026-10-24):** Initial macOS settings harness link failed with undefined symbol `_SGOnDeviceTranslatorRows`; the production function exists in beta.15 but isolated `harness/mod-settings/stubs.m` omitted the new two-row stub. Added matching test-only switch stubs using the same flag identifiers, plus a permanent harness completeness assertion. This changes no production app logic.

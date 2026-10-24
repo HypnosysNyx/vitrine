@@ -1247,5 +1247,18 @@
   "up": "升高",
   "up to date": "已是最新版本",
   "work": "支持",
-  "works": "支持"
+  "works": "支持",
+  "Asking…": "正在查询…",
+  "Apple's Translate in the lyrics' translate menu": "在歌词翻译菜单中使用 Apple「翻译」",
+  "Apple Intelligence in the lyrics' translate menu": "在歌词翻译菜单中使用 Apple Intelligence",
+  "Auto mix": "自动混音",
+  "Auto mix in the context menu": "在快捷菜单中显示自动混音",
+  "Add to Queue on an album page's menu with Spoof Premium (#88)": "启用模拟 Premium 时，专辑页面菜单支持加入播放队列（#88）",
+  "Spoof Premium turns off the DJ's Premium-only flag, Labs adds auto mix": "模拟 Premium 会关闭 DJ 的仅限 Premium 标记；实验室新增自动混音开关",
+  "switches for the on-device translators, and no translation that repeats its line": "新增设备端翻译器开关，并避免将原歌词原样重复作为译文",
+  "Anthropic presets Haiku 4.5 and Sonnet 4.6, Gemini defaults to 3.6 Flash": "Anthropic 预设更新为 Haiku 4.5 和 Sonnet 4.6；Gemini 默认使用 3.6 Flash",
+  "Lyrics Source opens a panel that lists each source as it answers": "“歌词来源”现在打开独立面板，并在各来源返回结果时逐项更新",
+  "the Lyrics Source submenu lists the sources at once and fits without scrolling": "歌词来源子菜单可一次显示所有来源，不再需要滚动",
+  "the volume slider's speaker glyphs line up with its track (#86)": "音量滑块两侧的扬声器图标与滑动轨道对齐（#86）",
+  "Apple Intelligence": "Apple Intelligence"
 }

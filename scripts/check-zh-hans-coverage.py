@@ -318,4 +318,39 @@ assert "[weakSelf fireQuick:quick];" in quick_renderer, "Quick native handler sh
 assert "SGT(item[2])" not in quick_renderer, "Do not translate native matcher"
 print("PASS: player menu three quick actions localized; native keys / handlers preserved")
 
+
+# beta.15 regression: the redesigned player's Lyrics Source submenu became a
+# live updating popover. The former row renderer was removed by upstream; new
+# header/row/placeholder/action text must be localized at their NEW sinks.
+player_menu = (SRC / "Redesigned/Player/PlayerMenu.m").read_text(encoding="utf-8")
+assert 'title.text = SGT(@"Lyrics Source");' in player_menu
+assert 'automatic.title = SGT(@"Automatic");' in player_menu
+assert 'automatic.subtitle = current ? SGT(@"As the order chooses") : SGT(SGLyricsCreditFor(_track));' in player_menu
+assert 'row.title = SGT(SGLyricsProviderFor(key).name);' in player_menu
+assert 'row.subtitle = offer ? timingText(offer.karaokeLines) : SGT(@"Asking…");' in player_menu
+assert 'none.title = SGT(@"No Source Has Lyrics");' in player_menu
+assert 'actionWithTitle:SGT(@"Lyrics Source") image:symbol(@"quote.bubble")' in player_menu
+assert 'open.subtitle = SGT(SGLyricsCreditFor(track));' in player_menu
+assert 'if (row.key) SGLyricsChooseSource(_track, row.key);' in player_menu
+assert 'else SGLyricsChooseAutomatic(_track);' in player_menu
+assert 'SGLyricsOffersDidChangeNotification' in player_menu
+assert TRANSLATIONS["Asking…"] == "正在查询…"
+translator = (SRC / "Shared/LyricsTranslation/LyricsTranslation.m").read_text(encoding="utf-8")
+assert "SGOnDeviceTranslatorRows(void)" in translator
+for k in ("Apple's Translate in the lyrics' translate menu",
+          "Apple Intelligence in the lyrics' translate menu",
+          "Auto mix", "Auto mix in the context menu"):
+    assert k in TRANSLATIONS and TRANSLATIONS[k] != k, k
+assert "SGOnDeviceTranslatorRows()" in (SRC / "App/Pages.m").read_text(encoding="utf-8")
+assert (ROOT / "version.txt").read_text(encoding="utf-8").strip() == "1.0.0-beta.15"
+assert len(release_notes) == 7, ("beta.15 release notes unexpectedly changed", release_notes)
+# The beta.15 source adds two translation settings rows to App/Pages.m.
+# The independent UIKit settings harness must provide both stubs too; a missing
+# symbol used to fail linking after all localization scans had passed.
+harness_stub = (ROOT / "harness/mod-settings/stubs.m").read_text(encoding="utf-8")
+assert 'NSArray<SGModRow *> *SGOnDeviceTranslatorRows(void)' in harness_stub
+assert 'SGKeyLyricsTranslateOnDevice' in harness_stub
+assert 'SGKeyLyricsAppleIntelligence' in harness_stub
+print("PASS: beta.15 7 release notes and new live lyrics source panel UI localized")
+
 print(f"PASS: {checked} screenshot strings resolve exactly; 31 localized language choices, guardrail-error fallback, duplicate-case protection, dynamic templates, and raw IDs checked")

@@ -3,6 +3,7 @@
 #import <UIKit/UIKit.h>
 #import "Core/SGCore.h"
 #import "Settings/SGModPage.h"
+#import "Shared/LyricsTranslation/LyricsTranslation.h"
 
 extern BOOL SGHarnessWarning;
 
@@ -22,6 +23,17 @@ UIViewController *SGRLyricsSettingsPage(NSString *title, NSString *intro, NSArra
 
 #define ROW(name) SGModRow *name(void) { return SGPageRow(@#name, ^UIViewController *{ return nil; }); }
 NSArray<SGModRow *> *SGAITranslatorRows(void) { return @[SGPageRow(@"SGAITranslatorRows", ^UIViewController *{ return nil; })]; }
+
+// beta.15: a settings-page harness must stand in for the two new on-device
+// translator switches. Use the same stored keys as the real Mod; no AI/OS
+// translation service is invoked by this isolated UI test.
+NSArray<SGModRow *> *SGOnDeviceTranslatorRows(void) {
+    return @[
+        SGSwitchRow(@"Translate on iPhone", @"Apple's Translate in the lyrics' translate menu", SGKeyLyricsTranslateOnDevice),
+        SGSwitchRow(@"Apple Intelligence", @"Apple Intelligence in the lyrics' translate menu", SGKeyLyricsAppleIntelligence),
+    ];
+}
+
 ROW(SGAppIconRow) ROW(SGGlassLyricsRow) ROW(SGLockScreenLyricsRow) ROW(SGLyricsMeaningsRow)
 ROW(SGLyricsTranslationLanguageRow) ROW(SGLyricsWordTimingRow) ROW(SGRLyricsTextSizesRow) ROW(SGLyricsDelayRow)
 ROW(SGSavedTranslationsRow) ROW(SGTranslateEverySongRow)

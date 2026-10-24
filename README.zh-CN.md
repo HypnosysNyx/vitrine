@@ -18,7 +18,7 @@
 
 | 项目 | 情况 |
 | --- | --- |
-| Vitrine 代码基线 | **1.0.0-beta.14**（已同步上游源码；非独立的正式汉化版号） |
+| Vitrine 代码基线 | **1.0.0-beta.15**（同步正式发布标签；非独立的正式汉化版号） |
 | Spotify iOS 版本 | 原项目明确支持 **9.1.78、9.1.88、9.1.90**；其他版本未验证 |
 | iOS / 原生界面 | iOS **16.1+** |
 | iOS / Liquid Glass 重设计 | **iOS 26+**；较低系统有实验性警告和回退机制 |
@@ -28,6 +28,15 @@
 原 beta.13 汉化在 2026-10-23 的基线提交 [`acac43a`](https://github.com/HypnosysNyx/vitrine/commit/acac43a6337e8646d07fbbe8c304371d489a2967) 的[静态检查与编译](https://github.com/HypnosysNyx/vitrine/actions/runs/39942001448)以及[一次完整 IPA 构建](https://github.com/HypnosysNyx/vitrine/actions/runs/39946414229)均成功；**编译成功不代表已经完成所有机型的实机汉化验收**。后续提交需分别检查对应工作流。
 
 同步状态（2026-10-24）：上游 beta.14 及截至 `f5473f7` 的后续提交已经通过 [PR #1](https://github.com/HypnosysNyx/vitrine/pull/1) 正式合并进 `i18n/zh-hans`（合并提交 [`c217a3f`](https://github.com/HypnosysNyx/vitrine/commit/c217a3ff1674223026460114b69c6fae2f2f8af4)）。[macOS 静态检查、界面测试和 tweak 编译链接](https://github.com/HypnosysNyx/vitrine/actions/runs/39991312030)均已通过。本次同步尚未执行对应 IPA 的安装及 iPhone 实机界面验收，不应当据此标称为实机测试完成的正式安装版。
+
+
+### beta.15 更新摘要（2026-10-24）
+
+**新增：** 专辑菜单加入队列（模拟 Premium 时）；DJ 的 Premium 标记调整与 Labs 自动混音；设备端歌词翻译器开关，以及重复原歌词时的译文处理。
+
+**修复：** Anthropic Haiku 4.5 / Sonnet 4.6 与 Gemini 3.6 Flash 模型预设；歌词来源改为可实时更新的独立面板，并优化子菜单显示；音量滑块扬声器图标对齐。
+
+参见 [官方 beta.15 Release](https://github.com/My-Name-Is-Jeff/vitrine/releases/tag/v1.0.0-beta.15)。本分支采用 **正式发布标签 `v1.0.0-beta.15`**，没有包含发布后主分支中未经正式版本发布的后续更改。已针对新歌词来源面板和全部 7 条更新说明增加本地化检查。源码编译或构建成功不代表已完成 iPhone 实机验证。
 
 ## 如何自行构建、安装
 
