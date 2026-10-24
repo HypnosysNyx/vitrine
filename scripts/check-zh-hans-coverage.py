@@ -298,4 +298,24 @@ assert 'SGLyricsTranslationLanguages(void)' in (SRC / "Shared/LyricsSources/Lyri
 assert 'setObject:_families[(NSUInteger)path.row]' in (SRC / "Shared/Fonts/FontImport.m").read_text(encoding="utf-8") or 'SGZHFontDisplayName(title)' in (SRC / "Shared/Fonts/FontImport.m").read_text(encoding="utf-8")
 print("PASS: 2026-10-24 Translated by screenshot, renderer checks and dynamic Karaoke templates")
 
+# Screenshot 2026-10-24: the redesigned player's three top quick actions
+# appeared in English although their translations were already in zh-Hans.
+# Keep matching the native Spotify row by the ORIGINAL English key / row ID.
+quick_source = (SRC / "Redesigned/ContextMenu/ContextMenu.x").read_text(encoding="utf-8")
+quick_trio = (
+    ("Share", "分享", "square.and.arrow.up", "share", "9"),
+    ("Add to Playlist", "添加到播放列表", "text.badge.plus", "add to playlist", "19"),
+    ("Add to Queue", "加入播放队列", "text.line.last.and.arrowtriangle.forward", "add to queue", "11"),
+)
+for english, chinese, symbol, native_title, native_id in quick_trio:
+    assert TRANSLATIONS.get(english) == chinese, ("Quick menu translation missing", english)
+    source_item = f'@[@"{english}", @"{symbol}", @"{native_title}", @"{native_id}"]'
+    assert source_item in quick_source, ("Spotify quick action identity changed", english)
+quick_renderer = quick_source.split("- (UIMenu *)quickRow {", 1)[1].split("- (void)refreshQuickRow {", 1)[0]
+assert "[UIAction actionWithTitle:SGT(item[0])" in quick_renderer, "Quick action text bypasses SGT"
+assert "NSString *quick = item[2];" in quick_renderer, "Quick match key should remain original"
+assert "[weakSelf fireQuick:quick];" in quick_renderer, "Quick native handler should not change"
+assert "SGT(item[2])" not in quick_renderer, "Do not translate native matcher"
+print("PASS: player menu three quick actions localized; native keys / handlers preserved")
+
 print(f"PASS: {checked} screenshot strings resolve exactly; 31 localized language choices, guardrail-error fallback, duplicate-case protection, dynamic templates, and raw IDs checked")

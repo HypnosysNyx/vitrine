@@ -785,11 +785,12 @@ static NSString *storedKey(NSString *kind) {
     NSMutableArray<UIMenuElement *> *actions = [NSMutableArray array];
     NSMutableString *shown = [NSMutableString string];
     __weak SGRMenuSession *weakSelf = self;
+    // Localize only the visible title. Keep Spotify action matching keys untouched.
     for (NSArray<NSString *> *item in quickItems()) {
         NSString *quick = item[2];
         SGRSheetRow *row = [self rowForQuick:quick];
         if (_groups ? !row : (seen && ![seen containsObject:quick])) continue;
-        UIAction *action = [UIAction actionWithTitle:item[0] image:[UIImage systemImageNamed:item[1]] identifier:nil handler:^(UIAction *picked) {
+        UIAction *action = [UIAction actionWithTitle:SGT(item[0]) image:[UIImage systemImageNamed:item[1]] identifier:nil handler:^(UIAction *picked) {
             weakSelf.pick = ^{ [weakSelf fireQuick:quick]; };
         }];
         if (row && !row.enabled) action.attributes = UIMenuElementAttributesDisabled;
