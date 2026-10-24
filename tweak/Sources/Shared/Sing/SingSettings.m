@@ -40,7 +40,7 @@ NSString *SGSingLevelText(double level) {
     if (level < 0.999) return [NSString stringWithFormat:@"%.0f%%", level * 100];
     if (level <= 1.001) return @"As sung";
     if (level >= 1.999) return @"Vocals only";
-    return [NSString stringWithFormat:@"Backing %.0f%%", (2 - level) * 100];
+    return [NSString stringWithFormat:SGT(@"Backing %.0f%%"), (2 - level) * 100];
 }
 
 static NSString *bytes(long long count) {

@@ -81,14 +81,14 @@ static NSString *trimmed(NSString *text) {
     for (NSUInteger i = 0; i < fieldKeys().count; i++) {
         NSString *key = fieldKeys()[i];
         UILabel *label = [UILabel new];
-        label.text = fieldLabels()[i];
+        label.text = SGT(fieldLabels()[i]);
         label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
         label.adjustsFontForContentSizeCategory = YES;
         label.isAccessibilityElement = NO;   // the field reads its own label
         UITextField *field = [UITextField new];
         field.text = _shown[key];
-        field.placeholder = _tags[key] ?: fieldLabels()[i];
-        field.accessibilityLabel = fieldLabels()[i];
+        field.placeholder = _tags[key] ?: SGT(fieldLabels()[i]);
+        field.accessibilityLabel = SGT(fieldLabels()[i]);
         field.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
         field.adjustsFontForContentSizeCategory = YES;
         field.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -110,7 +110,7 @@ static NSString *trimmed(NSString *text) {
     _stacks = stacks;
     _labelWidths = widths;
 
-    self.title = @"Edit info";
+    self.title = SGT(@"Edit info");
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(save)];
     return self;
@@ -121,7 +121,7 @@ static NSString *trimmed(NSString *text) {
     _coverCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     _coverCell.selectionStyle = UITableViewCellSelectionStyleNone;
     UIButtonConfiguration *change = [UIButtonConfiguration plainButtonConfiguration];
-    change.title = @"Change";
+    change.title = SGT(@"Change");
     _coverButton = [UIButton buttonWithConfiguration:change primaryAction:nil];
     _coverButton.showsMenuAsPrimaryAction = YES;
     _coverButton.accessibilityLabel = SGT(@"Change cover");
@@ -212,15 +212,15 @@ static NSString *trimmed(NSString *text) {
 
     __weak typeof(self) weakSelf = self;
     NSMutableArray<UIMenuElement *> *items = [NSMutableArray arrayWithArray:@[
-        [UIAction actionWithTitle:@"Choose from Photos" image:[UIImage systemImageNamed:@"photo.on.rectangle"] identifier:nil handler:^(UIAction *action) {
+        [UIAction actionWithTitle:SGT(@"Choose from Photos") image:[UIImage systemImageNamed:@"photo.on.rectangle"] identifier:nil handler:^(UIAction *action) {
             [weakSelf pickCoverFromFiles:NO];
         }],
-        [UIAction actionWithTitle:@"Choose from Files" image:[UIImage systemImageNamed:@"folder"] identifier:nil handler:^(UIAction *action) {
+        [UIAction actionWithTitle:SGT(@"Choose from Files") image:[UIImage systemImageNamed:@"folder"] identifier:nil handler:^(UIAction *action) {
             [weakSelf pickCoverFromFiles:YES];
         }],
     ]];
     if (_cover) {
-        UIAction *remove = [UIAction actionWithTitle:@"Remove cover" image:[UIImage systemImageNamed:@"trash"] identifier:nil handler:^(UIAction *action) {
+        UIAction *remove = [UIAction actionWithTitle:SGT(@"Remove cover") image:[UIImage systemImageNamed:@"trash"] identifier:nil handler:^(UIAction *action) {
             [weakSelf useCover:nil];
         }];
         remove.attributes = UIMenuElementAttributesDestructive;
@@ -262,7 +262,7 @@ static NSString *trimmed(NSString *text) {
     [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"Discard changes") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }]];
-    [sheet addAction:[UIAlertAction actionWithTitle:@"Keep editing" style:UIAlertActionStyleCancel handler:nil]];
+    [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"Keep editing") style:UIAlertActionStyleCancel handler:nil]];
     sheet.popoverPresentationController.barButtonItem = self.navigationItem.leftBarButtonItem;
     [self presentViewController:sheet animated:YES completion:nil];
 }
@@ -403,14 +403,14 @@ void SGLocalFilePresentEditor(UIViewController *presenter, NSString *uri) {
     _title = [UILabel new];
     _title.font = rowFont();
     _title.textColor = UIColor.whiteColor;
-    _title.text = @"Edit info";
+    _title.text = SGT(@"Edit info");
     for (UIView *view in @[_icon, _title]) {
         view.userInteractionEnabled = NO;
         [self addSubview:view];
     }
     self.isAccessibilityElement = YES;
     self.accessibilityTraits = UIAccessibilityTraitButton;
-    self.accessibilityLabel = @"Edit info";
+    self.accessibilityLabel = SGT(@"Edit info");
     [self addTarget:self action:@selector(open) forControlEvents:UIControlEventTouchUpInside];
     [self addTarget:self action:@selector(highlight) forControlEvents:UIControlEventTouchDown | UIControlEventTouchDragEnter];
     [self addTarget:self action:@selector(unhighlight) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside | UIControlEventTouchCancel | UIControlEventTouchDragExit];

@@ -465,7 +465,7 @@ static void askForKey(NSString *problem) {
         field.autocapitalizationType = UITextAutocapitalizationTypeNone;
         field.spellCheckingType = UITextSpellCheckingTypeNo;
     }];
-    UIAlertAction *save = [UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertAction *save = [UIAlertAction actionWithTitle:SGT(@"Save") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         NSString *key = [alert.textFields.firstObject.text stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         if (!key.length) return;
         NSString *wrong = SGSpicyLyricsKeyProblem(key);
@@ -474,15 +474,15 @@ static void askForKey(NSString *problem) {
         else setKey(key);
     }];
     [alert addAction:save];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Open Dashboard" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Open Dashboard") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [UIApplication.sharedApplication openURL:[NSURL URLWithString:kDashboard] options:@{} completionHandler:nil];
     }]];
     if (SGSpicyLyricsKeySet()) {
-        [alert addAction:[UIAlertAction actionWithTitle:@"Remove" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Remove") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
             setKey(nil);
         }]];
     }
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:SGT(@"Cancel") style:UIAlertActionStyleCancel handler:nil]];
     alert.preferredAction = save;
     [SGTopController() presentViewController:alert animated:YES completion:nil];
 }

@@ -10,6 +10,7 @@
 // is not told the same: its hasLyrics is a Swift protocol requirement with no Objective-C method on the
 // class or its protocols in the binary, so Swift reaches it through its witness table and a method added
 // for a hook would never be called.
+#import "Core/SGL10n.h"
 #import "Core/SGCore.h"
 #import "Headers/SPTPlayer.h"
 #import "Shared/LocalFiles/LocalFiles.h"
@@ -43,7 +44,7 @@ static void addButton(UIViewController *unit) {
     [button setImage:[UIImage systemImageNamed:@"quote.bubble" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:20 weight:UIImageSymbolWeightRegular]]
             forState:UIControlStateNormal];
     button.tintColor = UIColor.whiteColor;
-    button.accessibilityLabel = @"Lyrics";
+    button.accessibilityLabel = SGT(@"Lyrics");
     button.translatesAutoresizingMaskIntoConstraints = NO;
     __weak UIViewController *weakUnit = unit;
     [button addAction:[UIAction actionWithHandler:^(UIAction *action) {

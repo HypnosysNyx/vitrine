@@ -30,11 +30,11 @@ static NSArray<SGUpdateChange *> *changesSinceThisBuild(void) {
 // Three lines and a count: enough to know whether to care, with the whole changelog a tap away.
 static NSString *noticeBody(NSString *version, BOOL beta) {
     NSArray<SGUpdateChange *> *changes = changesSinceThisBuild();
-    NSMutableString *body = [NSMutableString stringWithFormat:@"This build is %s.", SG_VERSION];
-    if (beta) [body appendString:@" This one is a beta, a test build ahead of the next release."];
+    NSMutableString *body = [NSMutableString stringWithFormat:SGT(@"This build is %s."), SG_VERSION];
+    if (beta) [body appendString:SGT(@" This one is a beta, a test build ahead of the next release.")];
     NSUInteger shown = MIN(changes.count, (NSUInteger)3);
     for (NSUInteger i = 0; i < shown; i++) [body appendFormat:@"\n\n• %@", SGT(changes[i].text)];
-    if (changes.count > shown) [body appendFormat:@"\n\nand %lu more in %@.", (unsigned long)(changes.count - shown), version];
+    if (changes.count > shown) [body appendFormat:SGT(@"\n\nand %lu more in %@."), (unsigned long)(changes.count - shown), version];
     return body;
 }
 
@@ -62,7 +62,7 @@ static void offerWhenClear(NSInteger tries) {
     // away under it, is still a sheet this release has had.
     [NSUserDefaults.standardUserDefaults setObject:version forKey:kTold];
     SGUpdateRelease *release = SGUpdateNewestRelease();
-    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@ is out", version]
+    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:SGT(@"%@ is out"), version]
                                                                   message:noticeBody(version, release.prerelease)
                                                            preferredStyle:UIAlertControllerStyleAlert];
     [sheet addAction:[UIAlertAction actionWithTitle:SGT(@"What's new") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {

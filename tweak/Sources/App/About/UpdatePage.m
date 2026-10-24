@@ -61,6 +61,7 @@ static NSString *dateInWords(NSString *published, NSString *format) {
     });
     NSDate *date = published.length ? [reader dateFromString:published] : nil;
     if (!date) return @"";
+    writer.locale = [NSLocale localeWithLocaleIdentifier:SGUseSimplifiedChinese() ? @"zh-Hans" : @"en_US_POSIX"];
     writer.dateFormat = format;
     return [writer stringFromDate:date];
 }
@@ -114,14 +115,14 @@ static NSArray<SGUpdateRelease *> *releasesToShow(void) {
 - (NSString *)introText {
     SGUpdateRelease *newest = SGUpdateNewestRelease();
     if (!newest) return SGUpdateChecked()
-        ? [NSString stringWithFormat:@"This build is %s. GitHub has no newer release.", SG_VERSION]
-        : [NSString stringWithFormat:@"This build is %s. Nothing has been asked of GitHub yet.", SG_VERSION];
+        ? [NSString stringWithFormat:SGT(@"This build is %s. GitHub has no newer release."), SG_VERSION]
+        : [NSString stringWithFormat:SGT(@"This build is %s. Nothing has been asked of GitHub yet."), SG_VERSION];
     NSString *date = longDate(newest.date);
-    NSString *when = date.length ? [@" came out on " stringByAppendingString:date] : @" is out";
+    NSString *when = date.length ? [NSString stringWithFormat:SGT(@" came out on %@"), date] : SGT(@" is out");
     if (SGUpdateVersion())
-        return [NSString stringWithFormat:@"%@%@, and this build is %s. Everything in between is below.",
+        return [NSString stringWithFormat:SGT(@"%@%@, and this build is %s. Everything in between is below."),
                 newest.version, when, SG_VERSION];
-    return [NSString stringWithFormat:@"This build, %s, is GitHub's newest release; it%@. What went into it is below.",
+    return [NSString stringWithFormat:SGT(@"This build, %s, is GitHub's newest release; it%@. What went into it is below."),
             SG_VERSION, when];
 }
 
@@ -136,7 +137,7 @@ static NSArray<SGUpdateRelease *> *releasesToShow(void) {
     NSMutableArray<SGUpdateRow *> *top = [NSMutableArray arrayWithObject:check];
     SGUpdateRelease *newest = SGUpdateNewestRelease();
     if (SGUpdateVersion() && newest.url.length)
-        [top addObject:linkRow([@"Get " stringByAppendingString:newest.version],
+        [top addObject:linkRow([SGT(@"Get ") stringByAppendingString:newest.version],
                                newest.prerelease ? @"A beta, on GitHub with its .deb" : @"The release on GitHub, where its .deb is",
                                @"arrow.down.circle", newest.url)];
     if (SGRepoURL) [top addObject:linkRow(@"All releases", @"Every version, this one and the ones before it",

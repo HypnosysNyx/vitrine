@@ -20,7 +20,7 @@ static NSString *bandName(double hz) {
 }
 
 static NSString *spokenBand(double hz) {
-    return hz < 1000 ? [NSString stringWithFormat:@"%g hertz", hz] : [NSString stringWithFormat:@"%g kilohertz", hz / 1000];
+    return hz < 1000 ? [NSString stringWithFormat:SGT(@"%g hertz"), hz] : [NSString stringWithFormat:SGT(@"%g kilohertz"), hz / 1000];
 }
 
 // A real minus, and no sign on zero.
@@ -170,7 +170,7 @@ static NSString *signedNumber(double value, int decimals) {
 
     _reset = [self barButton:@"Reset" color:SGGrey()];
     [_reset addTarget:self action:@selector(resetTapped) forControlEvents:UIControlEventTouchUpInside];
-    _reset.accessibilityHint = _equalizer ? @"Every band back to zero." : @"Every point back to zero.";
+    _reset.accessibilityHint = SGT(_equalizer ? @"Every band back to zero." : @"Every point back to zero.");
     if (_equalizer) {
         _presets = [self barButton:@"Custom" color:UIColor.whiteColor];
         UIButtonConfiguration *config = _presets.configuration;
@@ -179,10 +179,10 @@ static NSString *signedNumber(double value, int decimals) {
         config.imagePadding = 5;
         _presets.configuration = config;
         _presets.showsMenuAsPrimaryAction = YES;
-        _presets.accessibilityLabel = @"Preset";
+        _presets.accessibilityLabel = SGT(@"Preset");
     } else {
         _name = [UILabel new];
-        _name.text = @"Amount";
+        _name.text = SGT(@"Amount");
         _name.textColor = UIColor.whiteColor;
         _name.accessibilityTraits = UIAccessibilityTraitHeader;
         [self addSubview:_name];
@@ -228,7 +228,7 @@ static NSString *signedNumber(double value, int decimals) {
         styled[NSFontAttributeName] = SGTitleFont();
         return styled;
     };
-    config.title = title;
+    config.title = SGT(title);
     config.titleLineBreakMode = NSLineBreakByTruncatingTail;
     UIButton *button = [UIButton buttonWithConfiguration:config primaryAction:nil];
     button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeading;
@@ -405,19 +405,19 @@ static NSString *signedNumber(double value, int decimals) {
     NSArray<NSString *> *names = SGDSPEqualizerPresetNames();
     NSInteger match = [self matchingPreset];
     UIButtonConfiguration *config = _presets.configuration;
-    config.title = match >= 0 ? names[(NSUInteger)match] : @"Custom";
+    config.title = SGT(match >= 0 ? names[(NSUInteger)match] : @"Custom");
     _presets.configuration = config;
     _presets.accessibilityValue = config.title;
     NSMutableArray<UIAction *> *actions = [NSMutableArray array];
     __weak typeof(self) weakSelf = self;
     [names enumerateObjectsUsingBlock:^(NSString *name, NSUInteger i, BOOL *stop) {
-        UIAction *action = [UIAction actionWithTitle:name image:nil identifier:nil handler:^(UIAction *a) {
+        UIAction *action = [UIAction actionWithTitle:SGT(name) image:nil identifier:nil handler:^(UIAction *a) {
             [weakSelf setGains:SGDSPEqualizerPreset((NSInteger)i) animated:YES];
         }];
         action.state = (NSInteger)i == match ? UIMenuElementStateOn : UIMenuElementStateOff;
         [actions addObject:action];
     }];
-    _presets.menu = [UIMenu menuWithTitle:@"Presets" children:actions];
+    _presets.menu = [UIMenu menuWithTitle:SGT(@"Presets") children:actions];
     [self setNeedsLayout];
 }
 

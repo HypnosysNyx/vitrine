@@ -34,8 +34,8 @@ static NSString *speedText(double speed) {
 }
 
 static NSString *semitonesText(float semitones) {
-    if (semitones == 0) return @"Original";
-    return [NSString stringWithFormat:@"%@%.0f %@", semitones > 0 ? @"+" : @"−", fabsf(semitones), fabsf(semitones) == 1 ? @"Semitone" : @"Semitones"];
+    if (semitones == 0) return SGT(@"Original pitch");
+    return [NSString stringWithFormat:@"%@%.0f %@", semitones > 0 ? @"+" : @"−", fabsf(semitones), SGT(fabsf(semitones) == 1 ? @"Semitone" : @"Semitones")];
 }
 
 // While pitch follows a speed that is not normal, the speed sets the pitch and the semitones are not played
@@ -49,7 +49,7 @@ static UIAction *soundMenu(void) {
     NSMutableArray<NSString *> *changed = [NSMutableArray array];
     if (SGPlayerSpeedAllowed() && fabs(SGPlayerSpeed() - 1) >= 0.01) [changed addObject:speedText(SGPlayerSpeed())];
     if (SGPlayerPitchAvailable() && !pitchFollowing() && SGPlayerPitch() != 0) [changed addObject:semitonesText(SGPlayerPitch())];
-    if (SGPlayerReverb() > 0) [changed addObject:[NSString stringWithFormat:@"Reverb %.0f%%", SGPlayerReverb()]];
+    if (SGPlayerReverb() > 0) [changed addObject:[NSString stringWithFormat:SGT(@"Reverb %.0f%%"), SGPlayerReverb()]];
     UIAction *open = [UIAction actionWithTitle:SGT(@"Speed, Pitch & Reverb") image:symbol(@"slider.horizontal.3") identifier:nil
                                        handler:^(UIAction *action) { SGPlayerShowSpeedPitchPanel(sg_moreButton); }];
     open.subtitle = changed.count ? [changed componentsJoinedByString:@", "] : SGT(@"Normal");
@@ -62,9 +62,9 @@ static NSString *sheetKind(void);
 
 static NSString *timingText(NSArray<SGKaraokeLine *> *lines) {
     switch (SGKaraokeLinesTiming(lines)) {
-        case SGKaraokeTimingWords: return @"Word by word";
-        case SGKaraokeTimingLine: return @"Line by line";
-        default: return @"Not synced";
+        case SGKaraokeTimingWords: return SGT(@"Word by word");
+        case SGKaraokeTimingLine: return SGT(@"Line by line");
+        default: return SGT(@"Not synced");
     }
 }
 
@@ -72,23 +72,23 @@ static NSString *timingText(NSArray<SGKaraokeLine *> *lines) {
 // the track, in the order, the one picked checked.
 static NSArray<UIMenuElement *> *sourceItems(NSString *track, NSDictionary<NSString *, SGLyricsResult *> *offers) {
     NSString *current = SGLyricsChosenSource(track);
-    UIAction *automatic = [UIAction actionWithTitle:@"Automatic" image:nil identifier:nil
+    UIAction *automatic = [UIAction actionWithTitle:SGT(@"Automatic") image:nil identifier:nil
                                             handler:^(UIAction *action) { SGLyricsChooseAutomatic(track); }];
-    automatic.subtitle = current ? @"As the order chooses" : SGLyricsCreditFor(track);
+    automatic.subtitle = current ? SGT(@"As the order chooses") : SGT(SGLyricsCreditFor(track));
     automatic.state = current ? UIMenuElementStateOff : UIMenuElementStateOn;
     NSMutableArray<UIMenuElement *> *items = [NSMutableArray arrayWithObject:automatic];
     for (NSString *key in SGLyricsOrder()) {
         SGLyricsResult *offer = offers[key];
         if (!offer) continue;
         SGLyricsProvider *provider = SGLyricsProviderFor(key);
-        UIAction *pick = [UIAction actionWithTitle:provider.name image:nil identifier:nil
+        UIAction *pick = [UIAction actionWithTitle:SGT(provider.name) image:nil identifier:nil
                                            handler:^(UIAction *action) { SGLyricsChooseSource(track, key); }];
         pick.subtitle = timingText(offer.karaokeLines);
         pick.state = [key isEqualToString:current] ? UIMenuElementStateOn : UIMenuElementStateOff;
         [items addObject:pick];
     }
     if (items.count == 1) {
-        UIAction *none = [UIAction actionWithTitle:@"No Source Has Lyrics" image:nil identifier:nil handler:^(UIAction *action) {}];
+        UIAction *none = [UIAction actionWithTitle:SGT(@"No Source Has Lyrics") image:nil identifier:nil handler:^(UIAction *action) {}];
         none.attributes = UIMenuElementAttributesDisabled;
         [items addObject:none];
     }
@@ -103,8 +103,8 @@ static UIMenu *lyricsSourceMenu(void) {
             completion(sourceItems(track, offers));
         });
     }];
-    UIMenu *menu = [UIMenu menuWithTitle:@"Lyrics Source" image:symbol(@"quote.bubble") identifier:nil options:0 children:@[sources]];
-    menu.subtitle = SGLyricsCreditFor(track);
+    UIMenu *menu = [UIMenu menuWithTitle:SGT(@"Lyrics Source") image:symbol(@"quote.bubble") identifier:nil options:0 children:@[sources]];
+    menu.subtitle = SGT(SGLyricsCreditFor(track));
     return menu;
 }
 
@@ -121,7 +121,7 @@ static NSArray<UIMenuElement *> *playerItems(void) {
         for (NSArray *background in backgrounds) {
             SGRPlayerBackgroundKind kind = [background[0] integerValue];
             if (kind == current) continue;
-            [items addObject:[UIAction actionWithTitle:background[1] image:symbol(background[2]) identifier:nil
+            [items addObject:[UIAction actionWithTitle:SGT(background[1]) image:symbol(background[2]) identifier:nil
                                                handler:^(UIAction *action) { SGRPlayerMenuSetBackground(kind); }]];
         }
     }
