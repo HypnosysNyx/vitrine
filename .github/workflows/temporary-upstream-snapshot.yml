@@ -15,9 +15,9 @@ jobs:
           git -C snapshots remote add upstream https://github.com/My-Name-Is-Jeff/vitrine.git
           git -C snapshots remote add fork https://github.com/HypnosysNyx/vitrine.git
           git -C snapshots fetch --depth=1 upstream refs/tags/v1.0.0-beta.15
-          git -C snapshots archive --format=tar.gz --output=beta15-base.tar.gz FETCH_HEAD
+          git -C snapshots archive --format=tar.gz --output=../beta15-base.tar.gz FETCH_HEAD
           git -C snapshots fetch --depth=1 fork refs/heads/i18n/zh-hans
-          git -C snapshots archive --format=tar.gz --output=zh-hans-current.tar.gz FETCH_HEAD
+          git -C snapshots archive --format=tar.gz --output=../zh-hans-current.tar.gz FETCH_HEAD
           git -C snapshots rev-parse FETCH_HEAD > zh-hans-current.sha
           git -C snapshots fetch --depth=1 upstream main
           git -C snapshots rev-parse FETCH_HEAD > upstream-main.sha
