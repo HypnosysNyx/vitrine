@@ -13,7 +13,7 @@ static NSArray<NSString *> *iconNames(void) {
 }
 
 static NSString *label(NSString *name) {
-    return name ? [name stringByReplacingOccurrencesOfString:@"_" withString:@" "] : SGT(@"Default");
+    return SGT(name ? [name stringByReplacingOccurrencesOfString:@"_" withString:@" "] : @"Default");
 }
 
 static void setIcon(NSString *icon) {
@@ -24,7 +24,7 @@ static void setIcon(NSString *icon) {
         // a word the row looks broken. The handler can run off the main thread.
         dispatch_async(dispatch_get_main_queue(), ^{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:SGT(@"The icon did not change")
-                                                                           message:error.localizedDescription
+                                                                           message:SGT(@"The icon could not be changed. Please try again.")
                                                                     preferredStyle:UIAlertControllerStyleAlert];
             [alert addAction:[UIAlertAction actionWithTitle:SGT(@"OK") style:UIAlertActionStyleCancel handler:nil]];
             [SGTopController() presentViewController:alert animated:YES completion:nil];

@@ -37,6 +37,7 @@ NSArray<SGModRow *> *SGOnDeviceTranslatorRows(void) {
 ROW(SGAppIconRow) ROW(SGGlassLyricsRow) ROW(SGLockScreenLyricsRow) ROW(SGLyricsMeaningsRow)
 ROW(SGLyricsTranslationLanguageRow) ROW(SGLyricsWordTimingRow) ROW(SGRLyricsTextSizesRow) ROW(SGLyricsDelayRow)
 ROW(SGSavedTranslationsRow) ROW(SGTranslateEverySongRow)
+ROW(SGLockScreenTranslationRow) ROW(SGLyricsRomanisedReplaceRow) ROW(SGRLyricsHideRow)
 NSArray<SGModRow *> *SGAppFontRows(void) { return @[]; }
 NSArray<SGModRow *> *SGNativeAppearanceRows(void) { return @[]; }
 NSArray<SGModRow *> *SGRAppearanceRows(void) { return @[]; }

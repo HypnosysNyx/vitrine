@@ -40,6 +40,12 @@ SGModRow *SGLockScreenLyricsRow(void) {
     return SGOptionRow(SGT(@"Lock screen lyrics"), SGT(@"Current line in place of the artist"), SGKeyLockScreenLyrics);
 }
 
+SGModRow *SGLockScreenTranslationRow(void) {
+    SGModRow *row = SGOptionRow(@"Lock screen translation", @"The line's translation in its place, when the lyrics have one", SGKeyLockScreenTranslation);
+    row.waitsOn = SGKeyLockScreenLyrics;
+    return row;
+}
+
 SGModRow *SGLyricsTranslationLanguageRow(void) {
     SGModRow *row = SGChoiceRow(SGT(@"Translation language"), nil, SGKeyLyricsTranslationLanguage, SGLyricsTranslationLanguageNames(), 0);
     row.choiceFooter = @"A language brings Musixmatch's community translations to lyrics that have none, "
@@ -52,6 +58,15 @@ SGModRow *SGLyricsTranslationLanguageRow(void) {
 // Only the redesign's lyrics view draws it, and every one there is redrawn as the switch flips.
 SGModRow *SGLyricsRomanisedRow(void) {
     SGModRow *row = SGOptionRow(SGT(@"Romanized lyrics"), @"Lines in other alphabets, again in Latin letters", SGKeyLyricsRomanised);
+    row.changed = ^(BOOL on) {
+        [NSNotificationCenter.defaultCenter postNotificationName:SGLyricsRomanisedDidChangeNotification object:nil];
+    };
+    return row;
+}
+
+SGModRow *SGLyricsRomanisedReplaceRow(void) {
+    SGModRow *row = SGOptionRow(@"In place of original", @"Show the Latin letters instead of the original script", SGKeyLyricsRomanisedReplace);
+    row.waitsOn = SGKeyLyricsRomanised;
     row.changed = ^(BOOL on) {
         [NSNotificationCenter.defaultCenter postNotificationName:SGLyricsRomanisedDidChangeNotification object:nil];
     };

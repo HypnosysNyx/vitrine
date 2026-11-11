@@ -153,7 +153,7 @@ assert contains("Shared/Sing/SGSingCard.m", 'alertControllerWithTitle:SGT(@"Kara
 assert contains("Shared/Sing/SGSingCard.m", 'actionWithTitle:SGT(SGSingCurrentState()')
 assert contains("Shared/Sing/SingSettings.m", 'stringWithFormat:SGT(@"After %.0f s")')
 assert contains("Redesigned/Lyrics/SGRSingButton.m", 'message:SGT(message)')
-assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "message:([shownError isEqualToString:error] ? [self localizedTranslationError:error] : shownError)")
+assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "message:alertMessage")
 assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "[NSString stringWithFormat:SGT(format), translated]")
 assert contains("Shared/LyricsTranslation/OnDeviceTranslation.swift", 'Apple Intelligence could not translate the song (')
 assert contains("Redesigned/Lyrics/SGRKaraokeView.m", "NSString *translated = SGT(reason);")
@@ -213,7 +213,7 @@ assert "NSString *translated = SGT(reason);" in error_ui
 assert "if (![translated isEqualToString:reason])" in error_ui
 assert 'SGLog(@"lyrics: untranslated translation failure: %@", error)' in error_ui
 assert 'return SGT(@"The translation could not be completed. Please try again.");' in error_ui
-assert 'message:([shownError isEqualToString:error] ? [self localizedTranslationError:error] : shownError)' in error_ui
+assert 'message:alertMessage' in error_ui
 assert TRANSLATIONS["Apple Intelligence could not translate the song. Please try again."] != "Apple Intelligence could not translate the song. Please try again."
 assert "detail.contains(\"safety guardrails\")" in (SRC / "Shared/LyricsTranslation/OnDeviceTranslation.swift").read_text(encoding="utf-8")
 guardrail_shown = TRANSLATIONS["Apple Intelligence could not translate the song (%@)."].replace(
@@ -342,8 +342,8 @@ for k in ("Apple's Translate in the lyrics' translate menu",
           "Auto mix", "Auto mix in the context menu"):
     assert k in TRANSLATIONS and TRANSLATIONS[k] != k, k
 assert "SGOnDeviceTranslatorRows()" in (SRC / "App/Pages.m").read_text(encoding="utf-8")
-assert (ROOT / "version.txt").read_text(encoding="utf-8").strip() == "1.0.0-beta.15"
-assert len(release_notes) == 7, ("beta.15 release notes unexpectedly changed", release_notes)
+assert (ROOT / "version.txt").read_text(encoding="utf-8").strip() == "1.0.0-beta.16"
+assert len(release_notes) == 40, ("beta.16 release notes unexpectedly changed", release_notes)
 # The beta.15 source adds two translation settings rows to App/Pages.m.
 # The independent UIKit settings harness must provide both stubs too; a missing
 # symbol used to fail linking after all localization scans had passed.
@@ -351,7 +351,7 @@ harness_stub = (ROOT / "harness/mod-settings/stubs.m").read_text(encoding="utf-8
 assert 'NSArray<SGModRow *> *SGOnDeviceTranslatorRows(void)' in harness_stub
 assert 'SGKeyLyricsTranslateOnDevice' in harness_stub
 assert 'SGKeyLyricsAppleIntelligence' in harness_stub
-print("PASS: beta.15 7 release notes and new live lyrics source panel UI localized")
+print("PASS: beta.16 40 release notes and preserved live lyrics source panel UI localized")
 
 
 # AI-KEY-20261024 screenshot (beta.15): OpenAI-compatible API key alert has
@@ -394,10 +394,66 @@ assert 'actionWithTitle:SGT(name)' in mod_rows
 for template in ("%@'s filters blocked this song's lyrics.",
                  "The song is too long for one answer from %@.",
                  "%@ declined to translate the song.",
-                 "Add a %@ API key%@ on the Lyrics page first."):
+                 "Add a %@ API key%@ in Mod Settings > Lyrics first."):
     assert ('stringWithFormat:SGT(@' + json.dumps(template, ensure_ascii=False) + ')') in ai_source, template
     assert template in TRANSLATIONS
-assert 'modelID ? @"" : SGT(@" and a model")' in ai_source
+assert 'modelID ? @"" : SGT(@" and choose a model")' in ai_source
 print("PASS: AI-KEY-20261024 dynamic provider notes, alert title, settings rows and key storage")
+
+
+# Upstream beta.16: the following Mod UI sinks are new and bypass the older
+# screenshot cases. Catalog additions alone are not enough for coverage.
+batch_ui = (SRC / "Shared/LyricsTranslation/BatchTranslation.x").read_text(encoding="utf-8")
+for needle in (
+    'NSString *rowTitle = SGT(isAlbum ? @"Translate Album" : @"Translate Playlist");',
+    'actionWithTitle:SGT(@"Translate on iPhone")',
+    'actionWithTitle:SGT(@"Translate with Apple Intelligence")',
+    'actionWithTitle:SGT(@"No Translator Configured")',
+    'action.subtitle = SGT(@"On this iPhone")',
+    'SGT(@"Sends the lyrics to ")',
+    'SGT(@"Translating %@")',
+    'localizedBatchError(err)',
+    'stringWithFormat:SGT(@"%lu of %lu songs…")',
+):
+    assert needle in batch_ui, ("beta.16 batch translation renderer missing", needle)
+assert 'self.accessibilityIdentifier = @"spotifyglass.batchTranslate"' in batch_ui
+assert 'SGBatchTranslateURI(uri, SGBatchTranslationEngineOnDevice, strongWindow)' in batch_ui
+notice = (SRC / "Shared/AlbumQueue/AlbumQueueMenu.x").read_text(encoding="utf-8")
+assert 'title = SGT(title);' in notice and 'detail = SGT(detail);' in notice
+assert 'stringWithFormat:SGT(@"%@, %@")' in notice
+assert (SRC / "Redesigned/Player/PlayerVolume.m").read_text(encoding="utf-8").find('self.accessibilityLabel = SGT(@"Volume");') >= 0
+icon = (SRC / "Shared/AppIcon/AppIcon.m").read_text(encoding="utf-8")
+assert 'setAlternateIconName:icon' in icon
+assert 'return SGT(name ? [name stringByReplacingOccurrencesOfString:@"_" withString:@" "] : @"Default");' in icon
+assert 'message:SGT(@"The icon could not be changed. Please try again.")' in icon
+pages = (SRC / "App/Pages.m").read_text(encoding="utf-8")
+assert 'SGLyricsRomanisedReplaceRow()' in pages and 'SGRLyricsHideRow()' in pages
+assert 'SGT(@"What a tap on the cover opens")' in pages
+player = (SRC / "Shared/Player/PlayerSettings.m").read_text(encoding="utf-8")
+assert 'SGLockScreenTranslationRow()' in player
+harness = (ROOT / "harness/mod-settings/stubs.m").read_text(encoding="utf-8")
+assert 'ROW(SGLockScreenTranslationRow)' in harness
+assert 'ROW(SGLyricsRomanisedReplaceRow)' in harness
+assert 'ROW(SGRLyricsHideRow)' in harness
+home = (SRC / "Redesigned/Home/HomeSettings.m").read_text(encoding="utf-8")
+assert 'SGT(@"Show Top picks heading")' in home
+assert 'SGT(@"Title stays on scroll")' in home
+appearance = (SRC / "Redesigned/Kit/SGRAppearanceSettings.m").read_text(encoding="utf-8")
+assert 'SGT(@"Full bleed covers")' in appearance
+lyrics_settings = (SRC / "Shared/Lyrics/LyricsSettings.m").read_text(encoding="utf-8")
+assert 'SGLockScreenTranslationRow' in lyrics_settings
+assert 'SGLyricsRomanisedReplaceRow' in lyrics_settings
+ai_settings = (SRC / "Shared/LyricsTranslation/LyricsTranslation.m").read_text(encoding="utf-8")
+for needle in ('SGT(@"Thinking")','SGT(@"Timeout")','SGT(@"Songs per batch")',
+               'SGT(@"Batch prompt")','SGT(@"Skip saved translations")',
+               'stringWithFormat:SGT(@"%@ s")','stringWithFormat:SGT(@"%ld s")'):
+    assert needle in ai_settings, ("beta.16 AI settings renderer missing", needle)
+for key in ("Show Top picks heading","Full bleed covers","Lock screen translation",
+            "In place of original","Agent button","Batch prompt","Skip saved translations",
+            "Language not downloaded","Open Settings","No Translator Configured",
+            "Download %@ and %@ in Settings > Apps > Translate > Languages, then try again."):
+    assert TRANSLATIONS.get(key) and TRANSLATIONS[key] != key, ("beta.16 missing translation", key)
+assert TRANSLATIONS['a 20th Anniversary app icon to pick in Appearance (#69)'] == '外观设置新增 20 周年纪念应用图标可供选择（#69）'
+print("PASS: beta.16 added settings, batch translation, error, and accessibility render paths")
 
 print(f"PASS: {checked} screenshot strings resolve exactly; 31 localized language choices, guardrail-error fallback, duplicate-case protection, dynamic templates, and raw IDs checked")
