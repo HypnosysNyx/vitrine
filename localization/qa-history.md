@@ -99,3 +99,28 @@ Purpose: Every screenshot regression must identify a root cause, fix the visible
 - **Fix:** Translate the title format before interpolation and the provider's original `keyNote` plus separate Paste Key instruction before building the visible alert. Add exact Simplified Chinese for Gemini, OpenAI-compatible and Anthropic notes; translate adjacent Mod-owned rows and model choices, leaving model names, network addresses, provider tags, keys, Keychain storage, clipboard cleanup, request body and URLs unchanged. Also translate dynamic AI-request diagnostic templates before interpolating provider names or HTTP status codes, without changing error classification or network behavior.
 - **Regression:** `AI-KEY-20261024` asserts actual provider table notes and exact catalog values, producer→alert display sinks, Mod settings menu display lookup, and preserved key/server storage and clipboard cleanup. The prior build's source fails this new check. Re-run catalog sync, placeholder checks, source audit and macOS compile.
 - **Not yet verified:** A matching-SHA IPA and iPhone screenshots for Gemini/OpenAI-compatible/Anthropic API-key alerts plus Model menu and tap behavior.
+
+
+## Upstream beta.16 official release synchronization — 2026-11-12
+
+- Baseline: official upstream tag v1.0.0-beta.16, published 2026-10-25, with 42 commits beyond beta.15. Excludes later, unreleased upstream main commits.
+- Merge reconciliation: preserve all existing beta.15 localization work and screenshot regressions, plus the upstream batch-translator, lock-screen translation, romanized text, full-bleed cover, pinned home title, new album/player controls, and haptics.
+- New source-to-render localization: translate the 40 exact upstream release-note strings in the What's New pane; new batch translation action and status strings, dynamically formatted provider responses, Swift language-download errors, new home/cover/AI settings, icon display name, and volume accessibility label. Preserve English identifiers/keys, backend transport values, and the original icon resource keys.
+- Regression: assert actual UIKit action/notice paths, formatter templates before interpolation, unchanged stored identifiers, compiled JSON dictionary, exact 40 release-note keys, and the previous beta.15 API-key, Karaoke, and quick-action cases.
+- Verification: static checks, macOS harness compilation and linking, matching-SHA IPA, and real device validation are separate gates. Do not claim a device has been verified from static checks alone.
+
+
+## 2026-11-12 — beta.16 compile failure: missing localization import
+
+- GitHub Actions PR #7 run `43067019467`, attempt 2: final tweak compile stopped at `Sources/Redesigned/Player/PlayerVolume.m:110` with undeclared `SGT`; ARC `int` to `NSString *` errors were secondary.
+- Cause: the new Volume VoiceOver label used `SGT(@"Volume")` but the translation unit omitted `#import "Core/SGL10n.h"`.
+- Fix: import the existing localization header; do not change runtime volume behavior or spoken label.
+- Regression: `check-zh-hans-coverage.py` now tests both the localized label and required header. Mac CI/full tweak linking and on-device checks still required.
+
+
+## 2026-11-12 — beta.16 batch translation compile fix and full-source include check
+
+- macOS Intel Actions run `43076007965` passed localization, dependencies and settings harnesses, but full tweak compile failed at `Sources/Shared/LyricsTranslation/BatchTranslation.x:142` because `SGT` and `SGUseSimplifiedChinese` were used without declaration. ARC string errors were cascading compiler diagnostics.
+- Added `#import "Core/SGL10n.h"` to the batch source. No batch behavior, API handling, user data, persisted IDs, or translated text was changed.
+- Added a project-wide regression covering every Objective-C/Logos implementation file using these helpers, requiring a direct localization-header import; this would catch both this failure and the previously fixed `PlayerVolume.m` failure before macOS compilation.
+- The CI build still needs a fresh full compile and a separate IPA build, followed by real-device verification.

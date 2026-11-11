@@ -326,6 +326,13 @@ static SGModRow *fluidSlider(NSString *title, SGRFluidSetting setting, NSString 
                        ^NSString *(double value) { return [NSString stringWithFormat:@"%.0f%@", value, unit]; });
 }
 
+SGModRow *SGRLyricsHideRow(void) {
+    SGModRow *row = SGChoiceRow(@"Hide the controls", @"A few seconds after the last touch, the lyrics take the room",
+                                SGRKeyLyricsAutoHide, @[@"Off", @"Everything", @"Keep the title"], SGRLyricsHideMode());
+    row.choiceNotes = @[@"The controls stay", @"The lyrics take the whole player", @"The cover, the title and the top row stay; in landscape, the title"];
+    return row;
+}
+
 UIViewController *SGRPlayerSettingsPage(NSArray *more) {
     SGRPlayerShowcase *showcase = [[SGRPlayerShowcase alloc] initWithFrame:CGRectMake(0, 0, 320, kCardMinHeight)];
     NSMutableArray<NSString *> *backgroundNames = [NSMutableArray array];
@@ -358,8 +365,8 @@ UIViewController *SGRPlayerSettingsPage(NSArray *more) {
                                    @"background still. Animated and Visualizer use these where they show Fluid."),
         SGNotedSection(SGT(@"Controls"), @[SGSwitchRow(SGT(@"Volume"), nil, SGRKeyPlayerVolume),
                                       SGOptionRow(SGT(@"Follow the cover"), nil, SGRKeyPlayerFollowsCover)],
-                       @"Volume puts a slider under the controls for this iPhone, or the speaker's while Spotify plays on another device. "
-                       @"Follow the cover paints the like, shuffle and repeat in the color of the song playing."),
+                       SGT(@"Volume puts a slider under the controls for this iPhone, or the speaker's while Spotify plays on another device. "
+                           @"Follow the cover paints the like, shuffle, repeat, device and queue buttons, and the mini player's device and like, in the color of the song playing.")),
         SGNotedSection(SGT(@"Mini player"), SGRNowPlayingBarRows(),
                        @"Apple Music style moves the now playing bar in between two tabs as you scroll down."), nil];
     [sections addObjectsFromArray:more];

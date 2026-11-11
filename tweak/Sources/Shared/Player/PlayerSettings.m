@@ -14,7 +14,7 @@ UIViewController *SGLockScreenWidgetPage(void) {
     SGModRow *likes = SGFlagRow(@"Like and dislike buttons", @"ios-feature-lockscreen.like_dislike_enabled");
     likes.subtitle = SGT(@"Off and locked while Switch with the star is on: the star takes their place");
     return [[SGModPage alloc] initWithTitle:SGT(@"Lock screen") intro:SGRestartNote sections:@[
-        SGSection(@"Widget", @[SGLockScreenLyricsRow(), likes]),
+        SGSection(SGT(@"Widget"), @[SGLockScreenLyricsRow(), SGLockScreenTranslationRow(), likes]),
         SGSection(SGT(@"Artwork"), SGLockScreenMotionRows()),
     ] footer:nil];
 }

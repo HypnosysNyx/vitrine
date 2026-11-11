@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   compile:
-    runs-on: macos-latest
+    runs-on: macos-26-intel
     timeout-minutes: 40
     env:
       THEOS: ${{ github.workspace }}/theos
