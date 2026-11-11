@@ -422,6 +422,7 @@ notice = (SRC / "Shared/AlbumQueue/AlbumQueueMenu.x").read_text(encoding="utf-8"
 assert 'title = SGT(title);' in notice and 'detail = SGT(detail);' in notice
 assert 'stringWithFormat:SGT(@"%@, %@")' in notice
 assert (SRC / "Redesigned/Player/PlayerVolume.m").read_text(encoding="utf-8").find('self.accessibilityLabel = SGT(@"Volume");') >= 0
+assert '#import "Core/SGL10n.h"' in (SRC / "Redesigned/Player/PlayerVolume.m").read_text(encoding="utf-8"), "Volume.m missing SGT declaration"
 icon = (SRC / "Shared/AppIcon/AppIcon.m").read_text(encoding="utf-8")
 assert 'setAlternateIconName:icon' in icon
 assert 'return SGT(name ? [name stringByReplacingOccurrencesOfString:@"_" withString:@" "] : @"Default");' in icon

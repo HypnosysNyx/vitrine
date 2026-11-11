@@ -108,3 +108,11 @@ Purpose: Every screenshot regression must identify a root cause, fix the visible
 - New source-to-render localization: translate the 40 exact upstream release-note strings in the What's New pane; new batch translation action and status strings, dynamically formatted provider responses, Swift language-download errors, new home/cover/AI settings, icon display name, and volume accessibility label. Preserve English identifiers/keys, backend transport values, and the original icon resource keys.
 - Regression: assert actual UIKit action/notice paths, formatter templates before interpolation, unchanged stored identifiers, compiled JSON dictionary, exact 40 release-note keys, and the previous beta.15 API-key, Karaoke, and quick-action cases.
 - Verification: static checks, macOS harness compilation and linking, matching-SHA IPA, and real device validation are separate gates. Do not claim a device has been verified from static checks alone.
+
+
+## 2026-11-12 — beta.16 compile failure: missing localization import
+
+- GitHub Actions PR #7 run `43067019467`, attempt 2: final tweak compile stopped at `Sources/Redesigned/Player/PlayerVolume.m:110` with undeclared `SGT`; ARC `int` to `NSString *` errors were secondary.
+- Cause: the new Volume VoiceOver label used `SGT(@"Volume")` but the translation unit omitted `#import "Core/SGL10n.h"`.
+- Fix: import the existing localization header; do not change runtime volume behavior or spoken label.
+- Regression: `check-zh-hans-coverage.py` now tests both the localized label and required header. Mac CI/full tweak linking and on-device checks still required.

@@ -15,6 +15,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
 #import "Core/SGCore.h"
+#import "Core/SGL10n.h"
 #import "Redesigned/Kit/SGRKit.h"
 #import "Player.h"
 
