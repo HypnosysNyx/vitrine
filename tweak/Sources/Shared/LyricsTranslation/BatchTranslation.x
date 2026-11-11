@@ -1,6 +1,7 @@
 #import <dlfcn.h>
 #import <objc/message.h>
 #import "Core/SGCore.h"
+#import "Core/SGL10n.h"
 #import "Shared/Lyrics/Lyrics.h"
 #import "Shared/LyricsSources/LyricsSources.h"
 #import "Shared/AlbumQueue/AlbumQueue.h"

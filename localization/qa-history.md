@@ -116,3 +116,11 @@ Purpose: Every screenshot regression must identify a root cause, fix the visible
 - Cause: the new Volume VoiceOver label used `SGT(@"Volume")` but the translation unit omitted `#import "Core/SGL10n.h"`.
 - Fix: import the existing localization header; do not change runtime volume behavior or spoken label.
 - Regression: `check-zh-hans-coverage.py` now tests both the localized label and required header. Mac CI/full tweak linking and on-device checks still required.
+
+
+## 2026-11-12 — beta.16 batch translation compile fix and full-source include check
+
+- macOS Intel Actions run `43076007965` passed localization, dependencies and settings harnesses, but full tweak compile failed at `Sources/Shared/LyricsTranslation/BatchTranslation.x:142` because `SGT` and `SGUseSimplifiedChinese` were used without declaration. ARC string errors were cascading compiler diagnostics.
+- Added `#import "Core/SGL10n.h"` to the batch source. No batch behavior, API handling, user data, persisted IDs, or translated text was changed.
+- Added a project-wide regression covering every Objective-C/Logos implementation file using these helpers, requiring a direct localization-header import; this would catch both this failure and the previously fixed `PlayerVolume.m` failure before macOS compilation.
+- The CI build still needs a fresh full compile and a separate IPA build, followed by real-device verification.

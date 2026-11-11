@@ -457,4 +457,19 @@ for key in ("Show Top picks heading","Full bleed covers","Lock screen translatio
 assert TRANSLATIONS['a 20th Anniversary app icon to pick in Appearance (#69)'] == '外观设置新增 20 周年纪念应用图标可供选择（#69）'
 print("PASS: beta.16 added settings, batch translation, error, and accessibility render paths")
 
+# Build safety: an Objective-C / Logos translation unit that calls SGT() or
+# SGUseSimplifiedChinese() must import their declaring header directly.
+# A transitive SGCore import does NOT declare the localization helpers. Both
+# beta.16 failures (PlayerVolume.m, BatchTranslation.x) were missed by earlier
+# dictionary-only audits, then rejected by clang as implicit int declarations.
+for source in SRC.rglob("*"):
+    if source.suffix not in {".m", ".mm", ".x"} or source.name == "SGL10n.m":
+        continue
+    implementation = source.read_text(encoding="utf-8")
+    if "SGT(" in implementation or "SGUseSimplifiedChinese(" in implementation:
+        assert '#import "Core/SGL10n.h"' in implementation or '#include "Core/SGL10n.h"' in implementation, (
+            "Localization helper used without its declaration", str(source.relative_to(SRC))
+        )
+print("PASS: all translation units using SGT/SGUseSimplifiedChinese import the header")
+
 print(f"PASS: {checked} screenshot strings resolve exactly; 31 localized language choices, guardrail-error fallback, duplicate-case protection, dynamic templates, and raw IDs checked")
