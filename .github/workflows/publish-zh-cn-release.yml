@@ -52,9 +52,9 @@ jobs:
           # Never attach a proprietary Spotify IPA to a public Release.
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Source release already exists; refreshing its description only."
-            gh release edit "$TAG"               --notes-file "$NOTES"               --title "Vitrine 1.0.0-beta.16 简体中文汉化源码版"               --prerelease
+            gh release edit "$TAG"               --notes-file "$NOTES"               --title "Vitrine v1.0.0-beta.16 简体中文汉化版"               --prerelease
           else
-            gh release create "$TAG"               --target "$CHINESE_SOURCE_SHA"               --title "Vitrine 1.0.0-beta.16 简体中文汉化源码版"               --notes-file "$NOTES"               --prerelease
+            gh release create "$TAG"               --target "$CHINESE_SOURCE_SHA"               --title "Vitrine v1.0.0-beta.16 简体中文汉化版"               --notes-file "$NOTES"               --prerelease
           fi
 
       - name: Display published Release URL
