@@ -4,7 +4,7 @@ name: Publish Vitrine Chinese source release
 
 on:
   push:
-    branches: [main]
+    branches: [main, i18n/zh-hans]
     paths:
       - ".github/workflows/publish-zh-cn-release.yml"
   workflow_dispatch:
