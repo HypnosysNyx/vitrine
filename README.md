@@ -14,6 +14,7 @@
 
 <p align="center">
   <a href="https://github.com/HypnosysNyx/vitrine/releases"><b>📦 查看汉化版本与发布说明</b></a> ·
+  <a href="docs/releases/v1.0.0-beta.16-zh.1.md"><b>📄 本次汉化源码版说明</b></a> ·
   <a href="https://github.com/HypnosysNyx/vitrine/tree/i18n/zh-hans"><b>🀄 汉化源码</b></a> ·
   <a href="https://github.com/HypnosysNyx/vitrine/actions/workflows/build-ipa.yml"><b>🛠 自行构建 IPA</b></a> ·
   <a href="https://github.com/HypnosysNyx/vitrine/issues"><b>🐛 问题反馈</b></a> ·
