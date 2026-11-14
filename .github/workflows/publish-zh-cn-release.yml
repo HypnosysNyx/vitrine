@@ -1,0 +1,63 @@
+# A source-only release for the non-official Chinese localization.
+# Never upload a decrypted Spotify IPA, keys, or private credentials.
+name: Publish Vitrine Chinese source release
+
+on:
+  push:
+    branches: [main, i18n/zh-hans]
+    paths:
+      - ".github/workflows/publish-zh-cn-release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-vitrine-zh-cn
+  cancel-in-progress: false
+
+jobs:
+  publish-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: i18n/zh-hans
+          fetch-depth: 0
+
+      - name: Print source revision
+        run: |
+          echo "CHINESE_SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "Vitrine Chinese source: $(git rev-parse HEAD)"
+
+      - name: Check simplified Chinese catalog and placeholders
+        run: |
+          python3 scripts/sync-zh-hans.py --check
+          python3 scripts/check-zh-hans-coverage.py
+          python3 scripts/check-zh-hans-placeholders.py
+          python3 scripts/audit-mod-ui-literals.py
+          python3 scripts/audit-mod-ui-renderers.py
+
+      - name: Publish source-only release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="v1.0.0-beta.16-zh.1"
+          NOTES="docs/releases/v1.0.0-beta.16-zh.1.md"
+          test -s "$NOTES"
+          # GitHub automatically attaches source ZIP/TAR archives at this tag.
+          # Never attach a proprietary Spotify IPA to a public Release.
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Source release already exists; refreshing its description only."
+            gh release edit "$TAG"               --notes-file "$NOTES"               --title "Vitrine 1.0.0-beta.16 简体中文汉化源码版"               --prerelease
+          else
+            gh release create "$TAG"               --target "$CHINESE_SOURCE_SHA"               --title "Vitrine 1.0.0-beta.16 简体中文汉化源码版"               --notes-file "$NOTES"               --prerelease
+          fi
+
+      - name: Display published Release URL
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release view v1.0.0-beta.16-zh.1 --json url --jq '.url'
